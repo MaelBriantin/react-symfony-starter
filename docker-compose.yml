@@ -31,14 +31,11 @@ services:
       context: .
       dockerfile: docker/react/Dockerfile
     volumes:
-      - ./app/react:/var/www
-      - react_modules:/var/www/node_modules
+      - ./app/react:/var/www:cached
+      - /var/www/node_modules
     networks:
       - backend
 
 networks:
   backend:
     driver: bridge
-
-volumes:
-  react_modules:
