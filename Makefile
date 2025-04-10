@@ -1,13 +1,10 @@
-DOCKER_COMPOSE = docker-compose
+DOCKER_COMPOSE = docker compose
 
 .PHONY: setup
-setup: build up sync-node-modules
+setup: build up
 
 .PHONY: reset
-reset:
-	$(DOCKER_COMPOSE) down --volumes && \
-	$(DOCKER_COMPOSE) build --no-cache && \
-	$(DOCKER_COMPOSE) up -d
+reset: down build up
 
 .PHONY: build
 build:
@@ -29,8 +26,12 @@ down:
 prune: down
 	docker system prune -f
 
-.PHONY: sync-node-modules
-sync-node-modules:
-	docker cp react:/var/www/pnpm-lock.yaml ./app/react/pnpm-lock.yaml && \
+.PHONY: onpm-install
+pnpm-install:
 	cd app/react && \
-	pnpm install --prefer-offline 
+	rm -rf node_modules && \
+	pnpm install
+
+.PHONY: composer-install
+composer-install:
+	docker exec -it php-fpm composer install --prefer-dist --no-dev --no-interaction

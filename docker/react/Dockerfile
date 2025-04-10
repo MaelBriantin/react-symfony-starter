@@ -14,6 +14,8 @@ FROM base AS dev
 COPY --chown=${UID}:node ./app/react/package*.json ./
 COPY --chown=${UID}:node ./app/react/pnpm-lock.yaml ./
 
+# Nettoyer et recréer node_modules
+RUN rm -rf node_modules
 RUN mkdir -p node_modules && chown ${UID}:node node_modules
 
 RUN pnpm install
