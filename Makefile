@@ -1,15 +1,17 @@
 DOCKER_COMPOSE = docker-compose
 
 .PHONY: setup
-setup: build sync-node-modules
+setup: build up sync-node-modules
+
+.PHONY: reset
+reset:
+	$(DOCKER_COMPOSE) down --volumes && \
+	$(DOCKER_COMPOSE) build --no-cache && \
+	$(DOCKER_COMPOSE) up -d
 
 .PHONY: build
 build:
-	$(DOCKER_COMPOSE) up -d --build
-
-.PHONY: build-no-cache
-build-no-cache:
-	$(DOCKER_COMPOSE) up -d --build --no-cache
+	$(DOCKER_COMPOSE) build --no-cache
 
 .PHONY: ps
 ps:

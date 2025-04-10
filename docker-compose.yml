@@ -6,7 +6,6 @@ services:
       dockerfile: docker/php/Dockerfile
     volumes:
       - ./app/php:/var/www
-      - /var/www/vendor
     ports:
       - "9000:9000"
     networks:
