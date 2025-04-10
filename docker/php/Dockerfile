@@ -69,14 +69,14 @@ RUN apk add --no-cache \
 # Copy composer files first for better caching
 COPY --chown=${UID}:${GID} app/php/composer.* ./
 
-# Install composer dependencies
-RUN composer install --no-scripts --no-autoloader
-
 # Copy the rest of the application
 COPY --chown=${UID}:${GID} app/php ./
+
+# Install composer dependencies
+RUN composer install --no-scripts
 
 # Generate optimized autoloader
 RUN composer dump-autoload --optimize
 
 # Set permissions
-RUN chown -R ${UID}:${GID} /app
+RUN chown -R ${UID}:${GID} ./
