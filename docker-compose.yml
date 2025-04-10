@@ -2,10 +2,11 @@ services:
   php:
     container_name: php
     build:
-      context: .
-      dockerfile: docker/php/Dockerfile
+      context: ./app/php
+      dockerfile: ../../docker/php/Dockerfile
     volumes:
       - ./app/php:/var/www
+      - /var/www/vendor
     ports:
       - "9000:9000"
     networks:

@@ -73,7 +73,7 @@ RUN mkdir -p /var/www/vendor && \
     chown -R ${UID}:${GID} /var/www
 
 # Copy composer files first for better caching
-COPY --chown=${UID}:${GID} app/php/composer.* ./
+COPY --chown=${UID}:${GID} ./composer.* ./
 
 # Switch to non-root user for all remaining operations
 USER ${UID}:${GID}
@@ -82,12 +82,11 @@ USER ${UID}:${GID}
 RUN composer install --prefer-dist --no-scripts --no-progress --no-interaction
 
 # Copy the rest of the application
-COPY --chown=${UID}:${GID} app/php ./
+COPY --chown=${UID}:${GID} . ./
 
 # Install all dependencies and run scripts
 RUN composer install --prefer-dist --no-progress --no-interaction && \
     composer dump-autoload --optimize --classmap-authoritative
 
 # Ensure correct permissions
-RUN chown -R ${UID}:${GID} . && \
-    chmod -R 755 ./vendor
+RUN chmod -R 755 ./vendor
