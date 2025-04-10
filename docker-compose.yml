@@ -1,0 +1,44 @@
+services:
+  php:
+    container_name: php
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    volumes:
+      - ./app/php:/var/www
+    ports:
+      - "9000:9000"
+    networks:
+      - backend
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: caddy
+    ports:
+      - "8000:8000"
+      - "443:443"
+    volumes:
+      - ./app/php:/var/www
+      - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+    depends_on:
+      - php
+    networks:
+      - backend
+
+  react:
+    container_name: react
+    build:
+      context: .
+      dockerfile: docker/react/Dockerfile
+    volumes:
+      - ./app/react:/var/www
+      - react_modules:/var/www/node_modules
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  react_modules:

@@ -1,0 +1,12 @@
+localhost {
+    handle_path /* {
+        reverse_proxy react:5173
+    }
+}
+
+localhost:8000 {
+    root * /var/www/public
+    encode gzip
+    php_fastcgi php:9000
+    file_server
+}
