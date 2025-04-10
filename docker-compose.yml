@@ -34,6 +34,8 @@ services:
     volumes:
       - ./app/react:/var/www:cached
       - /var/www/node_modules
+    ports:
+      - "5173:5173"
     networks:
       - backend
 
