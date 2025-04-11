@@ -14,12 +14,6 @@ help: ## Show this help message
 .PHONY: setup
 setup: init-env init-react init-php init-caddy ## Initialize the complete stack
 
-.PHONY: restart
-restart: ## Stop and restart all containers
-	@echo "Restarting all containers..."
-	$(DOCKER_COMPOSE) down -v && $(DOCKER_COMPOSE) up -d
-	@echo "All containers restarted."
-
 .PHONY: init-caddy
 init-caddy: build-caddy up-caddy ## Initialize Caddy container
 
@@ -124,10 +118,25 @@ hard-reset: clean-stack down prune setup ## Hard reset the stack
 .PHONY: init-env
 init-env: ## Initialize environment files
 	@if [ ! -f .env ]; then \
-		cp .env.example .env && \
-		APP_SECRET=$$(docker compose run --rm php php -r "echo bin2hex(random_bytes(16));") && \
-		sed -i "s/APP_SECRET=/APP_SECRET=$$APP_SECRET/" .env && \
-		echo "Created .env file with new APP_SECRET"; \
+		cp .env.example .env; \
+		SECRET=$$(openssl rand -hex 16); \
+		if [ "$$OSTYPE" = "darwin"* ]; then \
+			sed -i '' "s/^APP_SECRET=$$/APP_SECRET=$$SECRET/" .env; \
+		else \
+			sed -i "s/^APP_SECRET=$$/APP_SECRET=$$SECRET/" .env; \
+		fi; \
+		echo "Created .env file from .env.example with new APP_SECRET"; \
 	else \
 		echo ".env file already exists"; \
 	fi
+
+.PHONY: composer-require
+composer-require: ## Add a Composer package
+	@read -p "Enter the package name to add: " package; \
+	if [ -z "$$package" ]; then \
+		echo "Package name cannot be empty"; \
+		exit 1; \
+	fi; \
+	$(DOCKER_RUN) php composer require "$$package"; \
+	echo "Package '$$package' added successfully"; \
+	$(DOCKER_RUN) php composer update; \

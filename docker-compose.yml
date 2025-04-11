@@ -1,15 +1,14 @@
 services:
   react:
-    image: react
+    container_name: react
+    env_file: .env
     build:
       context: .
       dockerfile: docker/react/Dockerfile
-    container_name: react-vite-container
     volumes:
       - ./app/react:/app
 
   php:
-    image: php:8.4-fpm-alpine
     container_name: php
     env_file: .env
     build:

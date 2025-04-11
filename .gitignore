@@ -7,8 +7,9 @@ dist
 build
 
 # Environment
-.env*
-!.env.example
+.env
+.env.local
+.env.*.local
 
 # Logs
 *.log
