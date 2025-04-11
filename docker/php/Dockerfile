@@ -2,18 +2,18 @@ FROM composer:2.8.3 AS composer
 
 FROM php:8.4-fpm-alpine AS builder
 
-# Set the working directory
-WORKDIR /var/www/php
+WORKDIR /app
 
-# Set environment variables
 ARG UID=1000
 ARG GID=1000
 
-# Create a non-root user and group
-RUN addgroup -g $GID -S user \
-    && adduser -u $UID -D -S -G user user
+# Create user/group with minimal permissions necessary
+RUN addgroup -S -g ${GID} user && \
+    adduser -S -D -u ${UID} -G user user && \
+    mkdir -p /app && \
+    chown -R user:user /app
 
-# Install system dependencies with correct package names
+# Install system dependencies
 RUN apk add --no-cache \
     bash \
     curl \
@@ -40,53 +40,37 @@ RUN docker-php-ext-install \
 
 FROM php:8.4-fpm-alpine AS base
 
-# Set the working directory
-WORKDIR /var/www/php
+WORKDIR /app
 
-# Set environment variables
-ENV PATH="$PATH:/var/www/bin"
-
-# Set environment variables
 ARG UID=1000
 ARG GID=1000
+ENV PATH="$PATH:/app/bin"
 
-# Create a non-root user and group
-RUN addgroup -g $GID -S user \
-    && adduser -u $UID -D -S -G user user
-
-# Copy PHP extensions and configs
-COPY --from=builder /usr/local/lib/php/extensions /usr/local/lib/php/extensions
-COPY --from=builder /usr/local/etc/php/conf.d /usr/local/etc/php/conf.d
-
-# Install Composer
-COPY --from=composer /usr/bin/composer /usr/local/bin/composer
-
-# Install packages
-RUN apk add --no-cache \
+# Create user and set up permissions in one layer
+RUN addgroup -S -g ${GID} user && \
+    adduser -S -D -u ${UID} -G user user && \
+    mkdir -p /app && \
+    chown -R user:user /app && \
+    # Install required packages
+    apk add --no-cache \
     curl \
     bash \
     git \
     libzip
 
-# Create directory with correct permissions
-RUN mkdir -p /var/www/php/vendor && \
-    chown -R ${UID}:${GID} /var/www/php
+# Copy PHP extensions and configs
+COPY --from=builder --chown=user:user /usr/local/lib/php/extensions /usr/local/lib/php/extensions
+COPY --from=builder --chown=user:user /usr/local/etc/php/conf.d /usr/local/etc/php/conf.d
 
-# Copy composer files first for better caching
-COPY --chown=${UID}:${GID} ./composer.* ./
+# Install Composer
+COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 
-# Switch to non-root user for all remaining operations
-USER ${UID}:${GID}
+# Switch to non-root user for remaining operations
+USER user
 
-# Install dependencies without scripts
-RUN composer install --prefer-dist --no-scripts --no-progress --no-interaction
+COPY --chown=user:user ./app/php .
 
-# Copy the rest of the application
-COPY --chown=${UID}:${GID} . ./
+FROM base AS dev
 
-# Install all dependencies and run scripts
-RUN composer install --prefer-dist --no-progress --no-interaction && \
-    composer dump-autoload --optimize --classmap-authoritative
-
-# Ensure correct permissions
-RUN chmod -R 755 ./vendor
+ENV APP_ENV=dev
+ENV APP_DEBUG=1

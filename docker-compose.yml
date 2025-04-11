@@ -7,16 +7,29 @@ services:
     container_name: react-vite-container
     volumes:
       - ./app/react:/app
-  
+
+  php:
+    image: php:8.4-fpm-alpine
+    container_name: php
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+      target: dev
+    volumes:
+      - ./app/php:/app
+
   caddy:
     image: caddy:2-alpine
     container_name: caddy
     ports:
       - "443:443"
+      - "8000:8000"
     volumes:
       - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./app/php:/app
     depends_on:
       - react
+      - php
     networks:
       - default
 

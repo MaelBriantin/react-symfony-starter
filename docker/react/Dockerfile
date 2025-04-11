@@ -7,12 +7,6 @@ WORKDIR /app
 # Install pnpm package manager globally and configure its store directory for better caching
 RUN npm install -g pnpm && pnpm config set store-dir /app/.pnpm-store
 
-# Copy only package files first to leverage Docker layer caching for dependencies
-COPY ./app/react/package.json ./app/react/pnpm-lock.yaml ./
-
-# Install project dependencies using pnpm with exact versions from lockfile
-RUN pnpm install --frozen-lockfile
-
 # Copy the rest of the application code into the container
 COPY ./app/react .
 

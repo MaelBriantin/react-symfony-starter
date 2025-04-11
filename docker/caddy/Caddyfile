@@ -5,7 +5,7 @@ localhost {
 }
 
 localhost:8000 {
-    root * /var/www/php/public
+    root * /app/public
     encode gzip
     php_fastcgi php:9000
     file_server
