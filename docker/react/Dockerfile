@@ -1,30 +1,23 @@
-ARG UID=1000
+# Use Node.js 18 with Alpine Linux as the base image for a lightweight container
+FROM node:18-alpine
 
-FROM node:20-alpine AS base
+# Set the working directory inside the container
+WORKDIR /app
 
-RUN adduser -D --uid $UID --home /home/user --gecos "" user || true
-RUN corepack enable pnpm
+# Install pnpm package manager globally and configure its store directory for better caching
+RUN npm install -g pnpm && pnpm config set store-dir /app/.pnpm-store
 
-WORKDIR /var/www/react
+# Copy only package files first to leverage Docker layer caching for dependencies
+COPY ./app/react/package.json ./app/react/pnpm-lock.yaml ./
 
-RUN chown ${UID}:node /var/www/react
-USER ${UID}
+# Install project dependencies using pnpm with exact versions from lockfile
+RUN pnpm install --frozen-lockfile
 
-FROM base AS dev
-COPY --chown=${UID}:node ./app/react/package*.json ./
-COPY --chown=${UID}:node ./app/react/pnpm-lock.yaml ./
+# Copy the rest of the application code into the container
+COPY ./app/react .
 
-# Nettoyer et recréer node_modules
-RUN rm -rf node_modules
-RUN mkdir -p node_modules && chown ${UID}:node node_modules
+# Set the default command to run the development server
+CMD ["pnpm", "dev"]
 
-RUN pnpm install
-
-ENV PATH /var/www/react/node_modules/.bin:$PATH
-
-COPY --chown=${UID}:node ./app/react .
-
+# Expose port 5173 which will be used by the Vite development server
 EXPOSE 5173
-CMD ["pnpm", "run", "dev"]
-
-

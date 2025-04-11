@@ -1,44 +1,25 @@
 services:
-  php:
-    container_name: php
+  react:
+    image: react
     build:
-      context: ./app/php
-      dockerfile: ../../docker/php/Dockerfile
+      context: .
+      dockerfile: docker/react/Dockerfile
+    container_name: react-vite-container
     volumes:
-      - ./app/php:/var/www/php
-      - /var/www/php/vendor
-    ports:
-      - "9000:9000"
-    networks:
-      - backend
-
+      - ./app/react:/app
+  
   caddy:
     image: caddy:2-alpine
     container_name: caddy
     ports:
-      - "8000:8000"
       - "443:443"
     volumes:
-      - ./app/php:/var/www/php
       - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
     depends_on:
-      - php
+      - react
     networks:
-      - backend
-
-  react:
-    container_name: react
-    build:
-      context: .
-      dockerfile: docker/react/Dockerfile
-    volumes:
-      - ./app/react:/var/www/react:cached
-      - /var/www/react/node_modules
-    ports:
-      - "5173:5173"
-    networks:
-      - backend
+      - default
 
 networks:
-  backend:
+  default:
     driver: bridge

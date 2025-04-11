@@ -1,30 +1,37 @@
 DOCKER_COMPOSE = docker compose
+DOCKER_RUN = $(DOCKER_COMPOSE) run --rm
 
 .PHONY: setup
-setup: build up
+setup: init-react init-caddy
 
-.PHONY: reset
-reset: down setup
+.PHONY: init-caddy
+init-caddy: build-caddy up-caddy
 
-.PHONY: hard-reset
-reset: down prune setup
+.PHONY: build-caddy
+build-caddy:
+	$(DOCKER_COMPOSE) build --no-cache caddy
 
-.PHONY: build
-build:
-	$(DOCKER_COMPOSE) build --no-cache
+.PHONY: up-caddy
+up-caddy:
+	$(DOCKER_COMPOSE) up -d caddy
 
-.PHONY: ps
-ps:
-	$(DOCKER_COMPOSE) ps
+.PHONY: init-react
+init-react: build-react pnpm-install up-react
 
-.PHONY: up
-up:
-	$(DOCKER_COMPOSE) up -d
+.PHONY: build-react
+build-react:
+	$(DOCKER_COMPOSE) build --no-cache react
 
-.PHONY: down
-down:
-	$(DOCKER_COMPOSE) down -v --remove-orphans
+.PHONY: up-react
+up-react:
+	$(DOCKER_COMPOSE) up -d react
 
-.PHONY: prune
-prune: down
-	docker system prune -f
+.PHONY: pnpm-install
+pnpm-install:
+	$(DOCKER_RUN) react pnpm install
+
+.PHONY: clean-react
+clean-react:
+	$(DOCKER_RUN) react rm -rf node_modules
+	$(DOCKER_RUN) react rm -rf .pnpm-store
+	$(DOCKER_RUN) react rm -rf dist
