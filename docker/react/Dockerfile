@@ -5,9 +5,9 @@ FROM node:20-alpine AS base
 RUN adduser -D --uid $UID --home /home/user --gecos "" user || true
 RUN corepack enable pnpm
 
-WORKDIR /var/www
+WORKDIR /var/www/react
 
-RUN chown ${UID}:node /var/www
+RUN chown ${UID}:node /var/www/react
 USER ${UID}
 
 FROM base AS dev
@@ -20,7 +20,7 @@ RUN mkdir -p node_modules && chown ${UID}:node node_modules
 
 RUN pnpm install
 
-ENV PATH /var/www/node_modules/.bin:$PATH
+ENV PATH /var/www/react/node_modules/.bin:$PATH
 
 COPY --chown=${UID}:node ./app/react .
 

@@ -1,7 +1,7 @@
 DOCKER_COMPOSE = docker compose
 
 .PHONY: setup
-setup: build up composer-local pnpm-local
+setup: build up
 
 .PHONY: reset
 reset: down setup
@@ -28,14 +28,3 @@ down:
 .PHONY: prune
 prune: down
 	docker system prune -f
-
-.PHONY: pnpm-local
-pnpm-install:
-	cd app/react && \
-	rm -rf node_modules && \
-	pnpm install
-
-.PHONY: composer-local
-composer-local:
-	cd app/php && \
-	composer install

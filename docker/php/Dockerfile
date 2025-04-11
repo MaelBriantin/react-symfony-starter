@@ -3,7 +3,7 @@ FROM composer:2.8.3 AS composer
 FROM php:8.4-fpm-alpine AS builder
 
 # Set the working directory
-WORKDIR /var/www
+WORKDIR /var/www/php
 
 # Set environment variables
 ARG UID=1000
@@ -41,7 +41,7 @@ RUN docker-php-ext-install \
 FROM php:8.4-fpm-alpine AS base
 
 # Set the working directory
-WORKDIR /var/www
+WORKDIR /var/www/php
 
 # Set environment variables
 ENV PATH="$PATH:/var/www/bin"
@@ -69,8 +69,8 @@ RUN apk add --no-cache \
     libzip
 
 # Create directory with correct permissions
-RUN mkdir -p /var/www/vendor && \
-    chown -R ${UID}:${GID} /var/www
+RUN mkdir -p /var/www/php/vendor && \
+    chown -R ${UID}:${GID} /var/www/php
 
 # Copy composer files first for better caching
 COPY --chown=${UID}:${GID} ./composer.* ./

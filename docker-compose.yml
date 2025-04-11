@@ -5,8 +5,8 @@ services:
       context: ./app/php
       dockerfile: ../../docker/php/Dockerfile
     volumes:
-      - ./app/php:/var/www
-      - /var/www/vendor
+      - ./app/php:/var/www/php
+      - /var/www/php/vendor
     ports:
       - "9000:9000"
     networks:
@@ -19,7 +19,7 @@ services:
       - "8000:8000"
       - "443:443"
     volumes:
-      - ./app/php:/var/www
+      - ./app/php:/var/www/php
       - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
     depends_on:
       - php
@@ -32,8 +32,8 @@ services:
       context: .
       dockerfile: docker/react/Dockerfile
     volumes:
-      - ./app/react:/var/www:cached
-      - /var/www/node_modules
+      - ./app/react:/var/www/react:cached
+      - /var/www/react/node_modules
     ports:
       - "5173:5173"
     networks:
