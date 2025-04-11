@@ -68,8 +68,6 @@ COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 # Switch to non-root user for remaining operations
 USER user
 
-COPY --chown=user:user ./app/php .
-
 FROM base AS dev
 
 ENV APP_ENV=dev

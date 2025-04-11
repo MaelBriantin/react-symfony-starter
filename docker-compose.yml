@@ -11,6 +11,7 @@ services:
   php:
     image: php:8.4-fpm-alpine
     container_name: php
+    env_file: .env
     build:
       context: .
       dockerfile: docker/php/Dockerfile

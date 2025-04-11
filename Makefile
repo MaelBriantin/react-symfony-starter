@@ -12,7 +12,13 @@ help: ## Show this help message
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  %s%-15s%s %s\n", "$(BLUE)", $$1, "$(RESET)", $$2}' $(MAKEFILE_LIST)
 
 .PHONY: setup
-setup: init-react init-php init-caddy ## Initialize the complete stack
+setup: init-env init-react init-php init-caddy ## Initialize the complete stack
+
+.PHONY: restart
+restart: ## Stop and restart all containers
+	@echo "Restarting all containers..."
+	$(DOCKER_COMPOSE) down -v && $(DOCKER_COMPOSE) up -d
+	@echo "All containers restarted."
 
 .PHONY: init-caddy
 init-caddy: build-caddy up-caddy ## Initialize Caddy container
@@ -114,3 +120,14 @@ shell-react: ## Open a shell in the React container
 hard-reset: clean-stack down prune setup ## Hard reset the stack
 	@echo "Hard reset completed. All containers stopped and removed, volumes cleaned, and stack reinitialized."
 	@echo "Run 'make up' to start the stack again."
+
+.PHONY: init-env
+init-env: ## Initialize environment files
+	@if [ ! -f .env ]; then \
+		cp .env.example .env && \
+		APP_SECRET=$$(docker compose run --rm php php -r "echo bin2hex(random_bytes(16));") && \
+		sed -i "s/APP_SECRET=/APP_SECRET=$$APP_SECRET/" .env && \
+		echo "Created .env file with new APP_SECRET"; \
+	else \
+		echo ".env file already exists"; \
+	fi
