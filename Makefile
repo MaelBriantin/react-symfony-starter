@@ -12,7 +12,18 @@ help: ## Show this help message
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  %s%-15s%s %s\n", "$(BLUE)", $$1, "$(RESET)", $$2}' $(MAKEFILE_LIST)
 
 .PHONY: setup
-setup: init-env init-react init-php init-caddy ## Initialize the complete stack
+setup: init-env init-react init-database init-php init-caddy ## Initialize the complete stack
+
+.PHONY: init-database
+init-database: build-database up-database ## Initialize Database container
+
+.PHONY: build-database
+build-database: ## Build Database container
+	$(DOCKER_COMPOSE) build --no-cache database
+
+.PHONY: up-database
+up-database: ## Start Database container
+	$(DOCKER_COMPOSE) up -d database
 
 .PHONY: init-caddy
 init-caddy: build-caddy up-caddy ## Initialize Caddy container
@@ -77,6 +88,10 @@ down: ## Stop and remove all containers
 logs: ## Show logs from all containers
 	$(DOCKER_COMPOSE) logs -f
 
+.PHONY: logs-database
+logs-database: ## Show Database container logs
+	$(DOCKER_COMPOSE) logs -f database
+
 .PHONY: logs-php
 logs-php: ## Show PHP container logs
 	$(DOCKER_COMPOSE) logs -f php
@@ -93,6 +108,10 @@ logs-caddy: ## Show Caddy container logs
 rebuild: ## Rebuild and restart containers without cleaning
 	$(DOCKER_COMPOSE) build
 	$(DOCKER_COMPOSE) up -d
+
+.PHONY: restart
+restart: ## Restart all containers
+	$(DOCKER_COMPOSE) down && $(DOCKER_COMPOSE) up -d
 
 .PHONY: prune
 prune: ## Clean up unused Docker resources

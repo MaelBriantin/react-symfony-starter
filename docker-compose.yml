@@ -7,6 +7,8 @@ services:
       dockerfile: docker/react/Dockerfile
     volumes:
       - ./app/react:/app
+    networks:
+      - app-network
 
   php:
     container_name: php
@@ -17,10 +19,19 @@ services:
       target: dev
     volumes:
       - ./app/php:/app
+    depends_on:
+      - database
+    networks:
+      - app-network
+      - database-network
 
   caddy:
     image: caddy:2-alpine
     container_name: caddy
+    env_file: .env
+    environment:
+      - API_URL=${API_URL:-localhost:8000}
+      - FRONTEND_URL=${FRONTEND_URL:-localhost}
     ports:
       - "443:443"
       - "8000:8000"
@@ -31,8 +42,29 @@ services:
       - react
       - php
     networks:
-      - default
+      - app-network
+
+  database:
+    image: mysql:8.0
+    restart: unless-stopped
+    container_name: database
+    env_file: .env
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-app}
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+    volumes:
+      - database:/var/lib/mysql
+    networks:
+      - database-network
 
 networks:
-  default:
+  app-network:
     driver: bridge
+  database-network:
+    driver: bridge
+
+volumes:
+  database:
