@@ -1,0 +1,27 @@
+version: "3"
+
+tasks:
+  init:
+    desc: Initialize Database container
+    cmds:
+      - task: build
+      - task: up
+    silent: true
+
+  build:
+    desc: Build Database container
+    cmds:
+      - "{{.DOCKER_COMPOSE}} build --no-cache database"
+    silent: true
+
+  up:
+    desc: Start Database container
+    cmds:
+      - "{{.DOCKER_COMPOSE}} up -d database"
+    silent: true
+
+  logs:
+    desc: Show Database container logs
+    cmds:
+      - "{{.DOCKER_COMPOSE}} logs -f database"
+    silent: true

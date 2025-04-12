@@ -1,264 +1,40 @@
-# https://taskfile.dev
-
-version: '3'
-
-# Pipefail: If any command in a pipeline fails, the entire pipeline fails.
-set: [pipefail]
-# Output: Prefixed: Prefix all output with the task name
-output: prefixed
+version: "3"
 
 vars:
-  DOCKER_COMPOSE: docker compose
-  DOCKER_RUN: '{{.DOCKER_COMPOSE}} run --rm'
+  DOCKER_COMPOSE: docker-compose
+  DOCKER_RUN: "{{.DOCKER_COMPOSE}} run --rm"
+
+includes:
+  caddy: ./tasks/caddy.yml
+  database:
+    taskfile: ./tasks/database.yml
+    aliases: [db]
+  docker:
+    taskfile: ./tasks/docker.yml
+    aliases: [dc]
+  php: ./tasks/php.yml
+  react: ./tasks/react.yml
+  tools:
+    taskfile: ./tasks/tools.yml
+
+dotenv: [.env]
+
+set: [pipefail]
+output: prefixed
 
 tasks:
+  default:
+    cmds:
+      - echo "Enter 'task --list' to see all available tasks"
+    silent: true
+
   install:
     desc: Initialize the complete stack
     cmds:
-      - task: init-env
-      - task: init-database
-      - task: init-php
-      - task: init-react
-      - task: init-caddy
+      - task: tools:env
+      - task: database:init
+      - task: php:init
+      - task: react:init
+      - task: caddy:init
       - echo "✨ Installation complete! ✨"
-    silent: true
-
-  init-database:
-    desc: Initialize Database container
-    cmds:
-      - task: build-database
-      - task: up-database
-    silent: true
-
-
-  build-database:
-    desc: Build Database container
-    cmds:
-      - '{{.DOCKER_COMPOSE}} build --no-cache database'
-    silent: true
-
-  up-database:
-    desc: Start Database container
-    cmds:
-      - '{{.DOCKER_COMPOSE}} up -d database'
-    silent: true
-
-  init-caddy:
-    desc: Initialize Caddy container
-    cmds:
-      - task: build-caddy
-      - task: up-caddy
-    silent: true
-
-  build-caddy:
-    desc: Build Caddy container
-    cmds:
-      - '{{.DOCKER_COMPOSE}} build --no-cache caddy'
-    silent: true
-
-  up-caddy:
-    desc: Start Caddy container
-    cmds:
-      - '{{.DOCKER_COMPOSE}} up -d caddy'
-    silent: true
-
-  init-react:
-    desc: Initialize React container
-    cmds:
-      - task: build-react
-      - task: pnpm-install
-      - task: up-react
-    silent: true
-
-  build-react:
-    desc: Build React container
-    cmds:
-      - '{{.DOCKER_COMPOSE}} build --no-cache react'
-    silent: true
-
-  up-react:
-    desc: Start React container
-    cmds:
-      - '{{.DOCKER_COMPOSE}} up -d react'
-    silent: true
-
-  pnpm-install:
-    desc: Install pnpm dependencies in React container
-    cmds:
-      - '{{.DOCKER_RUN}} react pnpm install'
-    silent: true
-
-  clean-react:
-    desc: Clean React container
-    cmds:
-      - '{{.DOCKER_RUN}} react rm -rf node_modules'
-      - '{{.DOCKER_RUN}} react rm -rf .pnpm-store'
-      - '{{.DOCKER_RUN}} react rm -rf dist'
-    silent: true
-
-  init-php:
-    desc: Initialize PHP container
-    cmds:
-      - task: build-php
-      - task: composer-install
-      - task: up-php
-    silent: true
-
-  build-php:
-    desc: Build PHP container
-    cmds:
-      - '{{.DOCKER_COMPOSE}} build --no-cache php'
-    silent: true
-
-  up-php:
-    desc: Start PHP container
-    cmds:
-      - '{{.DOCKER_COMPOSE}} up -d php'
-    silent: true
-
-  composer-install:
-    desc: Install Composer dependencies in PHP container
-    cmds:
-      - '{{.DOCKER_RUN}} php composer install'
-    silent: true
-
-  clean-php:
-    desc: Clean PHP container
-    cmds:
-      - '{{.DOCKER_RUN}} php rm -rf vendor/'
-      - '{{.DOCKER_RUN}} php rm -rf var/cache/*'
-    silent: true
-
-  clean-stack:
-    desc: Clean all containers
-    deps: [clean-react, clean-php]
-    silent: true
-
-  down:
-    desc: Stop and remove all containers
-    cmds:
-      - '{{.DOCKER_COMPOSE}} down --remove-orphans --volumes'
-    silent: true
-
-  logs:
-    desc: Show logs from all containers
-    cmds:
-      - '{{.DOCKER_COMPOSE}} logs -f'
-    silent: true
-
-  logs-database:
-    desc: Show Database container logs
-    cmds:
-      - '{{.DOCKER_COMPOSE}} logs -f database'
-    silent: true
-
-  logs-php:
-    desc: Show PHP container logs
-    cmds:
-      - '{{.DOCKER_COMPOSE}} logs -f php'
-    silent: true
-    
-  logs-react:
-    desc: Show React container logs
-    cmds:
-      - '{{.DOCKER_COMPOSE}} logs -f react'
-    silent: true
-
-  logs-caddy:
-    desc: Show Caddy container logs
-    cmds:
-      - '{{.DOCKER_COMPOSE}} logs -f caddy'
-    silent: true
-
-  rebuild:
-    desc: Rebuild and restart containers without cleaning
-    cmds:
-      - '{{.DOCKER_COMPOSE}} build'
-      - '{{.DOCKER_COMPOSE}} up -d'
-    silent: true
-
-  restart:
-    desc: Restart all containers
-    cmds:
-      - task: down
-      - '{{.DOCKER_COMPOSE}} up -d'
-    silent: true
-
-  prune:
-    desc: Clean up unused Docker resources
-    cmds:
-      - docker system prune -f
-    silent: true
-
-  ps:
-    desc: Show running containers
-    cmds:
-      - '{{.DOCKER_COMPOSE}} ps'
-    silent: true
-
-  shell-php:
-    desc: Open a shell in the PHP container
-    cmds:
-      - '{{.DOCKER_RUN}} php sh'
-    silent: true
-
-  shell-react:
-    desc: Open a shell in the React container
-    cmds:
-      - '{{.DOCKER_RUN}} react sh'
-    silent: true
-
-  hard-reset:
-    desc: Hard reset the stack
-    cmds:
-      - task: clean-stack
-      - task: down
-      - task: prune
-    silent: true
-
-  init-env:
-    desc: Initialize environment files
-    cmds:
-      - |
-        if [ ! -f .env ]; then
-          cp .env.example .env
-          SECRET=$(openssl rand -hex 16)
-          if [ "$OSTYPE" = "darwin"* ]; then
-            sed -i '' "s/^APP_SECRET=$/APP_SECRET=$SECRET/" .env
-          else
-            sed -i "s/^APP_SECRET=$/APP_SECRET=$SECRET/" .env
-          fi
-          echo "Created .env file from .env.example with new APP_SECRET"
-        else
-          echo ".env file already exists"
-        fi
-    silent: true
-
-  composer-require:
-    desc: Add a Composer package
-    interactive: true
-    cmds:
-      - |
-        read -p "Enter the package name to add: " package
-        if [ -z "$package" ]; then
-          echo "Package name cannot be empty"
-          exit 1
-        fi
-        {{.DOCKER_RUN}} php composer require "$package"
-        echo "Package '$package' added successfully"
-        {{.DOCKER_RUN}} php composer update
-    silent: true
-
-  pnpm-add:
-    desc: Add a pnpm package
-    interactive: true
-    cmds:
-      - |
-        read -p "Enter the package name to add: " package
-        if [ -z "$package" ]; then
-          echo "Package name cannot be empty"
-          exit 1
-        fi
-        {{.DOCKER_RUN}} react pnpm add "$package"
-        echo "Package '$package' added successfully"
     silent: true

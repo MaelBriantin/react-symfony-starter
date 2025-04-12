@@ -1,0 +1,22 @@
+  version: '3'
+
+  tasks:
+    install:
+      desc: Install pnpm dependencies in React container
+      cmds:
+        - "{{.DOCKER_RUN}} react pnpm install"
+      silent: true
+
+    add:
+      desc: Add a pnpm package
+      interactive: true
+      cmds:
+        - |
+          read -p "Enter the package name to add: " package
+          if [ -z "$package" ]; then
+            echo "Package name cannot be empty"
+            exit 1
+          fi
+          {{.DOCKER_RUN}} react pnpm add "$package"
+          echo "Package '$package' added successfully"
+      silent: true

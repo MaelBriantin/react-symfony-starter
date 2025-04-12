@@ -1,0 +1,21 @@
+version: '3'
+
+tasks:
+  init:
+    desc: Initialize Caddy container
+    cmds:
+      - task: build
+      - task: up
+    silent: true
+
+  build:
+    desc: Build Caddy container
+    cmds:
+      - '{{.DOCKER_COMPOSE}} build --no-cache caddy'
+    silent: true
+
+  up:
+    desc: Start Caddy container
+    cmds:
+      - '{{.DOCKER_COMPOSE}} up -d caddy'
+    silent: true

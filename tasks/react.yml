@@ -1,0 +1,47 @@
+version: "3"
+
+includes:
+  pnpm: ./pnpm.yml
+
+tasks:
+  init:
+    desc: Initialize React container
+    cmds:
+      - task: build
+      - task: pnpm:install
+      - task: up
+    silent: true
+
+  build:
+    desc: Build React container
+    cmds:
+      - "{{.DOCKER_COMPOSE}} build --no-cache react"
+    silent: true
+
+  up:
+    desc: Start React container
+    cmds:
+      - "{{.DOCKER_COMPOSE}} up -d react"
+    silent: true
+
+  clean:
+    desc: Clean React container
+    cmds:
+      - "{{.DOCKER_RUN}} react rm -rf node_modules"
+      - "{{.DOCKER_RUN}} react rm -rf .pnpm-store"
+      - "{{.DOCKER_RUN}} react rm -rf dist"
+    silent: true
+
+  shell:
+    desc: Open a shell in the React container
+    cmds:
+      - echo "React shell started. Press Ctrl+D to exit."
+      - "{{.DOCKER_RUN}} react sh"
+      - echo "React shell stopped"
+    silent: true
+
+  logs:
+    desc: Show React container logs
+    cmds:
+      - "{{.DOCKER_COMPOSE}} logs -f react"
+    silent: true
