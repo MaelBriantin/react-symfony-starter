@@ -11,8 +11,8 @@ help: ## Show this help message
 	@printf "Targets:\n"
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  %s%-15s%s %s\n", "$(BLUE)", $$1, "$(RESET)", $$2}' $(MAKEFILE_LIST)
 
-.PHONY: setup
-setup: init-env init-react init-database init-php init-caddy ## Initialize the complete stack
+.PHONY: install
+install: init-env init-react init-database init-php init-caddy ## Initialize the complete stack
 
 .PHONY: init-database
 init-database: build-database up-database ## Initialize Database container
@@ -159,3 +159,13 @@ composer-require: ## Add a Composer package
 	$(DOCKER_RUN) php composer require "$$package"; \
 	echo "Package '$$package' added successfully"; \
 	$(DOCKER_RUN) php composer update; \
+
+.PHONY: pnpm-add
+pnpm-add: ## Add a pnpm package
+	@read -p "Enter the package name to add: " package; \
+	if [ -z "$$package" ]; then \
+		echo "Package name cannot be empty"; \
+		exit 1; \
+	fi; \
+	$(DOCKER_RUN) react pnpm add "$$package"; \
+	echo "Package '$$package' added successfully"; \

@@ -1,10 +1,12 @@
-localhost {
-    handle_path /* {
-        reverse_proxy react:5173
-    }
+{$FRONTEND_URL} {
+    log
+    tls internal
+    reverse_proxy react:5173
 }
 
-localhost:8000 {
+{$BACKEND_URL} {
+    log
+    tls internal
     root * /app/public
     encode gzip
     php_fastcgi php:9000

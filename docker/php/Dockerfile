@@ -1,18 +1,18 @@
 # ----- Stage 1: Composer -----
-FROM composer:2.8.3 AS composer
+FROM composer:2.8.8 AS composer
 
 # ----- Stage 2: Builder stage for PHP extensions compilation -----
 FROM php:8.4-fpm-alpine AS builder
 
+ARG UID=1000
+ARG GID=1000
+
 WORKDIR /app
 
-# NOTE: User 'user' (UID 1000) and group 'user' (GID 1000) already exist in this image
-# Created a new one with the same UID/GID resulting in an error
-# Created a new one with different UID/GID resulting in impossible to run
-# the composer install command at the end of the instaallation
+# Create user 'user' (UID 1000) and group 'user' (GID 1000)
+RUN addgroup -g $GID user && \
+    adduser -u $UID -D -G user user
 
-# Install system dependencies for compilation (as root)
-USER root
 RUN apk add --no-cache \
     bash \
     curl \
@@ -40,11 +40,15 @@ RUN docker-php-ext-install \
 # ----- Stage 3: Final base image -----
 FROM php:8.4-fpm-alpine AS base
 
+ARG UID=1000
+ARG GID=1000
+
 WORKDIR /app
 
-# Ensure 'user' can write to /app in case it's not mounted
-# and install runtime packages (as root)
-USER root
+# Create user 'user' (UID 1000) and group 'user' (GID 1000)
+RUN addgroup -g $GID user && \
+    adduser -u $UID -D -G user user
+
 RUN mkdir -p /app && \
     apk add --no-cache \
         curl \
@@ -61,8 +65,6 @@ COPY --from=builder --chown=user:user /usr/local/etc/php/conf.d /usr/local/etc/p
 COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 RUN chmod +x /usr/local/bin/composer
 
-# Switch back to the EXISTING non-root 'user' for execution
-# This user has UID/GID 1000, matching your host
 USER user
 
 # ----- Stage 4: Development image -----

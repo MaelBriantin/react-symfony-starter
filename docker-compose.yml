@@ -30,11 +30,11 @@ services:
     container_name: caddy
     env_file: .env
     environment:
-      - API_URL=${API_URL:-localhost:8000}
+      - BACKEND_URL=${BACKEND_URL:-api.localhost}
       - FRONTEND_URL=${FRONTEND_URL:-localhost}
     ports:
       - "443:443"
-      - "8000:8000"
+      - "80:80"
     volumes:
       - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
       - ./app/php:/app
@@ -45,7 +45,7 @@ services:
       - app-network
 
   database:
-    image: mysql:8.0
+    image: mysql:8.4
     restart: unless-stopped
     container_name: database
     env_file: .env
