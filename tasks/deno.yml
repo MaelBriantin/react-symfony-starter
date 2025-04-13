@@ -1,0 +1,72 @@
+version: "3"
+
+vars:
+  SERVICE: deno
+
+tasks:
+  add:
+    desc: Add a new Deno dependency
+    cmds:
+      - "{{.DOCKER_RUN}} {{.SERVICE}} deno add {{.CLI_ARGS}}"
+    silent: true
+
+  remove:
+    desc: Remove a Deno dependency
+    cmds:
+      - "{{.DOCKER_RUN}} {{.SERVICE}} deno remove {{.CLI_ARGS}}"
+    silent: true
+
+  install:
+    desc: Install deno dependencies
+    dir: app/client
+    cmds:
+      - "{{.DOCKER_RUN}} {{.SERVICE}} deno install"
+    silent: true
+
+  init:
+    desc: Initialize Deno container
+    cmds:
+      - task: build
+      - task: install
+      - task: up
+    silent: true
+
+  build:
+    desc: Build Deno container
+    cmds:
+      - "{{.DOCKER_COMPOSE}} build --no-cache {{.SERVICE}}"
+    silent: true
+
+  up:
+    desc: Start Deno container
+    cmds:
+      - "{{.DOCKER_COMPOSE}} up -d {{.SERVICE}}"
+    silent: true
+
+  lint:
+    desc: Lint with 'deno lint' command
+    cmds:
+      - "{{.DOCKER_RUN}} {{.SERVICE}} deno lint {{.CLI_ARGS}}"
+    silent: true
+
+  format:
+    aliases:
+      - fmt
+    desc: Format with 'deno fmt' command
+    cmds:
+      - "{{.DOCKER_RUN}} {{.SERVICE}} deno fmt"
+    silent: true
+
+  clean-dependencies:
+    desc: Clean Deno container
+    cmds:
+      - "{{.DOCKER_COMPOSE}} down --remove-orphans"
+      - "{{.DOCKER_RUN}} {{.SERVICE}} rm -rf node_modules"
+      - "{{.DOCKER_RUN}} {{.SERVICE}} rm -rf .vite"
+    silent: true
+
+  logs:
+    desc: Show logs for Deno container
+    cmds:
+      - "{{.DOCKER_COMPOSE}} logs -f {{.SERVICE}}"
+    silent: true

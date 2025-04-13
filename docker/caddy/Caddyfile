@@ -1,10 +1,10 @@
-{$FRONTEND_URL} {
+{$CLIENT_URL} {
     log
     tls internal
-    reverse_proxy react:5173
+    reverse_proxy deno:5173
 }
 
-{$BACKEND_URL} {
+{$API_URL} {
     log
     tls internal
     root * /app/public

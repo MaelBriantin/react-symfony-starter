@@ -32,7 +32,7 @@ help: ## Show this help message
 
 
 .PHONY: install
-install: init-env init-database init-php init-react init-caddy ## Initialize the complete stack
+install: init-env init-mysql init-php init-deno init-caddy ## Initialize the complete stack
 
 .PHONY: init-env
 init-env: ## Initialize environment files from example
@@ -49,22 +49,22 @@ init-env: ## Initialize environment files from example
 		echo ".env file already exists"; \
 	fi
 
-# --- Database Service ---
+# --- mysql Service ---
 
-.PHONY: init-database
-init-database: build-database up-database ## Initialize Database container (build, up)
+.PHONY: init-mysql
+init-mysql: build-mysql up-mysql ## Initialize mysql container (build, up)
 
-.PHONY: build-database
-build-database: ## Build Database container
-	$(DOCKER_COMPOSE) build --no-cache database
+.PHONY: build-mysql
+build-mysql: ## Build mysql container
+	$(DOCKER_COMPOSE) build --no-cache mysql
 
-.PHONY: up-database
-up-database: ## Start Database container in detached mode
-	$(DOCKER_COMPOSE) up -d database
+.PHONY: up-mysql
+up-mysql: ## Start mysql container in detached mode
+	$(DOCKER_COMPOSE) up -d mysql
 
-.PHONY: logs-database
-logs-database: ## Show Database container logs
-	$(DOCKER_COMPOSE) logs -f database
+.PHONY: logs-mysql
+logs-mysql: ## Show mysql container logs
+	$(DOCKER_COMPOSE) logs -f mysql
 
 # --- PHP Service ---
 
@@ -107,46 +107,46 @@ logs-php: ## Show PHP container logs
 shell-php: ## Open a shell in the PHP container
 	$(DOCKER_RUN) php sh
 
-# --- React Service ---
+# --- Deno Service ---
 
-.PHONY: init-react
-init-react: build-react pnpm-install up-react ## Initialize React container (build, install deps, up)
+.PHONY: init-deno
+init-deno: build-deno deno-install up-deno ## Initialize Deno container (build, install deps, up)
 
-.PHONY: build-react
-build-react: ## Build React container
-	$(DOCKER_COMPOSE) build --no-cache react
+.PHONY: build-deno
+build-deno: ## Build React container
+	$(DOCKER_COMPOSE) build --no-cache deno
 
-.PHONY: up-react
-up-react: ## Start React container in detached mode
-	$(DOCKER_COMPOSE) up -d react
+.PHONY: up-deno
+up-deno: ## Start React container in detached mode
+	$(DOCKER_COMPOSE) up -d deno
 
-.PHONY: pnpm-install
-pnpm-install: ## Install pnpm dependencies in React container
-	$(DOCKER_RUN) react pnpm install
+.PHONY: deno-install
+deno-install: ## Install deno dependencies in React container
+	$(DOCKER_RUN) deno deno cache --node-modules-dir=auto src/main.ts
 
-.PHONY: pnpm-add
-pnpm-add: ## Add a pnpm package
+.PHONY: deno-add
+deno-add: ## Add a deno package
 	@read -p "Enter the package name to add: " package; \
 	if [ -z "$$package" ]; then \
 		echo "Package name cannot be empty"; \
 		exit 1; \
 	fi; \
-	$(DOCKER_RUN) react pnpm add "$$package"; \
+	$(DOCKER_RUN) deno deno add "$$package"; \
 	echo "Package '$$package' added successfully";
 
-.PHONY: clean-react
-clean-react: ## Clean React container (node_modules, pnpm-store, dist)
-	$(DOCKER_RUN) react rm -rf node_modules
-	$(DOCKER_RUN) react rm -rf .pnpm-store
-	$(DOCKER_RUN) react rm -rf dist
+.PHONY: clean-deno
+clean-deno: ## Clean React container (node_modules, deno-store, dist)
+	$(DOCKER_RUN) deno rm -rf node_modules
+	$(DOCKER_RUN) deno rm -rf .deno-store
+	$(DOCKER_RUN) deno rm -rf dist
 
-.PHONY: logs-react
-logs-react: ## Show React container logs
-	$(DOCKER_COMPOSE) logs -f react
+.PHONY: logs-deno
+logs-deno: ## Show React container logs
+	$(DOCKER_COMPOSE) logs -f deno
 
-.PHONY: shell-react
-shell-react: ## Open a shell in the React container
-	$(DOCKER_RUN) react sh
+.PHONY: shell-deno
+shell-deno: ## Open a shell in the React container
+	$(DOCKER_RUN) deno sh
 
 # --- Caddy Service ---
 
@@ -188,7 +188,7 @@ restart: ## Restart all containers (down + up)
 # --- Cleaning & Reset ---
 
 .PHONY: clean-stack
-clean-stack: clean-react clean-php ## Clean generated files in PHP and React containers
+clean-stack: clean-deno clean-php ## Clean generated files in PHP and React containers
 
 .PHONY: down
 down: ## Stop and remove all containers, networks, and volumes
@@ -201,4 +201,4 @@ prune: ## Clean up unused Docker resources (images, networks, volumes)
 .PHONY: hard-reset
 hard-reset: clean-stack down prune install ## Hard reset: Clean, down, prune Docker, and reinstall stack
 	@echo "Hard reset completed. Stack cleaned, containers/volumes removed, Docker pruned."
-	@echo "Stack has been reinitialized. Run 'make up-database up-php up-react up-caddy' or relevant 'up-*' targets to start services."
+	@echo "Stack has been reinitialized. Run 'make up-mysql up-php up-deno up-caddy' or relevant 'up-*' targets to start services."

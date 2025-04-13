@@ -1,5 +1,8 @@
 version: "3"
 
+vars:
+  SERVICE: php
+
 includes:
   composer: ./composer.yml
 
@@ -15,32 +18,32 @@ tasks:
   build:
     desc: Build PHP container
     cmds:
-      - "{{.DOCKER_COMPOSE}} build --no-cache php"
+      - "{{.DOCKER_COMPOSE}} build --no-cache {{.SERVICE}}"
     silent: true
 
   up:
     desc: Start PHP container
     cmds:
-      - "{{.DOCKER_COMPOSE}} up -d php"
+      - "{{.DOCKER_COMPOSE}} up -d {{.SERVICE}}"
     silent: true
 
-  clean:
+  clean-dependencies:
     desc: Clean PHP container
     cmds:
-      - "{{.DOCKER_RUN}} php rm -rf vendor/"
-      - "{{.DOCKER_RUN}} php rm -rf var/cache/*"
+      - "{{.DOCKER_RUN}} {{.SERVICE}} rm -rf vendor/"
+      - "{{.DOCKER_RUN}} {{.SERVICE}} rm -rf var/cache/*"
     silent: true
 
   shell:
     desc: Open a shell in the PHP container
     cmds:
       - echo "PHP shell started. Press Ctrl+D to exit."
-      - "{{.DOCKER_RUN}} php sh"
+      - "{{.DOCKER_RUN}} {{.SERVICE}} sh"
       - echo "PHP shell stopped"
     silent: true
 
   logs:
     desc: Show PHP container logs
     cmds:
-      - "{{.DOCKER_COMPOSE}} logs -f php"
+      - "{{.DOCKER_COMPOSE}} logs -f {{.SERVICE}}"
     silent: true

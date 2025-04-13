@@ -6,14 +6,15 @@ vars:
 
 includes:
   caddy: ./tasks/caddy.yml
-  database:
-    taskfile: ./tasks/database.yml
-    aliases: [db]
+  mysql:
+    taskfile: ./tasks/mysql.yml
+    aliases: [db, database]
+  deno:
+    taskfile: ./tasks/deno.yml
   docker:
     taskfile: ./tasks/docker.yml
     aliases: [dc]
   php: ./tasks/php.yml
-  react: ./tasks/react.yml
   tools:
     taskfile: ./tasks/tools.yml
 
@@ -32,9 +33,9 @@ tasks:
     desc: Initialize the complete stack
     cmds:
       - task: tools:env
-      - task: database:init
+      - task: mysql:init
       - task: php:init
-      - task: react:init
+      - task: deno:init
       - task: caddy:init
       - echo "✨ Installation complete! ✨"
     silent: true

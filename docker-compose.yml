@@ -1,12 +1,12 @@
 services:
-  react:
-    container_name: react
+  deno:
+    container_name: deno
     env_file: .env
     build:
       context: .
-      dockerfile: docker/react/Dockerfile
+      dockerfile: docker/deno/Dockerfile
     volumes:
-      - ./app/react:/app
+      - ./app/client:/app
     networks:
       - app-network
 
@@ -18,9 +18,9 @@ services:
       dockerfile: docker/php/Dockerfile
       target: dev
     volumes:
-      - ./app/php:/app
+      - ./app/api:/app
     depends_on:
-      - database
+      - mysql
     networks:
       - app-network
       - database-network
@@ -30,24 +30,24 @@ services:
     container_name: caddy
     env_file: .env
     environment:
-      - BACKEND_URL=${BACKEND_URL:-api.localhost}
-      - FRONTEND_URL=${FRONTEND_URL:-localhost}
+      - API_URL=${API_URL:-api.localhost}
+      - CLIENT_URL=${CLIENT_URL:-localhost}
     ports:
       - "443:443"
       - "80:80"
     volumes:
       - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
-      - ./app/php:/app
+      - ./app/api:/app
     depends_on:
-      - react
+      - deno
       - php
     networks:
       - app-network
 
-  database:
+  mysql:
     image: mysql:8.4
     restart: unless-stopped
-    container_name: database
+    container_name: mysql
     env_file: .env
     command: --default-authentication-plugin=mysql_native_password
     environment:

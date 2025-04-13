@@ -1,6 +1,9 @@
 # Dependencies
+app/client/node_modules
+app/client/.vite
+app/client/dist
+.vite
 node_modules
-.pnpm-store
 
 # Build
 dist
