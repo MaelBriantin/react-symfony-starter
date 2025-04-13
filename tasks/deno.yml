@@ -2,8 +2,15 @@ version: "3"
 
 vars:
   SERVICE: deno
+  ENTRYPOINT: src/main.ts
 
 tasks:
+  default:
+    desc: Run the 'deno:init' task
+    cmds:
+      - task: init
+    silent: true
+
   add:
     desc: Add a new Deno dependency
     cmds:
@@ -17,10 +24,19 @@ tasks:
     silent: true
 
   install:
-    desc: Install deno dependencies
-    dir: app/client
+    desc: Install npm dependencies into node_modules and cache Deno modules
     cmds:
-      - "{{.DOCKER_RUN}} {{.SERVICE}} deno install"
+      - >
+        {{.DOCKER_RUN}} {{.SERVICE}} 
+        deno cache 
+        --node-modules-dir=auto 
+        {{.ENTRYPOINT}}
+    silent: true
+
+  dev:
+    desc: Run development server
+    cmds:
+      - "{{.DOCKER_RUN}} -p 5173:5173 {{.SERVICE}} deno task dev --host" # Mappe le port explicitement ici aussi
     silent: true
 
   init:

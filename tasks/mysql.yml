@@ -4,6 +4,12 @@ vars:
   SERVICE: mysql
 
 tasks:
+  default:
+    desc: Run the 'mysql:init' task
+    cmds:
+      - task: init
+    silent: true
+
   init:
     desc: Initialize Database container
     cmds:

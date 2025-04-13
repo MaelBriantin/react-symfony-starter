@@ -1,6 +1,12 @@
 version: '3'
 
 tasks:
+  default:
+    desc: Run the 'mysql:init' task
+    cmds:
+      - task: init
+    silent: true
+
   init:
     desc: Initialize Caddy container
     cmds:

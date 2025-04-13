@@ -11,10 +11,13 @@ includes:
     aliases: [db, database]
   deno:
     taskfile: ./tasks/deno.yml
+    aliases: [client, react]
   docker:
     taskfile: ./tasks/docker.yml
     aliases: [dc]
-  php: ./tasks/php.yml
+  php: 
+    taskfile: ./tasks/php.yml
+    aliases: [api, symfony]
   tools:
     taskfile: ./tasks/tools.yml
 
@@ -33,9 +36,9 @@ tasks:
     desc: Initialize the complete stack
     cmds:
       - task: tools:env
-      - task: mysql:init
-      - task: php:init
-      - task: deno:init
-      - task: caddy:init
+      - task: mysql
+      - task: php
+      - task: deno
+      - task: caddy
       - echo "✨ Installation complete! ✨"
     silent: true

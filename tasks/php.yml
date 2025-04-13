@@ -7,6 +7,12 @@ includes:
   composer: ./composer.yml
 
 tasks:
+  default:
+    desc: Run the 'php:init' task
+    cmds:
+      - task: init
+    silent: true
+
   init:
     desc: Initialize PHP container
     cmds:

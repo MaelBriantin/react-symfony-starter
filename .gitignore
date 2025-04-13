@@ -1,10 +1,3 @@
-# Dependencies
-app/client/node_modules
-app/client/.vite
-app/client/dist
-.vite
-node_modules
-
 # Build
 dist
 build
@@ -16,22 +9,18 @@ build
 
 # Logs
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
 
 # Editor directories and files
 .idea
-.vscode/*
+.vscode
 !.vscode/extensions.json
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
 
 # PHP / Symfony
-/app/php/var/
-/app/php/vendor/
+app/api/var/
+app/api/vendor/
 .phpunit.result.cache
+
+# Deno / React
+app/client/node_modules
+app/client/.vite
+app/client/dist

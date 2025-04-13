@@ -8,7 +8,7 @@ services:
     volumes:
       - ./app/client:/app
     networks:
-      - app-network
+      - app-network    
 
   php:
     container_name: php
@@ -19,11 +19,15 @@ services:
       target: dev
     volumes:
       - ./app/api:/app
+      - ./.env:/app/.env:ro
     depends_on:
       - mysql
     networks:
       - app-network
       - database-network
+    dns:
+      - 1.1.1.1
+      - 1.0.0.1
 
   caddy:
     image: caddy:2-alpine
