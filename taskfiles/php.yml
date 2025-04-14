@@ -53,3 +53,9 @@ tasks:
     cmds:
       - "{{.DOCKER_COMPOSE}} logs -f {{.SERVICE}}"
     silent: true
+
+  console:
+    desc: Run Symfony console command
+    cmds:
+      - "{{.DOCKER_COMPOSE}} exec {{.SERVICE}} php bin/console {{.CLI_ARGS}}"
+    silent: true
