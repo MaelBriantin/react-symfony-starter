@@ -19,5 +19,4 @@ tasks:
         fi
         {{.DOCKER_RUN}} php composer require "$package"
         echo "Package '$package' added successfully"
-        {{.DOCKER_RUN}} php composer update
     silent: true

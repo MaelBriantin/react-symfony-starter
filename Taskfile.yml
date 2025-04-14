@@ -5,21 +5,20 @@ vars:
   DOCKER_RUN: "{{.DOCKER_COMPOSE}} run --rm"
 
 includes:
-  caddy: ./tasks/caddy.yml
-  mysql:
-    taskfile: ./tasks/mysql.yml
-    aliases: [db, database]
+  caddy: ./taskfiles/caddy.yml
   deno:
-    taskfile: ./tasks/deno.yml
+    taskfile: ./taskfiles/deno.yml
     aliases: [client, react]
-  docker:
-    taskfile: ./tasks/docker.yml
-    aliases: [dc]
+  dev: ./taskfiles/dev.yml
+  docker: ./taskfiles/docker.yml
+  env:
+    taskfile: ./taskfiles/env.yml
+  mysql:
+    taskfile: ./taskfiles/mysql.yml
+    aliases: [db, database]
   php: 
-    taskfile: ./tasks/php.yml
+    taskfile: ./taskfiles/php.yml
     aliases: [api, symfony]
-  tools:
-    taskfile: ./tasks/tools.yml
 
 dotenv: [.env]
 
@@ -30,15 +29,4 @@ tasks:
   default:
     cmds:
       - echo "Enter 'task --list' to see all available tasks"
-    silent: true
-
-  install:
-    desc: Initialize the complete stack
-    cmds:
-      - task: tools:env
-      - task: mysql
-      - task: php
-      - task: deno
-      - task: caddy
-      - echo "✨ Installation complete! ✨"
     silent: true
