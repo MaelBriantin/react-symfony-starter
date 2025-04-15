@@ -1,7 +1,7 @@
 version: "3"
 
 vars:
-  DOCKER_COMPOSE: docker-compose
+  DOCKER_COMPOSE: docker compose
   DOCKER_RUN: "{{.DOCKER_COMPOSE}} run --rm"
 
 includes:
@@ -16,7 +16,7 @@ includes:
   mysql:
     taskfile: ./taskfiles/mysql.yml
     aliases: [db, database]
-  php: 
+  php:
     taskfile: ./taskfiles/php.yml
     aliases: [api, symfony]
 

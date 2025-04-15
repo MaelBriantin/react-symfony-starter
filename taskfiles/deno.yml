@@ -2,7 +2,7 @@ version: "3"
 
 vars:
   SERVICE: deno
-  ENTRYPOINT: src/main.ts
+  ENTRYPOINT: src/main.tsx
 
 tasks:
   default:
@@ -43,8 +43,8 @@ tasks:
     desc: Initialize Deno container
     cmds:
       - task: build
-      - task: install
       - task: up
+      - task: install
     silent: true
 
   build:
