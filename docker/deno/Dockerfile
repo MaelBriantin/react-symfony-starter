@@ -1,4 +1,4 @@
-FROM denoland/deno:2.2.9 AS base
+FROM denoland/deno:2.2.10 AS base
 
 ARG UID=1000
 ARG GID=1000

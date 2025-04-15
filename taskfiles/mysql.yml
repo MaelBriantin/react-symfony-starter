@@ -1,8 +1,5 @@
 version: "3"
 
-vars:
-  SERVICE: mysql
-
 tasks:
   default:
     desc: Run the 'mysql:init' task
@@ -20,17 +17,17 @@ tasks:
   build:
     desc: Build Database container
     cmds:
-      - "{{.DOCKER_COMPOSE}} build --no-cache {{.SERVICE}}"
+      - "{{.DOCKER_COMPOSE}} build --no-cache mysql"
     silent: true
 
   up:
     desc: Start Database container
     cmds:
-      - "{{.DOCKER_COMPOSE}} up -d {{.SERVICE}}"
+      - "{{.DOCKER_COMPOSE}} up -d mysql"
     silent: true
 
   logs:
     desc: Show Database container logs
     cmds:
-      - "{{.DOCKER_COMPOSE}} logs -f {{.SERVICE}}"
+      - "{{.DOCKER_COMPOSE}} logs -f mysql"
     silent: true

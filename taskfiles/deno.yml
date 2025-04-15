@@ -1,7 +1,6 @@
 version: "3"
 
 vars:
-  SERVICE: deno
   ENTRYPOINT: src/main.tsx
 
 tasks:
@@ -14,21 +13,21 @@ tasks:
   add:
     desc: Add a new Deno dependency
     cmds:
-      - "{{.DOCKER_RUN}} {{.SERVICE}} deno add {{.CLI_ARGS}}"
+      - "{{.DOCKER_RUN}} deno deno add {{.CLI_ARGS}}"
     silent: true
 
   remove:
     desc: Remove a Deno dependency
     cmds:
-      - "{{.DOCKER_RUN}} {{.SERVICE}} deno remove {{.CLI_ARGS}}"
+      - "{{.DOCKER_RUN}} deno deno remove {{.CLI_ARGS}}"
     silent: true
 
   install:
     desc: Install npm dependencies into node_modules and cache Deno modules
     cmds:
       - >
-        {{.DOCKER_RUN}} {{.SERVICE}} 
-        deno cache 
+        {{.DOCKER_RUN}} deno 
+        deno cache
         --node-modules-dir=auto 
         {{.ENTRYPOINT}}
     silent: true
@@ -36,33 +35,33 @@ tasks:
   dev:
     desc: Run development server
     cmds:
-      - "{{.DOCKER_RUN}} -p 5173:5173 {{.SERVICE}} deno task dev --host" # Mappe le port explicitement ici aussi
+      - "{{.DOCKER_RUN}} -p 5173:5173 deno deno task dev --host"
     silent: true
 
   init:
     desc: Initialize Deno container
     cmds:
       - task: build
-      - task: up
       - task: install
+      - task: up
     silent: true
 
   build:
     desc: Build Deno container
     cmds:
-      - "{{.DOCKER_COMPOSE}} build --no-cache {{.SERVICE}}"
+      - "{{.DOCKER_COMPOSE}} build --no-cache deno"
     silent: true
 
   up:
     desc: Start Deno container
     cmds:
-      - "{{.DOCKER_COMPOSE}} up -d {{.SERVICE}}"
+      - "{{.DOCKER_COMPOSE}} up -d deno"
     silent: true
 
   lint:
     desc: Lint with 'deno lint' command
     cmds:
-      - "{{.DOCKER_RUN}} {{.SERVICE}} deno lint {{.CLI_ARGS}}"
+      - "{{.DOCKER_RUN}} deno deno lint {{.CLI_ARGS}}"
     silent: true
 
   format:
@@ -70,19 +69,19 @@ tasks:
       - fmt
     desc: Format with 'deno fmt' command
     cmds:
-      - "{{.DOCKER_RUN}} {{.SERVICE}} deno fmt"
+      - "{{.DOCKER_RUN}} deno deno fmt"
     silent: true
 
   clean-dependencies:
     desc: Clean Deno container
     cmds:
       - "{{.DOCKER_COMPOSE}} down --remove-orphans"
-      - "{{.DOCKER_RUN}} {{.SERVICE}} rm -rf node_modules"
-      - "{{.DOCKER_RUN}} {{.SERVICE}} rm -rf .vite"
+      - "{{.DOCKER_RUN}} deno rm -rf node_modules"
+      - "{{.DOCKER_RUN}} deno rm -rf .vite"
     silent: true
 
   logs:
     desc: Show logs for Deno container
     cmds:
-      - "{{.DOCKER_COMPOSE}} logs -f {{.SERVICE}}"
+      - "{{.DOCKER_COMPOSE}} logs -f deno"
     silent: true

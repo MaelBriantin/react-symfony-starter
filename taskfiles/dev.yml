@@ -19,4 +19,5 @@ tasks:
       - task: deno
       - task: caddy
       - echo "✨ Installation complete! ✨"
+      - echo "🚀 You can start shipping your code! 🚀"
     silent: true
