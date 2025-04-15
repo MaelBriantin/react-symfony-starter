@@ -40,7 +40,7 @@ services:
       - "443:443"
       - "80:80"
     volumes:
-      - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./config/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
       - ./app/api:/app
     depends_on:
       - deno

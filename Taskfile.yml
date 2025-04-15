@@ -1,26 +1,28 @@
 version: "3"
 
+dotenv: ['.env']
+
 vars:
   DOCKER_COMPOSE: docker compose
   DOCKER_RUN: "{{.DOCKER_COMPOSE}} run --rm"
+  CLIENT_URL: $CLIENT_URL
+  API_URL: $API_URL
 
 includes:
-  caddy: ./taskfiles/caddy.yml
+  caddy: ./config/taskfiles/caddy.yml
   deno:
-    taskfile: ./taskfiles/deno.yml
+    taskfile: ./config/taskfiles/deno.yml
     aliases: [client, react]
-  dev: ./taskfiles/dev.yml
-  docker: ./taskfiles/docker.yml
+  dev: ./config/taskfiles/dev.yml
+  docker: ./config/taskfiles/docker.yml
   env:
-    taskfile: ./taskfiles/env.yml
+    taskfile: ./config/taskfiles/env.yml
   mysql:
-    taskfile: ./taskfiles/mysql.yml
+    taskfile: ./config/taskfiles/mysql.yml
     aliases: [db, database]
   php:
-    taskfile: ./taskfiles/php.yml
+    taskfile: ./config/taskfiles/php.yml
     aliases: [api, symfony]
-
-dotenv: [.env]
 
 set: [pipefail]
 output: prefixed
@@ -28,5 +30,7 @@ output: prefixed
 tasks:
   default:
     cmds:
-      - echo "Enter 'task --list' to see all available tasks"
+      - |
+        echo "This command is not the command you are looking for.
+        Type 'task --list' or 'task -l' to see all available tasks."
     silent: true
