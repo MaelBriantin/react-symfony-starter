@@ -52,7 +52,7 @@ tasks:
     silent: true
 
   console:
-    desc: Run Symfony console command
+    desc: Run Symfony console command (task php:console -- <command>)
     cmds:
       - "{{.DOCKER_COMPOSE}} exec php php bin/console {{.CLI_ARGS}}"
     silent: true

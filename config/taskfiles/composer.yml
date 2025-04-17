@@ -8,15 +8,15 @@ tasks:
     silent: true
 
   require:
-    desc: Add a Composer package
-    interactive: true
+    desc: Add a Composer package (task composer:require -- <package>)
     cmds:
       - |
-        read -p "Enter the package name to add: " package
-        if [ -z "$package" ]; then
-          echo "Package name cannot be empty"
-          exit 1
-        fi
-        {{.DOCKER_RUN}} php composer require "$package"
-        echo "Package '$package' added successfully"
+        {{.DOCKER_RUN}} php composer require "{{.CLI_ARGS}}"
+    silent: true
+
+  require:dev:
+    desc: Add a Composer development package (task composer:require-dev -- <package>)
+    cmds:
+      - |
+        {{.DOCKER_RUN}} php composer require --dev "{{.CLI_ARGS}}"
     silent: true

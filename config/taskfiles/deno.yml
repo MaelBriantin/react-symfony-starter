@@ -11,13 +11,13 @@ tasks:
     silent: true
 
   add:
-    desc: Add a new Deno dependency
+    desc: Add a new Deno dependency (task deno:add -- <package>)
     cmds:
       - "{{.DOCKER_RUN}} deno deno add {{.CLI_ARGS}}"
     silent: true
 
   remove:
-    desc: Remove a Deno dependency
+    desc: Remove a Deno dependency (task deno:remove -- <package>)
     cmds:
       - "{{.DOCKER_RUN}} deno deno remove {{.CLI_ARGS}}"
     silent: true
@@ -84,4 +84,10 @@ tasks:
     desc: Show logs for Deno container
     cmds:
       - "{{.DOCKER_COMPOSE}} logs -f deno"
+    silent: true
+
+  shell:
+    desc: Open a shell in the Deno container
+    cmds:
+      - "{{.DOCKER_RUN}} deno sh"
     silent: true

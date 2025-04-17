@@ -49,3 +49,15 @@ tasks:
       - '{{.DOCKER_COMPOSE}} up -d'
     silent: true
 
+  start:
+    desc: Start all containers
+    cmds:
+      - '{{.DOCKER_COMPOSE}} start'
+    silent: true
+
+  stop:
+    desc: Stop all containers
+    cmds:
+      - '{{.DOCKER_COMPOSE}} stop'
+    silent: true
+
