@@ -65,7 +65,7 @@ const App = () => {
           </p>
         </div>
         <p className="text-gray-400">
-          Click on the Vite, React and Deno logos to learn more
+          Click on the Vite and React logos to learn more
         </p>
       </div>
   );
