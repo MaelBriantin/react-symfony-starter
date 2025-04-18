@@ -27,12 +27,11 @@ includes:
     aliases: [api, symfony]
 
 set: [pipefail]
-output: prefixed
 
 tasks:
   default:
     cmds:
       - |
-        echo "This command is not the command you are looking for.
+        echo "This command is not the command you are looking for ✋
         Type 'task --list' or 'task -l' to see all available tasks."
     silent: true

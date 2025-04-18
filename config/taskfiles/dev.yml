@@ -10,6 +10,7 @@ includes:
 tasks:
   setup:
     desc: Initialize the complete stack for development
+    output: prefixed
     cmds:
       - task: env:generate
         vars: { ENV_TYPE: dev }
@@ -26,12 +27,11 @@ tasks:
       - .env
     desc: Show success message
     cmds:
-      - echo "🎉 Installation completed successfully!"
+      - echo ""
+      - echo "🎉 Installation completed successfully 🎉"
       - echo ""
       - |
         echo "Your stack is up and running:
         - Symfony API (PHP): ${API_URL}
         - React Frontend (Node): ${CLIENT_URL}"
-      - echo ""
-      - echo "Happy Hacking! 🚀"
     silent: true
