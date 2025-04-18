@@ -6,10 +6,12 @@
   "imports": {
     "@deno/vite-plugin": "npm:@deno/vite-plugin@^1.0.0",
     "@std/assert": "jsr:@std/assert@1",
+    "@tailwindcss/vite": "npm:@tailwindcss/vite@^4.1.4",
     "@types/react": "npm:@types/react@^18.3.12",
     "@vitejs/plugin-react": "npm:@vitejs/plugin-react@^4.3.3",
     "react": "npm:react@^18.3.1",
     "react-dom": "npm:react-dom@^18.3.1",
+    "tailwindcss": "npm:tailwindcss@^4.1.4",
     "vite": "npm:vite@^5.4.11"
   },
   "compilerOptions": {
