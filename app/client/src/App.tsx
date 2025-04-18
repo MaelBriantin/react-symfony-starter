@@ -1,6 +1,8 @@
 
 import { useState } from "react";
 import "./App.css";
+import { Button } from "./components/ui/button";
+import { ModeToggle } from "./components/mode-toggle";
 
 type ItemType = {
   name: string,
@@ -47,19 +49,20 @@ const App = () => {
   const [count, setCount] = useState(0);
 
   return (
-      <div className="flex flex-col w-screen h-screen items-center justify-center gap-6 dark:bg-neutral-800 dark:text-gray-100 text-black bg-neutral-100">
+      <div className="flex flex-col w-screen h-screen items-center justify-center gap-8"> 
+        <ModeToggle />
         <div className="flex justify-center gap-8">
           {items.map(item => 
             itemCard(item)
           )}
         </div>
         <div className="px-4 py-2 flex flex-col items-center justify-center gap-4">
-          <button
+          <Button
             type="button"
             onClick={() => setCount((count: number) => count + 1)}
           >
             count is {count}
-          </button>
+          </Button>
           <p>
             Edit <code>src/App.tsx</code> and save to test HMR
           </p>

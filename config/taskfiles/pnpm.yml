@@ -18,3 +18,15 @@ tasks:
     cmds:
       - "{{.DOCKER_RUN}} node pnpm install"
     silent: true
+
+  update:
+    desc: Update node dependencies via pnpm
+    cmds:
+      - "{{.DOCKER_RUN}} node pnpm update"
+    silent: true
+
+  dlx:
+    desc: Run a command via pnpm dlx (task pnpm:dlx -- <command>)
+    cmds:
+      - "{{.DOCKER_RUN}} node pnpm dlx {{.CLI_ARGS}}"
+    silent: true
