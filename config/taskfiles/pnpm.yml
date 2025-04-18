@@ -1,0 +1,20 @@
+version: "3"
+
+tasks:
+  add:
+    desc: Add a new Node dependency via pnpm (task pnpm:add -- <package>)
+    cmds:
+      - "{{.DOCKER_RUN}} node pnpm add {{.CLI_ARGS}}"
+    silent: true
+  
+  remove:
+    desc: Remove a Node dependency via pnpm (task pnpm:remove -- <package>)
+    cmds:
+      - "{{.DOCKER_RUN}} node pnpm remove {{.CLI_ARGS}}"
+    silent: true
+
+  install:
+    desc: Install node dependencies via pnpm
+    cmds:
+      - "{{.DOCKER_RUN}} node pnpm install"
+    silent: true

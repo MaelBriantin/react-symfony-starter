@@ -1,10 +1,10 @@
 services:
-  deno:
-    container_name: deno
+  node:
+    container_name: node
     env_file: .env
     build:
       context: .
-      dockerfile: docker/deno/Dockerfile
+      dockerfile: docker/node/Dockerfile
     volumes:
       - ./app/client:/app
     networks:
@@ -43,7 +43,7 @@ services:
       - ./config/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
       - ./app/api:/app
     depends_on:
-      - deno
+      - node
       - php
     networks:
       - app-network

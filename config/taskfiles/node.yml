@@ -1,0 +1,59 @@
+version: "3"
+
+includes:
+  pnpm: ./pnpm.yml
+
+tasks:
+  default:
+    desc: Run the 'node:init' task
+    cmds:
+      - task: init
+    silent: true
+
+  dev:
+    desc: Run development server
+    cmds:
+      - "{{.DOCKER_RUN}} -p 5173:5173 node pnpm dev"
+    silent: true
+
+  init:
+    desc: Initialize Node container
+    cmds:
+      - task: build
+      - task: pnpm:install
+      - task: up
+    silent: true
+
+  build:
+    desc: Build Node container
+    cmds:
+      - "{{.DOCKER_COMPOSE}} build --no-cache node"
+    silent: true
+
+  up:
+    desc: Start Node container
+    cmds:
+      - "{{.DOCKER_COMPOSE}} up -d node"
+    silent: true
+
+  clean-dependencies:
+    desc: Clean Node container
+    cmds:
+      - "{{.DOCKER_COMPOSE}} down --remove-orphans"
+      - "{{.DOCKER_RUN}} node rm -rf node_modules"
+      - "{{.DOCKER_RUN}} node rm -rf .vite"
+    silent: true
+
+  logs:
+    desc: Show logs for Node container
+    cmds:
+      - "{{.DOCKER_COMPOSE}} logs -f node"
+    silent: true
+
+  shell:
+    desc: Open a shell in the Node container
+    cmds:
+      - echo "Node shell started. Press Ctrl+D to exit."
+      - "{{.DOCKER_RUN}} node sh"
+      - echo "Node shell stopped."
+    silent: true

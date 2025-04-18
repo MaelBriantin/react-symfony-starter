@@ -2,9 +2,9 @@ version: "3"
 
 includes:
   caddy: ./caddy.yml
-  deno: ./deno.yml
   env: ./env.yml
   mysql: ./mysql.yml
+  node: ./node.yml
   php: ./php.yml
 
 tasks:
@@ -16,7 +16,7 @@ tasks:
       - task: env:init
       - task: mysql
       - task: php
-      - task: deno
+      - task: node
       - task: caddy
       - task: success
     silent: true
@@ -31,7 +31,7 @@ tasks:
       - |
         echo "Your stack is up and running:
         - Symfony API (PHP): ${API_URL}
-        - React Frontend (Deno): ${CLIENT_URL}"
+        - React Frontend (Node): ${CLIENT_URL}"
       - echo ""
       - echo "Happy Hacking! 🚀"
     silent: true

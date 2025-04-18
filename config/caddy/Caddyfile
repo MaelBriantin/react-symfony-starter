@@ -1,7 +1,7 @@
 {$CLIENT_URL} {
     log
     tls internal
-    reverse_proxy deno:5173
+    reverse_proxy node:5173
 }
 
 {$API_URL} {

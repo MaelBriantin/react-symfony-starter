@@ -11,9 +11,6 @@ vars:
 includes:
   caddy: ./config/taskfiles/caddy.yml
   composer: ./config/taskfiles/composer.yml
-  deno:
-    taskfile: ./config/taskfiles/deno.yml
-    aliases: [client, react]
   dev: ./config/taskfiles/dev.yml
   docker: ./config/taskfiles/docker.yml
   env:
@@ -21,6 +18,10 @@ includes:
   mysql:
     taskfile: ./config/taskfiles/mysql.yml
     aliases: [db, database]
+  node:
+    taskfile: ./config/taskfiles/node.yml
+    aliases: [frontend, client, react]
+  pnpm: ./config/taskfiles/pnpm.yml
   php:
     taskfile: ./config/taskfiles/php.yml
     aliases: [api, symfony]

@@ -20,7 +20,8 @@ app/api/var/
 app/api/vendor/
 .phpunit.result.cache
 
-# Deno / React
+# Node / React
 app/client/node_modules
 app/client/.vite
 app/client/dist
+app/client/.pnpm-store

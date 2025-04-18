@@ -28,10 +28,10 @@ To get started with the development environment, follow these steps:
 
     This command will run the following tasks:
     - create a `.env` file from the `.env.example` file with the needed environment variables (you don't need to change anything)
-    - build the Docker containers for the Symfony backend and the React frontend (MYSQL, Deno, PHP, Caddy)
+    - build the Docker containers for the Symfony backend and the React frontend (MYSQL, Node, PHP, Caddy)
     - start the Docker containers
-    - install the PHP dependencies using Composer
-    - install the Deno dependencies using Deno
+    - install the PHP dependencies using `composer`
+    - install the Node dependencies using `pnpm`
     - run the Caddy server via Docker
 
 3. Access the application:
