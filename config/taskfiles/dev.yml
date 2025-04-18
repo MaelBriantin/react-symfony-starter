@@ -35,13 +35,3 @@ tasks:
       - echo ""
       - echo "Happy Hacking! 🚀"
     silent: true
-
-  print-urls:
-    dotenv:
-      - .env
-    desc: Show the current environment variables
-    cmds:
-      - |
-        echo "- Symfony API (PHP): ${API_URL}
-        - React Frontend (Deno): ${CLIENT_URL}"
-    silent: true
