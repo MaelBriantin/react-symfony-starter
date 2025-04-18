@@ -89,5 +89,7 @@ tasks:
   shell:
     desc: Open a shell in the Deno container
     cmds:
+      - echo "Deno shell started. Press Ctrl+D to exit."
       - "{{.DOCKER_RUN}} deno sh"
+      - echo "Deno shell stopped."
     silent: true

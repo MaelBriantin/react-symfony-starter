@@ -42,7 +42,7 @@ tasks:
     cmds:
       - echo "PHP shell started. Press Ctrl+D to exit."
       - "{{.DOCKER_RUN}} php sh"
-      - echo "PHP shell stopped"
+      - echo "PHP shell stopped."
     silent: true
 
   logs:
