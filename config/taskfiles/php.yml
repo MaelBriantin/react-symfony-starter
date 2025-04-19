@@ -56,3 +56,9 @@ tasks:
     cmds:
       - "{{.DOCKER_COMPOSE}} exec php php bin/console {{.CLI_ARGS}}"
     silent: true
+
+  phpstan:
+    desc: Run PHPStan
+    cmds:
+      - "{{.DOCKER_RUN}} php vendor/bin/phpstan analyse --memory-limit=1G {{.CLI_ARGS}}"
+    silent: true

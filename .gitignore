@@ -1,27 +1,33 @@
-# Build
+###> Build directories ###
 dist
 build
+###< Build directories ###
 
-# Environment
+###> Environment files ###
 .env
 .env.local
 .env.*.local
+###< Environment files ###
 
-# Logs
+###> Logs ###
 *.log
+###< Logs ###
 
-# Editor directories and files
+###> Editor directories and files ###
 .idea
 .vscode
 !.vscode/extensions.json
+###< Editor directories and files ###
 
-# PHP / Symfony
+###> PHP / Symfony ###
 app/api/var/
 app/api/vendor/
 .phpunit.result.cache
+###< PHP / Symfony ###
 
-# Node / React
+###> Node / React / Vite ###
 app/client/node_modules
 app/client/.vite
 app/client/dist
 app/client/.pnpm-store
+###< Node / React / Vite ###
