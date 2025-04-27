@@ -25,6 +25,8 @@ includes:
   php:
     taskfile: ./config/taskfiles/php.yml
     aliases: [api, symfony]
+  test:
+    taskfile: ./config/taskfiles/test.yml
 
 set: [pipefail]
 

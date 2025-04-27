@@ -60,11 +60,19 @@ tasks:
   phpstan:
     desc: Run PHPStan
     cmds:
-      - "{{.DOCKER_RUN}} php vendor/bin/phpstan analyse --memory-limit=1G {{.CLI_ARGS}}"
+      - "{{.DOCKER_RUN}} php vendor/bin/phpstan analyse --memory-limit=512M {{.CLI_ARGS}}"
     silent: true
 
   cs-fixer:
     desc: Run PHP CS Fixer
     cmds:
       - "{{.DOCKER_COMPOSE}} exec -e PHP_CS_FIXER_IGNORE_ENV=1 php php vendor/bin/php-cs-fixer fix {{.CLI_ARGS}}"
+    silent: true
+
+  pest:
+    aliases:
+      - test
+    desc: Run Pest tests
+    cmds:
+      - "{{.DOCKER_RUN}} php vendor/bin/pest --colors=always {{.CLI_ARGS}}"
     silent: true

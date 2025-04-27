@@ -1,0 +1,11 @@
+version: "3"
+
+includes:
+  php: ./php.yml
+
+tasks:
+  php:
+    desc: Run php:pest
+    cmds:
+      - task: php:pest
+    silent: true

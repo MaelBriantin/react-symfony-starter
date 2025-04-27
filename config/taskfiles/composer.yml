@@ -20,3 +20,10 @@ tasks:
       - |
         {{.DOCKER_RUN}} php composer require --dev "{{.CLI_ARGS}}"
     silent: true
+
+  remove:
+    desc: Remove a Composer package (task composer:remove -- <package>)
+    cmds:
+      - |
+        {{.DOCKER_RUN}} php composer remove "{{.CLI_ARGS}}"
+    silent: true
