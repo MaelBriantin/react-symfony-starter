@@ -39,8 +39,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
+        Assert::stringNotEmpty($this->email, 'Email cannot be empty');
         return $this->email;
     }
 
