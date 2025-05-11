@@ -2,26 +2,25 @@
 
 namespace App\Infrastructure\Controller\Auth;
 
-use Webmozart\Assert\Assert;
-use App\Domain\Model\User as UserModel;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Application\Command\RegisterUserCommand;
+use App\Application\UseCase\Auth\RegisterUser;
+use App\Infrastructure\Response\Auth\RegisterResponse;
+use App\Infrastructure\Validator\Auth\RegisterRequestValidator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/auth/register', name: 'app_auth_register', methods: ['POST'])]
 class RegistrationController extends AbstractController
 {
     public function __construct(
-        private UserPasswordHasherInterface $passwordHasher,
-        private EntityManagerInterface $entityManager
+        private RegisterUser $registerUser,
+        private RegisterRequestValidator $validator
     ) {
     }
 
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(Request $request): RegisterResponse
     {
         $data = json_decode($request->getContent(), true);
 
@@ -29,40 +28,15 @@ class RegistrationController extends AbstractController
             throw new BadRequestHttpException('Invalid JSON data');
         }
 
-        try {
-            Assert::keyExists($data, 'email', 'Email is required');
-            Assert::keyExists($data, 'password', 'Password is required');
-            Assert::string($data['email'], 'Email must be a string');
-            Assert::string($data['password'], 'Password must be a string');
-            Assert::email($data['email'], 'Invalid email format');
-            Assert::minLength($data['password'], 6, 'Password must be at least 6 characters long');
-        } catch (\InvalidArgumentException $e) {
-            throw new BadRequestHttpException($e->getMessage());
-        }
+        $this->validator->validate($data);
 
-        $userModel = new UserModel(
+        $command = new RegisterUserCommand(
             $data['email'],
-            $data['password'],
-            ['ROLE_USER']
+            $data['password']
         );
 
-        $user = $userModel->toEntity();
+        $user = $this->registerUser->execute($command);
 
-        $hashedPassword = $this->passwordHasher->hashPassword(
-            $user,
-            $userModel->getPassword()
-        );
-        $user->setPassword($hashedPassword);
-
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
-
-        return new JsonResponse([
-            'message' => 'User registered successfully',
-            'user' => [
-                'email' => $user->getEmail(),
-                'roles' => $user->getRoles(),
-            ],
-        ]);
+        return new RegisterResponse($user);
     }
 }

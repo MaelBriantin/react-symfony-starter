@@ -2,7 +2,9 @@
 
 namespace App\Infrastructure\Repository;
 
-use App\Domain\Entity\User;
+use App\Domain\Entity\User as UserEntity;
+use App\Domain\Model\User as UserModel;
+use App\Domain\Repository\UserRepositoryInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -10,13 +12,23 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
- * @extends ServiceEntityRepository<User>
+ * @extends ServiceEntityRepository<UserEntity>
  */
-class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
+class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, User::class);
+        parent::__construct($registry, UserEntity::class);
+    }
+
+    public function save(UserModel $user): UserModel
+    {
+        $userEntity = $user->toEntity();
+        
+        $this->getEntityManager()->persist($userEntity);
+        $this->getEntityManager()->flush();
+        
+        return UserModel::fromEntity($userEntity);
     }
 
     /**
@@ -24,7 +36,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
      */
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
-        if (!$user instanceof User) {
+        if (!$user instanceof UserEntity) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
         }
 
