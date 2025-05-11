@@ -2,8 +2,10 @@
 
 namespace App\Infrastructure\Controller\Auth;
 
-use App\Application\Command\RegisterUserCommand;
+use App\Application\Command\Auth\RegisterUserCommand;
 use App\Application\UseCase\Auth\RegisterUser;
+use App\Domain\Data\ValueObject\Email;
+use App\Domain\Data\ValueObject\Password;
 use App\Infrastructure\Request\Auth\RegisterRequest;
 use App\Infrastructure\Response\Auth\RegisterResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,8 +32,8 @@ class RegistrationController extends AbstractController
         $registerRequest = RegisterRequest::fromArray($data);
 
         $command = new RegisterUserCommand(
-            $registerRequest->email,
-            $registerRequest->password
+            new Email($registerRequest->email),
+            new Password($registerRequest->password)
         );
 
         $user = $this->registerUser->execute($command);

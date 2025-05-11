@@ -1,6 +1,8 @@
 doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
+        types:
+            password: App\Infrastructure\Doctrine\Type\PasswordType
 
         # IMPORTANT: You MUST configure your server version,
         # either here or in the DATABASE_URL env var (see .env file)
@@ -21,8 +23,8 @@ doctrine:
             App:
                 type: attribute
                 is_bundle: false
-                dir: '%kernel.project_dir%/src/Infrastructure/Entity'
-                prefix: 'App\Infrastructure\Entity'
+                dir: '%kernel.project_dir%/src/Infrastructure/Doctrine/Entity'
+                prefix: 'App\Infrastructure\Doctrine\Entity'
                 alias: App
         controller_resolver:
             auto_mapping: false

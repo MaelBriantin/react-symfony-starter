@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Infrastructure\Service\Auth;
+
+use App\Domain\Data\ValueObject\Password;
+use App\Domain\Service\Auth\PasswordHasherInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use App\Infrastructure\Doctrine\Entity\User;
+
+class SymfonyPasswordHasher implements PasswordHasherInterface
+{
+    public function __construct(
+        private UserPasswordHasherInterface $passwordHasher
+    ) {
+    }
+
+    public function hash(Password $plainPassword): Password
+    {
+        $user = new User();
+        $hashedPassword = $this->passwordHasher->hashPassword(
+            $user,
+            $plainPassword->value()
+        );
+
+        return new Password($hashedPassword);
+    }
+}

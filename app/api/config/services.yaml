@@ -17,8 +17,13 @@ services:
         resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
-            - '../src/Domain/Entity/'
+            - '../src/Infrastructure/Entity/'
             - '../src/Kernel.php'
+            - '../src/Domain/Model/'
+            - '../src/Domain/Data/'
+
+    App\Domain\Service\Auth\PasswordHasherInterface:
+        class: App\Infrastructure\Service\Auth\SymfonyPasswordHasher
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

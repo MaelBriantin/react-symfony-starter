@@ -2,7 +2,7 @@
 
 namespace App\Application\UseCase\Auth;
 
-use App\Application\Command\RegisterUserCommand;
+use App\Application\Command\Auth\RegisterUserCommand;
 use App\Domain\Model\User;
 use App\Domain\Repository\UserRepositoryInterface;
 use App\Domain\Service\Auth\PasswordHasherInterface;

@@ -2,24 +2,26 @@
 
 namespace App\Domain\Model;
 
+use App\Domain\Data\ValueObject\Email;
+use App\Domain\Data\ValueObject\Password;
 use Symfony\Component\Uid\Uuid;
 use Webmozart\Assert\Assert;
-use App\Infrastructure\Entity\User as UserEntity;
+use App\Infrastructure\Doctrine\Entity\User as UserEntity;
 
 class User
 {
     private Uuid $id;
-    private string $email;
+    private Email $email;
     /** @var array<string> */
     private array $roles = [];
-    private string $password;
+    private Password $password;
 
     /**
      * @param array<string> $roles
      */
     public function __construct(
-        string $email,
-        string $password,
+        Email $email,
+        Password $password,
         array $roles = []
     ) {
         $this->id = Uuid::v7();
@@ -28,18 +30,27 @@ class User
         $this->roles = $roles;
     }
 
-    public function getId(): Uuid
+    public function getIdObject(): Uuid
     {
         return $this->id;
     }
 
-    public function getEmail(): string
+    public function getId(): string
     {
-        Assert::stringNotEmpty($this->email, 'Email cannot be empty');
+        return $this->id->toRfc4122();
+    }
+
+    public function getEmailObject(): Email
+    {
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function getEmail(): string
+    {
+        return $this->email->value();
+    }
+
+    public function setEmail(Email $email): self
     {
         $this->email = $email;
         return $this;
@@ -64,12 +75,12 @@ class User
         return $this;
     }
 
-    public function getPassword(): string
+    public function getPassword(): Password
     {
         return $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(Password $password): self
     {
         $this->password = $password;
         return $this;
@@ -89,7 +100,7 @@ class User
     {
         return new self(
             $user->getEmail(),
-            $user->getPassword(),
+            $user->getPasswordObject(),
             $user->getRoles()
         );
     }

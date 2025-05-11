@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Infrastructure\Repository;
+namespace App\Infrastructure\Doctrine\Repository;
 
+use App\Domain\Data\ValueObject\Password;
 use App\Domain\Model\User as UserModel;
 use App\Domain\Repository\UserRepositoryInterface;
-use App\Infrastructure\Entity\User as UserEntity;
+use App\Infrastructure\Doctrine\Entity\User as UserEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -48,7 +49,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
         }
 
-        $user->setPassword($newHashedPassword);
+        $user->setPassword(new Password($newHashedPassword));
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
     }

@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Infrastructure\Entity;
+namespace App\Infrastructure\Doctrine\Entity;
 
-use App\Infrastructure\Repository\UserRepository;
+use App\Infrastructure\Doctrine\Repository\UserRepository;
 use App\Domain\Model\User as UserModel;
+use App\Domain\Data\ValueObject\Email;
+use App\Domain\Data\ValueObject\Password;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -21,14 +23,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Uuid $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    private string $email;
+    private Email $email;
 
     /** @var string[] */
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
-    #[ORM\Column(type: 'string')]
-    private string $password;
+    #[ORM\Column(type: 'password')]
+    private Password $password;
 
     public function __construct()
     {
@@ -40,13 +42,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
-    public function getEmail(): string
+    public function setId(Uuid $id): self
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function getEmail(): Email
     {
         Assert::stringNotEmpty($this->email, 'Email cannot be empty');
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(Email $email): self
     {
         $this->email = $email;
         return $this;
@@ -73,12 +81,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getPassword(): string
+    public function getPasswordObject(): Password
     {
         return $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function getPassword(): string
+    {
+        return $this->password->value();
+    }
+
+    public function setPassword(Password $password): self
     {
         $this->password = $password;
         return $this;
@@ -100,7 +113,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public static function fromModel(UserModel $user): self
     {
         $entity = new self();
-        $entity->setEmail($user->getEmail());
+        $entity->setId($user->getIdObject());
+        $entity->setEmail($user->getEmailObject());
         $entity->setPassword($user->getPassword());
         $entity->setRoles($user->getRoles());
         return $entity;

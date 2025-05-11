@@ -12,6 +12,7 @@ class RegisterResponse extends JsonResponse
         parent::__construct([
             'message' => 'User registered successfully',
             'user' => [
+                'uuid' => $this->user->getId(),
                 'email' => $this->user->getEmail(),
                 'roles' => $this->user->getRoles(),
             ],
