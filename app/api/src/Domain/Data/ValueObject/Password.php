@@ -31,6 +31,10 @@ class Password
         if (!preg_match('/[0-9]/', $value)) {
             throw new InvalidArgumentException('Password must contain at least one number');
         }
+
+        if (!preg_match('/[!@#$%^&*(),.?":{}|<>]/', $value)) {
+            throw new InvalidArgumentException('Password must contain at least one special character');
+        }
     }
 
     public function value(): string

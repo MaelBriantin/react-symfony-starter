@@ -17,9 +17,8 @@ services:
         resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
-            - '../src/Infrastructure/Entity/'
+            - '../src/Infrastructure/Doctrine/Entity/'
             - '../src/Kernel.php'
-            - '../src/Domain/Model/'
             - '../src/Domain/Data/'
 
     App\Domain\Port\Out\PasswordHasherPort:
