@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Domain\Entity;
+namespace App\Infrastructure\Entity;
 
 use App\Infrastructure\Repository\UserRepository;
+use App\Domain\Model\User as UserModel;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -48,30 +49,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(string $email): self
     {
         $this->email = $email;
-
         return $this;
     }
 
-    /**
-     * The public representation of the user (e.g. a username, an email address, etc.)
-     *
-     * @see UserInterface
-     */
     public function getUserIdentifier(): string
     {
         Assert::stringNotEmpty($this->email, 'Email cannot be empty');
         return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     * @return string[]
-     */
+    /** @return string[] */
     public function getRoles(): array
     {
         $roles = $this->roles;
         $roles[] = 'ROLE_USER';
-
         return array_unique($roles);
     }
 
@@ -79,13 +70,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
-
         return $this;
     }
 
-    /**
-     * @return string the hashed password for this user
-     */
     public function getPassword(): string
     {
         return $this->password;
@@ -94,16 +81,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(string $password): self
     {
         $this->password = $password;
-
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function eraseCredentials(): void
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+    }
+
+    public function toModel(): UserModel
+    {
+        return new UserModel(
+            $this->email,
+            $this->password,
+            $this->roles
+        );
+    }
+
+    public static function fromModel(UserModel $user): self
+    {
+        $entity = new self();
+        $entity->setEmail($user->getEmail());
+        $entity->setPassword($user->getPassword());
+        $entity->setRoles($user->getRoles());
+        return $entity;
     }
 }

@@ -4,6 +4,7 @@ namespace App\Domain\Model;
 
 use Symfony\Component\Uid\Uuid;
 use Webmozart\Assert\Assert;
+use App\Infrastructure\Entity\User as UserEntity;
 
 class User
 {
@@ -74,17 +75,17 @@ class User
         return $this;
     }
 
-    public function toEntity(): \App\Domain\Entity\User
+    public function toEntity(): UserEntity
     {
-        $user = new \App\Domain\Entity\User();
+        $user = new UserEntity();
         $user->setEmail($this->email);
         $user->setPassword($this->password);
         $user->setRoles($this->roles);
-        
+
         return $user;
     }
 
-    public static function fromEntity(\App\Domain\Entity\User $user): self
+    public static function fromEntity(UserEntity $user): self
     {
         return new self(
             $user->getEmail(),
@@ -93,4 +94,3 @@ class User
         );
     }
 }
-

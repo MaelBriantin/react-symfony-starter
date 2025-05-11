@@ -4,8 +4,8 @@ namespace App\Infrastructure\Controller\Auth;
 
 use App\Application\Command\RegisterUserCommand;
 use App\Application\UseCase\Auth\RegisterUser;
+use App\Infrastructure\Request\Auth\RegisterRequest;
 use App\Infrastructure\Response\Auth\RegisterResponse;
-use App\Infrastructure\Validator\Auth\RegisterRequestValidator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,7 +16,6 @@ class RegistrationController extends AbstractController
 {
     public function __construct(
         private RegisterUser $registerUser,
-        private RegisterRequestValidator $validator
     ) {
     }
 
@@ -28,11 +27,11 @@ class RegistrationController extends AbstractController
             throw new BadRequestHttpException('Invalid JSON data');
         }
 
-        $this->validator->validate($data);
+        $registerRequest = RegisterRequest::fromArray($data);
 
         $command = new RegisterUserCommand(
-            $data['email'],
-            $data['password']
+            $registerRequest->email,
+            $registerRequest->password
         );
 
         $user = $this->registerUser->execute($command);
