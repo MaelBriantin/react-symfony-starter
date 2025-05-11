@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Response\Auth;
 
-use App\Domain\Model\User;
+use App\Domain\Data\Model\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class RegisterResponse extends JsonResponse

@@ -22,7 +22,7 @@ services:
             - '../src/Domain/Model/'
             - '../src/Domain/Data/'
 
-    App\Domain\Service\Auth\PasswordHasherInterface:
+    App\Domain\Port\Out\PasswordHasherPort:
         class: App\Infrastructure\Service\Auth\SymfonyPasswordHasher
 
     # add more service definitions when explicit configuration is needed

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Model;
+namespace App\Domain\Data\Model;
 
 use App\Domain\Data\ValueObject\Email;
 use App\Domain\Data\ValueObject\Password;

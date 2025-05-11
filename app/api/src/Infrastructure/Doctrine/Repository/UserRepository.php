@@ -3,8 +3,8 @@
 namespace App\Infrastructure\Doctrine\Repository;
 
 use App\Domain\Data\ValueObject\Password;
-use App\Domain\Model\User as UserModel;
-use App\Domain\Repository\UserRepositoryInterface;
+use App\Domain\Data\Model\User as UserModel;
+use App\Domain\Port\Out\UserRepositoryPort;
 use App\Infrastructure\Doctrine\Entity\User as UserEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 /**
  * @extends ServiceEntityRepository<UserEntity>
  */
-class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserRepositoryInterface
+class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserRepositoryPort
 {
     public function __construct(ManagerRegistry $registry)
     {

@@ -2,10 +2,10 @@
 
 namespace App\Infrastructure\Doctrine\Entity;
 
-use App\Infrastructure\Doctrine\Repository\UserRepository;
-use App\Domain\Model\User as UserModel;
+use App\Domain\Data\Model\User as UserModel;
 use App\Domain\Data\ValueObject\Email;
 use App\Domain\Data\ValueObject\Password;
+use App\Infrastructure\Doctrine\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
