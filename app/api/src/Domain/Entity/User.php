@@ -5,10 +5,13 @@ namespace App\Domain\Entity;
 use App\Infrastructure\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
+use Webmozart\Assert\Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
@@ -55,6 +58,7 @@ class User
      */
     public function getUserIdentifier(): string
     {
+        Assert::stringNotEmpty($this->email, 'Email cannot be empty');
         return (string) $this->email;
     }
 
@@ -79,7 +83,7 @@ class User
     }
 
     /**
-     * @see PasswordAuthenticatedUserInterface
+     * @return string the hashed password for this user
      */
     public function getPassword(): string
     {
