@@ -1,0 +1,63 @@
+version: "3"
+  
+tasks:
+  down:
+    aliases:
+      - d
+    desc: Stop and remove all containers
+    cmds:
+      - '{{.DOCKER_COMPOSE}} down --remove-orphans --volumes'
+    silent: true
+
+  logs:
+    aliases:
+      - l
+    desc: Show logs from all containers
+    cmds:
+      - '{{.DOCKER_COMPOSE}} logs -f'
+    silent: true
+
+  prune:
+    aliases:
+      - p
+    desc: Clean up unused Docker resources
+    cmds:
+      - docker system prune -f
+    silent: true
+
+  ps:
+    desc: Show running containers
+    cmds:
+      - '{{.DOCKER_COMPOSE}} ps'
+    silent: true
+
+  rebuild:
+    aliases:
+      - rb
+    desc: Rebuild and restart containers without cleaning
+    cmds:
+      - '{{.DOCKER_COMPOSE}} build'
+      - '{{.DOCKER_COMPOSE}} up -d --force-recreate --remove-orphans'
+    silent: true
+
+  restart:
+    aliases:
+      - rs
+    desc: Restart all containers
+    cmds:
+      - task: down
+      - '{{.DOCKER_COMPOSE}} up -d'
+    silent: true
+
+  start:
+    desc: Start all containers
+    cmds:
+      - '{{.DOCKER_COMPOSE}} start'
+    silent: true
+
+  stop:
+    desc: Stop all containers
+    cmds:
+      - '{{.DOCKER_COMPOSE}} stop'
+    silent: true
+

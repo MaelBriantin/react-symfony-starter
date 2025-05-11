@@ -1,0 +1,39 @@
+version: "3"
+
+dotenv: ['.env']
+
+vars:
+  DOCKER_COMPOSE: docker compose
+  DOCKER_RUN: "{{.DOCKER_COMPOSE}} run --rm"
+  CLIENT_URL: $CLIENT_URL
+  API_URL: $API_URL
+
+includes:
+  caddy: ./config/taskfiles/caddy.yml
+  composer: ./config/taskfiles/composer.yml
+  dev: ./config/taskfiles/dev.yml
+  docker: ./config/taskfiles/docker.yml
+  env:
+    taskfile: ./config/taskfiles/env.yml
+  mysql:
+    taskfile: ./config/taskfiles/mysql.yml
+    aliases: [db, database]
+  node:
+    taskfile: ./config/taskfiles/node.yml
+    aliases: [frontend, client, react]
+  pnpm: ./config/taskfiles/pnpm.yml
+  php:
+    taskfile: ./config/taskfiles/php.yml
+    aliases: [api, symfony]
+  test:
+    taskfile: ./config/taskfiles/test.yml
+
+set: [pipefail]
+
+tasks:
+  default:
+    cmds:
+      - |
+        echo "This command is not the command you are looking for ✋
+        Type 'task --list' or 'task -l' to see all available tasks."
+    silent: true

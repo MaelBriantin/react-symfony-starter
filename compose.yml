@@ -1,0 +1,75 @@
+services:
+  node:
+    container_name: node
+    env_file: .env
+    build:
+      context: .
+      dockerfile: docker/node/Dockerfile
+    volumes:
+      - ./app/client:/app
+    networks:
+      - app-network
+
+  php:
+    container_name: php
+    env_file: .env
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+      target: dev
+    volumes:
+      - ./app/api:/app
+      - ./.env:/app/.env
+    depends_on:
+      - mysql
+    networks:
+      - app-network
+      - database-network
+    dns:
+      - 1.1.1.1
+      - 1.0.0.1
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: caddy
+    env_file: .env
+    environment:
+      - API_URL=${API_URL:-https://api.localhost}
+      - CLIENT_URL=${CLIENT_URL:-https://localhost}
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./config/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./app/api:/app
+    depends_on:
+      - node
+      - php
+    networks:
+      - app-network
+
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    container_name: mysql
+    env_file: .env
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-app}
+      MYSQL_USER: ${MYSQL_USER:-user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-password}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+    volumes:
+      - database:/var/lib/mysql
+    networks:
+      - database-network
+
+networks:
+  app-network:
+    driver: bridge
+  database-network:
+    driver: bridge
+
+volumes:
+  database:

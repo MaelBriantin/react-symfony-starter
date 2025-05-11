@@ -1,0 +1,35 @@
+version: "3"
+
+tasks:
+  install:
+    desc: Install Composer dependencies in PHP container
+    cmds:
+      - "{{.DOCKER_RUN}} php composer install"
+    silent: true
+
+  require:
+    desc: Add a Composer package (task composer:require -- <package>)
+    cmds:
+      - |
+        {{.DOCKER_RUN}} php composer require "{{.CLI_ARGS}}"
+    silent: true
+
+  require:dev:
+    desc: Add a Composer development package (task composer:require-dev -- <package>)
+    cmds:
+      - |
+        {{.DOCKER_RUN}} php composer require --dev "{{.CLI_ARGS}}"
+    silent: true
+
+  remove:
+    desc: Remove a Composer package (task composer:remove -- <package>)
+    cmds:
+      - |
+        {{.DOCKER_RUN}} php composer remove "{{.CLI_ARGS}}"
+    silent: true
+
+  update:
+    desc: Update Composer dependencies in PHP container
+    cmds:
+      - "{{.DOCKER_RUN}} php composer update"
+    silent: true

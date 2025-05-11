@@ -1,0 +1,27 @@
+version: '3'
+
+tasks:
+  default:
+    desc: Run the 'mysql:init' task
+    cmds:
+      - task: init
+    silent: true
+
+  init:
+    desc: Initialize Caddy container
+    cmds:
+      - task: build
+      - task: up
+    silent: true
+
+  build:
+    desc: Build Caddy container
+    cmds:
+      - '{{.DOCKER_COMPOSE}} build --no-cache caddy'
+    silent: true
+
+  up:
+    desc: Start Caddy container
+    cmds:
+      - '{{.DOCKER_COMPOSE}} up -d caddy'
+    silent: true

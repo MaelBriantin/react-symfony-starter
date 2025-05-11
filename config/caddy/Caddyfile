@@ -1,0 +1,14 @@
+{$CLIENT_URL} {
+    log
+    tls internal
+    reverse_proxy node:5173
+}
+
+{$API_URL} {
+    log
+    tls internal
+    root * /app/public
+    encode gzip
+    php_fastcgi php:9000
+    file_server
+}

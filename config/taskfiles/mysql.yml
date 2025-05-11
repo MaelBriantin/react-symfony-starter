@@ -1,0 +1,33 @@
+version: "3"
+
+tasks:
+  default:
+    desc: Run the 'mysql:init' task
+    cmds:
+      - task: init
+    silent: true
+
+  init:
+    desc: Initialize Database container
+    cmds:
+      - task: build
+      - task: up
+    silent: true
+
+  build:
+    desc: Build Database container
+    cmds:
+      - "{{.DOCKER_COMPOSE}} build --no-cache mysql"
+    silent: true
+
+  up:
+    desc: Start Database container
+    cmds:
+      - "{{.DOCKER_COMPOSE}} up -d mysql"
+    silent: true
+
+  logs:
+    desc: Show Database container logs
+    cmds:
+      - "{{.DOCKER_COMPOSE}} logs -f mysql"
+    silent: true

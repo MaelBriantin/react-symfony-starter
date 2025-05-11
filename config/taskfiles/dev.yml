@@ -1,0 +1,37 @@
+version: "3"
+
+includes:
+  caddy: ./caddy.yml
+  env: ./env.yml
+  mysql: ./mysql.yml
+  node: ./node.yml
+  php: ./php.yml
+
+tasks:
+  setup:
+    desc: Initialize the complete stack for development
+    output: prefixed
+    cmds:
+      - task: env:generate
+        vars: { ENV_TYPE: dev }
+      - task: env:init
+      - task: mysql
+      - task: php
+      - task: node
+      - task: caddy
+      - task: success
+    silent: true
+
+  success:
+    dotenv:
+      - .env
+    desc: Show success message
+    cmds:
+      - echo ""
+      - echo "🎉 Installation completed successfully 🎉"
+      - echo ""
+      - |
+        echo "Your stack is up and running:
+        - Symfony API (PHP): ${API_URL}
+        - React Frontend (Node): ${CLIENT_URL}"
+    silent: true
