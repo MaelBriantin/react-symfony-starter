@@ -18,11 +18,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private Uuid $id;
 
-    #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[ORM\Column(type: 'email', length: 180, unique: true)]
     private Email $email;
 
     /** @var string[] */
@@ -34,10 +32,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->id = Uuid::v7();
     }
 
-    public function getId(): ?Uuid
+    public function getId(): Uuid
     {
         return $this->id;
     }
@@ -106,7 +103,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return new UserModel(
             $this->email,
             $this->password,
-            $this->roles
+            $this->roles,
+            $this->id
         );
     }
 

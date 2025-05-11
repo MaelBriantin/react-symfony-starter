@@ -22,9 +22,10 @@ class User
     public function __construct(
         Email $email,
         Password $password,
-        array $roles = []
+        array $roles = [],
+        ?Uuid $id = null
     ) {
-        $this->id = Uuid::v7();
+        $this->id = $id ?? Uuid::v7();
         $this->email = $email;
         $this->password = $password;
         $this->roles = $roles;
@@ -101,7 +102,8 @@ class User
         return new self(
             $user->getEmail(),
             $user->getPasswordObject(),
-            $user->getRoles()
+            $user->getRoles(),
+            $user->getId()
         );
     }
 }
