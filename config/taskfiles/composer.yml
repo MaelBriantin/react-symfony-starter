@@ -27,3 +27,9 @@ tasks:
       - |
         {{.DOCKER_RUN}} php composer remove "{{.CLI_ARGS}}"
     silent: true
+
+  update:
+    desc: Update Composer dependencies in PHP container
+    cmds:
+      - "{{.DOCKER_RUN}} php composer update"
+    silent: true
