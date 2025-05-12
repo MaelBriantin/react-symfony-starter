@@ -4,14 +4,14 @@ namespace App\Application\UseCase\Auth;
 
 use App\Application\Command\Auth\RegisterUserCommand;
 use App\Domain\Data\Model\User;
-use App\Domain\Port\Out\UserRepositoryPort;
-use App\Domain\Port\Out\PasswordHasherPort;
+use App\Domain\Port\Secondary\User\UserRepositoryInterface;
+use App\Domain\Port\Secondary\Auth\PasswordHasherInterface;
 
-class RegisterUser
+class RegisterUserUseCase
 {
     public function __construct(
-        private UserRepositoryPort $userRepository,
-        private PasswordHasherPort $passwordHasher
+        private UserRepositoryInterface $userRepository,
+        private PasswordHasherInterface $passwordHasher
     ) {
     }
 

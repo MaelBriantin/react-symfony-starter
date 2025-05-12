@@ -5,7 +5,6 @@ namespace App\Domain\Data\Model;
 use App\Domain\Data\ValueObject\Email;
 use App\Domain\Data\ValueObject\Password;
 use Symfony\Component\Uid\Uuid;
-use Webmozart\Assert\Assert;
 use App\Infrastructure\Doctrine\Entity\User as UserEntity;
 
 class User

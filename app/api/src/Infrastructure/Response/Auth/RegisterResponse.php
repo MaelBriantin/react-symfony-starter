@@ -1,21 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Infrastructure\Response\Auth;
 
 use App\Domain\Data\Model\User;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Infrastructure\Response\User\AbstractUserResponse;
 
-class RegisterResponse extends JsonResponse
+class RegisterResponse extends AbstractUserResponse
 {
-    public function __construct(private User $user)
+    public function __construct(User $user)
     {
-        parent::__construct([
-            'message' => 'User registered successfully',
-            'user' => [
-                'uuid' => $this->user->getId(),
-                'email' => $this->user->getEmail(),
-                'roles' => $this->user->getRoles(),
-            ],
-        ]);
+        parent::__construct(
+            users: $user, 
+            message: 'User registered successfully'
+        );
     }
 }

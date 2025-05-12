@@ -21,7 +21,7 @@ services:
             - '../src/Kernel.php'
             - '../src/Domain/Data/'
 
-    App\Domain\Port\Out\PasswordHasherPort:
+    App\Domain\Port\Secondary\PasswordHasherInterface:
         class: App\Infrastructure\Service\Auth\SymfonyPasswordHasher
 
     # add more service definitions when explicit configuration is needed

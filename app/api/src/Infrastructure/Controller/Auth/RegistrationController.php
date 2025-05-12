@@ -3,7 +3,7 @@
 namespace App\Infrastructure\Controller\Auth;
 
 use App\Application\Command\Auth\RegisterUserCommand;
-use App\Application\UseCase\Auth\RegisterUser;
+use App\Application\UseCase\Auth\RegisterUserUseCase;
 use App\Domain\Data\ValueObject\Email;
 use App\Domain\Data\ValueObject\Password;
 use App\Infrastructure\Request\Auth\RegisterRequest;
@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 class RegistrationController extends AbstractController
 {
     public function __construct(
-        private RegisterUser $registerUser,
+        private RegisterUserUseCase $registerUser,
     ) {
     }
 

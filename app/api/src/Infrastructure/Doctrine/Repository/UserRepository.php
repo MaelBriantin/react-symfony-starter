@@ -1,21 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Infrastructure\Doctrine\Repository;
 
 use App\Domain\Data\ValueObject\Password;
 use App\Domain\Data\Model\User as UserModel;
-use App\Domain\Port\Out\UserRepositoryPort;
+use App\Domain\Data\ValueObject\Email;
+use App\Domain\Port\Secondary\User\UserRepositoryInterface;
 use App\Infrastructure\Doctrine\Entity\User as UserEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @extends ServiceEntityRepository<UserEntity>
  */
-class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserRepositoryPort
+class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -32,9 +36,20 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $userEntity->toModel();
     }
 
-    public function findByEmail(string $email): ?UserModel
+    public function findByEmail(Email $email): ?UserModel
     {
         $entity = $this->findOneBy(['email' => $email]);
+
+        if (!$entity) {
+            return null;
+        }
+
+        return $entity->toModel();
+    }
+
+    public function findById(Uuid $id): ?UserModel
+    {
+        $entity = $this->find($id);
 
         if (!$entity) {
             return null;
@@ -52,5 +67,22 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setPassword(new Password($newHashedPassword));
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
+    }
+
+    /** @return array<UserEntity> */
+    protected function findAllEntities(): array
+    {
+        return parent::findAll();
+    }
+
+    /** @return array<UserModel> */
+    public function findAllUsers(): array
+    {
+        $entities = $this->findAllEntities();
+
+        return array_map(
+            fn (UserEntity $entity): UserModel => $entity->toModel(),
+            $entities
+        );
     }
 }

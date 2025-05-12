@@ -3,11 +3,11 @@
 namespace App\Infrastructure\Service\Auth;
 
 use App\Domain\Data\ValueObject\Password;
-use App\Domain\Port\Out\PasswordHasherPort;
+use App\Domain\Port\Secondary\Auth\PasswordHasherInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use App\Infrastructure\Doctrine\Entity\User;
 
-class SymfonyPasswordHasher implements PasswordHasherPort
+class SymfonyPasswordHasher implements PasswordHasherInterface
 {
     public function __construct(
         private UserPasswordHasherInterface $passwordHasher
