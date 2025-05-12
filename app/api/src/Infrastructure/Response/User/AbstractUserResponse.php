@@ -26,7 +26,7 @@ abstract class AbstractUserResponse extends JsonResponse
             'message' => $this->message,
             'users' => array_map(
                 /**
-                 * @return array{uuid: Uuid, email: Email, roles: array<string>}
+                 * @return array{uuid: string, email: string, roles: array<string>}
                  */
                 static fn (User $user): array => self::formatUser($user),
                 $users
@@ -41,13 +41,13 @@ abstract class AbstractUserResponse extends JsonResponse
     }
 
     /**
-     * @return array{uuid: Uuid, email: Email, roles: array<string>}
+     * @return array{uuid: string, email: string, roles: array<string>}
      */
     protected static function formatUser(User $user): array
     {
         return [
-            'uuid' => $user->getId(),
-            'email' => $user->getEmail(),
+            'uuid' => (string) $user->getId(),
+            'email' => (string) $user->getEmail(),
             'roles' => $user->getRoles(),
         ];
     }
