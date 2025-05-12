@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Infrastructure\Response\User;
 
 use App\Domain\Data\Model\User;
+use App\Domain\Data\ValueObject\Email;
+use App\Domain\Data\ValueObject\Uuid;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 abstract class AbstractUserResponse extends JsonResponse
@@ -24,7 +26,7 @@ abstract class AbstractUserResponse extends JsonResponse
             'message' => $this->message,
             'users' => array_map(
                 /**
-                 * @return array{uuid: string, email: string, roles: array<string>}
+                 * @return array{uuid: Uuid, email: Email, roles: array<string>}
                  */
                 static fn (User $user): array => self::formatUser($user),
                 $users
@@ -39,7 +41,7 @@ abstract class AbstractUserResponse extends JsonResponse
     }
 
     /**
-     * @return array{uuid: string, email: string, roles: array<string>}
+     * @return array{uuid: Uuid, email: Email, roles: array<string>}
      */
     protected static function formatUser(User $user): array
     {

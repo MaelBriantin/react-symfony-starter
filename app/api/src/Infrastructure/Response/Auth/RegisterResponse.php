@@ -12,7 +12,7 @@ class RegisterResponse extends AbstractUserResponse
     public function __construct(User $user)
     {
         parent::__construct(
-            users: $user, 
+            users: $user,
             message: 'User registered successfully'
         );
     }

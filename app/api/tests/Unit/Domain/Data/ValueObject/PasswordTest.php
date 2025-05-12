@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Domain\Data\ValueObject;
 
 use App\Domain\Data\ValueObject\Password;

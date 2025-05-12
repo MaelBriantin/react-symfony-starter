@@ -5,6 +5,7 @@ namespace App\Infrastructure\Doctrine\Entity;
 use App\Domain\Data\Model\User as UserModel;
 use App\Domain\Data\ValueObject\Email;
 use App\Domain\Data\ValueObject\Password;
+use App\Domain\Data\ValueObject\Uuid as UserId;
 use App\Infrastructure\Doctrine\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
@@ -78,14 +79,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getPasswordObject(): Password
-    {
-        return $this->password;
-    }
-
     public function getPassword(): string
     {
-        return $this->password->value();
+        return (string) $this->password;
+    }
+
+    public function getPassordObject(): Password
+    {
+        return $this->password;
     }
 
     public function setPassword(Password $password): self
@@ -100,19 +101,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function toModel(): UserModel
     {
+        $userId = new UserId($this->id->toRfc4122());
         return new UserModel(
+            $userId,
             $this->email,
             $this->password,
             $this->roles,
-            $this->id
         );
     }
 
     public static function fromModel(UserModel $user): self
     {
         $entity = new self();
-        $entity->setId($user->getIdObject());
-        $entity->setEmail($user->getEmailObject());
+        // Convert UserId (domain) to Uuid (entity)
+        $userId = $user->getId();
+        $uuid = Uuid::fromString((string) $userId->value());
+        $entity->setId($uuid);
+        $entity->setEmail($user->getEmail());
         $entity->setPassword($user->getPassword());
         $entity->setRoles($user->getRoles());
         return $entity;

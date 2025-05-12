@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Domain\Data\ValueObject;
 
 use App\Domain\Data\ValueObject\Email;
@@ -20,7 +22,7 @@ class EmailTest extends TestCase
     public function test_empty_email_throws_exception(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid email format');
+        $this->expectExceptionMessage('Email cannot be empty');
 
         new Email('');
     }
