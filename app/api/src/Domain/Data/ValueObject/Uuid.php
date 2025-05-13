@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 namespace App\Domain\Data\ValueObject;
+
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Constraints as Assert;
-
 use InvalidArgumentException;
 
 class Uuid

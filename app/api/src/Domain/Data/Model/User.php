@@ -5,6 +5,7 @@ namespace App\Domain\Data\Model;
 use App\Domain\Data\ValueObject\Email;
 use App\Domain\Data\ValueObject\Password;
 use App\Domain\Data\ValueObject\Uuid;
+use Webmozart\Assert\Assert;
 
 class User
 {
@@ -22,6 +23,11 @@ class User
     public function getId(): Uuid
     {
         return $this->id;
+    }
+
+    public function getUniqueIdentifier(): Email
+    {
+        return $this->email;
     }
 
     public function getEmail(): Email

@@ -10,9 +10,12 @@ class Password
 {
     private string $value;
 
-    public function __construct(string $value)
+    // $isHashed parameter to bypass validation for hashed passwords
+    public function __construct(string $value, bool $isHashed = false)
     {
-        $this->validate($value);
+        if (!$isHashed) {
+            $this->validate($value);
+        }
         $this->value = $value;
     }
 
