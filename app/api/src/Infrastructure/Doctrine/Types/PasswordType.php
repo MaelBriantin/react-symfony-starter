@@ -15,9 +15,11 @@ class PasswordType extends StringType
         if ($value === null) {
             return null;
         }
+
         if (!is_string($value)) {
             throw new \InvalidArgumentException('Password value must be string or null');
         }
+
         // When converting from DB, the password is HASHED
         return new Password(
             value: $value,
@@ -27,7 +29,19 @@ class PasswordType extends StringType
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
-        return $value instanceof Password ? (string) $value->value() : ($value !== null ? (string) $value : null);
+        if ($value === null) {
+            return null;
+        }
+
+        if ($value instanceof Password) {
+            return $value->value();
+        }
+
+        if (!is_string($value)) {
+            throw new \InvalidArgumentException('Password value must be Password object, string or null');
+        }
+
+        return $value;
     }
 
     public function getName(): string

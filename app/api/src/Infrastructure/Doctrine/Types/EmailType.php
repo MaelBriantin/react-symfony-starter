@@ -12,12 +12,32 @@ class EmailType extends StringType
 
     public function convertToPHPValue($value, AbstractPlatform $platform): ?Email
     {
-        return $value !== null ? new Email((string) $value) : null;
+        if ($value === null) {
+            return null;
+        }
+
+        if (!is_string($value)) {
+            throw new \InvalidArgumentException('Email value must be string or null');
+        }
+
+        return new Email($value);
     }
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
-        return $value instanceof Email ? (string) $value->value() : ($value !== null ? (string) $value : null);
+        if ($value === null) {
+            return null;
+        }
+
+        if ($value instanceof Email) {
+            return $value->value();
+        }
+
+        if (!is_string($value)) {
+            throw new \InvalidArgumentException('Invalid email value type');
+        }
+
+        return $value;
     }
 
     public function getName(): string

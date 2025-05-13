@@ -2,9 +2,8 @@
 
 namespace App\Infrastructure\Controller\Auth;
 
-// Remove or alias this if it causes conflict, or be explicit in type-hint
-// use App\Domain\Data\Model\User;
 use App\Infrastructure\Doctrine\Entity\User as EntityUser;
+use App\Infrastructure\Service\SymfonyUuidGenerator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,7 +24,7 @@ class LoginController extends AbstractController
         $domainUser = $entityUser->toModel();
 
         // TODO: Generate a real token
-        $token = 'fake-token';
+        $token = new SymfonyUuidGenerator()->generateV4();
 
         return $this->json([
             'user' => $domainUser->getEmail()->value(),
