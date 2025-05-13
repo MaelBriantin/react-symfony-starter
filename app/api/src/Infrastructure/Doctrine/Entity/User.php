@@ -115,8 +115,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public static function fromModel(UserModel $user): self
     {
+        if ($user->getPassword() === null) {
+            throw new \InvalidArgumentException('Password cannot be null');
+        }
         $entity = new self();
-        // Convert UserId (domain) to Uuid (entity)
         $userId = $user->getId();
         $uuid = Uuid::fromString((string) $userId->value());
         $entity->setId($uuid);
