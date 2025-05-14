@@ -8,6 +8,7 @@ use App\Domain\Data\ValueObject\Password;
 use App\Domain\Data\Model\User as UserModel;
 use App\Domain\Data\ValueObject\Email;
 use App\Domain\Port\Secondary\User\UserRepositoryInterface;
+use App\Infrastructure\Adapter\UserAdapter;
 use App\Infrastructure\Doctrine\Entity\User as UserEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -21,19 +22,21 @@ use Symfony\Component\Uid\Uuid;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserRepositoryInterface
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, UserEntity::class);
+    public function __construct(
+        private readonly ManagerRegistry $registry,
+        private readonly UserAdapter $userAdapter
+    ) {
+        parent::__construct($this->registry, UserEntity::class);
     }
 
     public function save(UserModel $user): UserModel
     {
-        $userEntity = UserEntity::fromModel($user);
+        $userEntity = $this->userAdapter->toEntity($user);
 
         $this->getEntityManager()->persist($userEntity);
         $this->getEntityManager()->flush();
 
-        return $userEntity->toModel();
+        return $this->userAdapter->toDomain($userEntity);
     }
 
     public function findByEmail(Email $email): ?UserModel
@@ -44,7 +47,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             return null;
         }
 
-        return $entity->toModel();
+        return $this->userAdapter->toDomain($entity);
     }
 
     public function findById(Uuid $id): ?UserModel
@@ -55,7 +58,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             return null;
         }
 
-        return $entity->toModel();
+        return $this->userAdapter->toDomain($entity);
     }
 
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
@@ -81,7 +84,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $entities = $this->findAllEntities();
 
         return array_map(
-            fn (UserEntity $entity): UserModel => $entity->toModel(),
+            fn (UserEntity $entity): UserModel => $this->userAdapter->toDomain($entity),
             $entities
         );
     }

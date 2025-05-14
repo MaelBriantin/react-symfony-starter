@@ -35,3 +35,21 @@ tasks:
         - Symfony API (PHP): ${API_URL}
         - React Frontend (Node): ${CLIENT_URL}"
     silent: true
+
+  start:
+    desc: Start all containers
+    cmds:
+      - '{{.DOCKER_COMPOSE}} up -d'
+    silent: true
+
+  stop:
+    desc: Stop all containers
+    cmds:
+      - '{{.DOCKER_COMPOSE}} stop'
+    silent: true
+
+  down:
+    desc: Stop and remove all containers
+    cmds:
+      - '{{.DOCKER_COMPOSE}} down --remove-orphans --volumes'
+    silent: true

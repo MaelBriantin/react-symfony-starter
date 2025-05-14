@@ -101,30 +101,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function eraseCredentials(): void
     {
     }
-
-    public function toModel(): UserModel
-    {
-        $userId = new UserId($this->id->toRfc4122());
-        return new UserModel(
-            $userId,
-            $this->email,
-            $this->password,
-            $this->roles,
-        );
-    }
-
-    public static function fromModel(UserModel $user): self
-    {
-        if ($user->getPassword() === null) {
-            throw new \InvalidArgumentException('Password cannot be null');
-        }
-        $entity = new self();
-        $userId = $user->getId();
-        $uuid = Uuid::fromString((string) $userId->value());
-        $entity->setId($uuid);
-        $entity->setEmail($user->getEmail());
-        $entity->setPassword($user->getPassword());
-        $entity->setRoles($user->getRoles());
-        return $entity;
-    }
 }

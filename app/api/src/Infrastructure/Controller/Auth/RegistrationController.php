@@ -10,12 +10,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Application\UseCase\Auth\Register\RegisterUserUseCase;
+use App\Application\UseCase\Auth\Register\RegisterUserCommand;
 
 #[Route('/auth/register', name: 'app_auth_register', methods: ['POST'])]
 class RegistrationController extends AbstractController
 {
     public function __construct(
-        private \App\Application\UseCase\Auth\Register\RegisterUserUseCase $registerUser,
+        private RegisterUserUseCase $registerUser,
     ) {
     }
 
@@ -29,7 +31,7 @@ class RegistrationController extends AbstractController
 
         $registerRequest = RegisterRequest::fromArray($data);
 
-        $command = new \App\Application\UseCase\Auth\Register\RegisterUserCommand(
+        $command = new RegisterUserCommand(
             new Email($registerRequest->email),
             new Password($registerRequest->password)
         );
