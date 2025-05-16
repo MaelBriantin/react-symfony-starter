@@ -6,7 +6,7 @@ namespace App\Domain\Port\Secondary\User;
 
 use App\Domain\Data\Model\User;
 use App\Domain\Data\ValueObject\Email;
-use Symfony\Component\Uid\Uuid;
+use App\Domain\Data\ValueObject\Uuid;
 
 interface UserRepositoryInterface
 {

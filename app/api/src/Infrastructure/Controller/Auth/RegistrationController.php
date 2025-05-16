@@ -17,7 +17,7 @@ use App\Application\UseCase\Auth\Register\RegisterUserCommand;
 class RegistrationController extends AbstractController
 {
     public function __construct(
-        private RegisterUserUseCase $registerUser,
+        private readonly RegisterUserUseCase $registerUser,
     ) {
     }
 

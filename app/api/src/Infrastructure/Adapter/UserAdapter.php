@@ -12,9 +12,10 @@ class UserAdapter
 {
     public static function toDomain(EntityUser $user): DomainUser
     {
+        $uuid = $user->getId();
         return new DomainUser(
-            id: new Uuid($user->getId()),
-            email: new Email($user->getEmail()),
+            id: new Uuid($uuid->toRfc4122()),
+            email: new Email((string) $user->getEmail()),
         );
     }
 

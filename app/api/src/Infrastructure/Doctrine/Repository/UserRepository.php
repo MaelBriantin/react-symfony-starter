@@ -7,6 +7,7 @@ namespace App\Infrastructure\Doctrine\Repository;
 use App\Domain\Data\ValueObject\Password;
 use App\Domain\Data\Model\User as UserModel;
 use App\Domain\Data\ValueObject\Email;
+use App\Domain\Data\ValueObject\Uuid;
 use App\Domain\Port\Secondary\User\UserRepositoryInterface;
 use App\Infrastructure\Adapter\UserAdapter;
 use App\Infrastructure\Doctrine\Entity\User as UserEntity;
@@ -15,7 +16,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
-use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Uid\Uuid as SymfonyUuid;
 
 /**
  * @extends ServiceEntityRepository<UserEntity>
@@ -52,7 +53,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function findById(Uuid $id): ?UserModel
     {
-        $entity = $this->find($id);
+        $entity = $this->find(SymfonyUuid::fromString($id->value()));
 
         if (!$entity) {
             return null;
@@ -67,7 +68,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
         }
 
-        $user->setPassword(new Password($newHashedPassword));
+        $user->setPassword(new Password($newHashedPassword, true));
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
     }
