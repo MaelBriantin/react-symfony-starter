@@ -5,7 +5,6 @@ namespace App\Domain\Data\Model;
 use App\Domain\Data\ValueObject\Email;
 use App\Domain\Data\ValueObject\Password;
 use App\Domain\Data\ValueObject\Uuid;
-use Webmozart\Assert\Assert;
 
 class User
 {
