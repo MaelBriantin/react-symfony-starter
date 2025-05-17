@@ -103,3 +103,11 @@ tasks:
     cmds:
       - "{{.DOCKER_COMPOSE}} exec php bin/console make:migration --formatted"
     silent: true
+
+  check:
+    desc: Run Pest, PHPStan, and CS Fixer
+    cmds:
+      - task: cs-fixer
+      - task: phpstan
+      - task: pest
+    silent: true

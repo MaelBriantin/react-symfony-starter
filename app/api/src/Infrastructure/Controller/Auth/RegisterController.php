@@ -14,7 +14,7 @@ use App\Application\UseCase\Auth\Register\RegisterUserUseCase;
 use App\Application\UseCase\Auth\Register\RegisterUserCommand;
 
 #[Route('/auth/register', name: 'app_auth_register', methods: ['POST'])]
-class RegistrationController extends AbstractController
+class RegisterController extends AbstractController
 {
     public function __construct(
         private readonly RegisterUserUseCase $registerUser,
