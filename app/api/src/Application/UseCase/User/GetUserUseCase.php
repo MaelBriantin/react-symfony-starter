@@ -7,7 +7,7 @@ namespace App\Application\UseCase\User;
 use App\Domain\Data\Model\User;
 use App\Domain\Port\Primary\User\GetUserUseCaseInterface;
 use App\Domain\Port\Secondary\User\UserRepositoryInterface;
-use Symfony\Component\Uid\Uuid;
+use App\Domain\Data\ValueObject\Uuid;
 
 class GetUserUseCase implements GetUserUseCaseInterface
 {

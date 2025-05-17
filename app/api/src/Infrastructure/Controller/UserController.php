@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Controller;
 
-use Symfony\Component\Uid\Uuid;
+use App\Domain\Data\ValueObject\Uuid;
 use App\Domain\Port\Primary\User\GetUserUseCaseInterface;
 use App\Domain\Port\Primary\User\GetAllUsersUseCaseInterface;
 use Symfony\Component\Routing\Attribute\Route;
@@ -33,17 +33,16 @@ class UserController extends AbstractController
     public function show(string $id): ShowResponse
     {
         try {
-            $uuid = Uuid::fromString($id);
+            $uuid = new Uuid($id);
+            $user = $this->getUser->execute($uuid);
+
+            if (!$user) {
+                throw new NotFoundHttpException('User not found');
+            }
+
+            return new ShowResponse($user);
         } catch (\InvalidArgumentException $e) {
-            throw new NotFoundHttpException(sprintf('Invalid UUID format for id "%s".', $id), $e);
+            throw new NotFoundHttpException('Invalid UUID format');
         }
-
-        $user = $this->getUser->execute($uuid);
-
-        if (null === $user) {
-            throw new NotFoundHttpException(sprintf('User with id "%s" not found.', $id));
-        }
-
-        return new ShowResponse($user);
     }
 }

@@ -7,7 +7,7 @@ use App\Domain\Port\Secondary\Auth\PasswordHasherInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use App\Infrastructure\Doctrine\Entity\User;
 
-class SymfonyPasswordHasher implements PasswordHasherInterface
+readonly class SymfonyPasswordHasher implements PasswordHasherInterface
 {
     public function __construct(
         private UserPasswordHasherInterface $passwordHasher

@@ -16,6 +16,7 @@ tasks:
       - task: build
       - task: composer:install
       - task: up
+      - task: migrate
     silent: true
 
   build:
@@ -75,4 +76,38 @@ tasks:
     desc: Run Pest tests
     cmds:
       - "{{.DOCKER_RUN}} php vendor/bin/pest --colors=always {{.CLI_ARGS}}"
+    silent: true
+
+  cache:clear:
+    desc: Clear Symfony cache
+    cmds:
+      - "{{.DOCKER_COMPOSE}} exec php bin/console cache:clear"
+    silent: true
+
+  migrations:migrate:
+    desc: Run Symfony migrations
+    aliases:
+      - migrate
+    cmds:
+      - "{{.DOCKER_COMPOSE}} exec php bin/console doctrine:migrations:migrate --no-interaction"
+    silent: true
+
+  migrations:diff:
+    desc: Show Symfony migration diff
+    cmds:
+      - "{{.DOCKER_COMPOSE}} exec php bin/console doctrine:migrations:diff --formatted"
+    silent: true
+
+  make:migration:
+    desc: Create a new Symfony migration
+    cmds:
+      - "{{.DOCKER_COMPOSE}} exec php bin/console make:migration --formatted"
+    silent: true
+
+  check:
+    desc: Run Pest, PHPStan, and CS Fixer
+    cmds:
+      - task: cs-fixer
+      - task: phpstan
+      - task: pest
     silent: true
