@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AboutController extends AbstractController
 {
-    #[Route('/')]
+    #[Route('/', name: 'app_about', methods: ['GET'])]
     public function about(): Response
     {
         return $this->json([

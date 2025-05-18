@@ -2,6 +2,7 @@
 
 namespace App\Application\UseCase\Auth\Register;
 
+use App\Domain\Exception\User\EmailAlreadyUsedException;
 use App\Domain\Data\Model\User;
 use App\Domain\Data\ValueObject\Uuid;
 use App\Domain\Port\Secondary\Auth\PasswordHasherInterface;
@@ -19,6 +20,11 @@ class RegisterUserUseCase
 
     public function execute(RegisterUserCommand $command): User
     {
+        $existingUser = $this->userRepository->findOneByEmail($command->email);
+        if ($existingUser !== null) {
+            throw new EmailAlreadyUsedException($command->email);
+        }
+
         $user = new User(
             new Uuid($this->uuidGenerator->generateV7()),
             $command->email,
