@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Application\UseCase\Auth;
+namespace App\Application\UseCase\Auth\Register;
 
-use App\Application\Command\Auth\RegisterUserCommand;
-use App\Domain\Port\Secondary\UuidGeneratorInterface;
 use App\Domain\Data\Model\User;
 use App\Domain\Data\ValueObject\Uuid;
-use App\Domain\Port\Secondary\User\UserRepositoryInterface;
 use App\Domain\Port\Secondary\Auth\PasswordHasherInterface;
+use App\Domain\Port\Secondary\User\UserRepositoryInterface;
+use App\Domain\Port\Secondary\UuidGeneratorInterface;
 
 class RegisterUserUseCase
 {
@@ -27,6 +26,9 @@ class RegisterUserUseCase
             ['ROLE_USER']
         );
 
+        if ($user->getPassword() === null) {
+            throw new \InvalidArgumentException('Password cannot be null');
+        }
         $hashedPassword = $this->passwordHasher->hash($user->getPassword());
         $user->setPassword($hashedPassword);
 

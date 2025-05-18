@@ -1,43 +1,26 @@
 <?php
 
-declare(strict_types=1);
-
-namespace App\Tests\Unit\Domain\Data\ValueObject;
-
 use App\Domain\Data\ValueObject\Uuid;
 use InvalidArgumentException;
-use Tests\TestCase;
 
-class UuidTest extends TestCase
-{
-    public function test_valid_uuid_can_be_created(): void
-    {
+describe('Uuid', function () {
+    it('can be created with a valid uuid', function () {
         $uuid = new Uuid('123e4567-e89b-12d3-a456-426614174000');
-        
-        $this->assertSame('123e4567-e89b-12d3-a456-426614174000', $uuid->value());
-    }
+        expect($uuid->value())->toBe('123e4567-e89b-12d3-a456-426614174000');
+    });
 
-    public function test_empty_uuid_throws_exception(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Uuid cannot be empty');
+    it('throws if uuid is empty', function () {
+        expect(fn() => new Uuid(''))
+            ->toThrow(InvalidArgumentException::class, 'Uuid cannot be empty');
+    });
 
-        new Uuid('');
-    }
+    it('throws if uuid format is invalid', function () {
+        expect(fn() => new Uuid('invalid-uuid'))
+            ->toThrow(InvalidArgumentException::class, 'Invalid Uuid format');
+    });
 
-    public function test_invalid_uuid_format_throws_exception(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid Uuid format');
-
-        new Uuid('invalid-uuid');
-    }
-
-    public function test_uuid_too_short_throws_exception(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid Uuid format');
-
-        new Uuid('123e4567-e89b-12d3-a456-426614174000123');
-    }
-}
+    it('throws if uuid is too short', function () {
+        expect(fn() => new Uuid('123e4567-e89b-12d3-a456-426614174000123'))
+            ->toThrow(InvalidArgumentException::class, 'Invalid Uuid format');
+    });
+});
