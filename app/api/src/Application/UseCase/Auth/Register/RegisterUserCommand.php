@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application\Command\Auth;
+namespace App\Application\UseCase\Auth\Register;
 
 use App\Domain\Data\ValueObject\Email;
 use App\Domain\Data\ValueObject\Password;

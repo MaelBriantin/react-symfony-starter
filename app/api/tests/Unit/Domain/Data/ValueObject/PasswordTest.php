@@ -1,77 +1,46 @@
 <?php
 
-declare(strict_types=1);
-
-namespace Tests\Unit\Domain\Data\ValueObject;
-
 use App\Domain\Data\ValueObject\Password;
 use InvalidArgumentException;
-use Tests\TestCase;
-use PHPUnit\Framework\Attributes\DataProvider;
 
-class PasswordTest extends TestCase
-{
-    public function test_valid_password_can_be_created(): void
-    {
+describe('Password', function () {
+    it('can be created with a valid password', function () {
         $password = new Password('Password123!');
-        
-        $this->assertSame('Password123!', $password->value());
-    }
+        expect($password->value())->toBe('Password123!');
+    });
 
-    public function test_password_too_short_throws_exception(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Password must be at least 8 characters long');
+    it('throws if password is too short', function () {
+        expect(fn() => new Password('Pass123'))
+            ->toThrow(InvalidArgumentException::class, 'Password must be at least 8 characters long');
+    });
 
-        new Password('Pass123');
-    }
+    it('throws if password has no uppercase', function () {
+        expect(fn() => new Password('password123!'))
+            ->toThrow(InvalidArgumentException::class, 'Password must contain at least one uppercase letter');
+    });
 
-    public function test_password_without_uppercase_throws_exception(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Password must contain at least one uppercase letter');
+    it('throws if password has no lowercase', function () {
+        expect(fn() => new Password('PASSWORD123'))
+            ->toThrow(InvalidArgumentException::class, 'Password must contain at least one lowercase letter');
+    });
 
-        new Password('password123!');
-    }
+    it('throws if password has no number', function () {
+        expect(fn() => new Password('PasswordABC'))
+            ->toThrow(InvalidArgumentException::class, 'Password must contain at least one number');
+    });
 
-    public function test_password_without_lowercase_throws_exception(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Password must contain at least one lowercase letter');
+    it('throws if password has no special character', function () {
+        expect(fn() => new Password('Password123'))
+            ->toThrow(InvalidArgumentException::class, 'Password must contain at least one special character');
+    });
 
-        new Password('PASSWORD123');
-    }
-
-    public function test_password_without_number_throws_exception(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Password must contain at least one number');
-
-        new Password('PasswordABC');
-    }
-
-    public function test_password_without_special_character_throws_exception(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Password must contain at least one special character');
-
-        new Password('Password123');
-    }
-
-    #[DataProvider('validPasswordProvider')]
-    public function test_various_valid_passwords_are_accepted(string $validPassword): void
-    {
+    it('accepts various valid passwords', function (string $validPassword) {
         $password = new Password($validPassword);
-        $this->assertSame($validPassword, $password->value());
-    }
-
-    public static function validPasswordProvider(): array
-    {
-        return [
-            'minimum requirements' => ['Password1!'],
-            'complex password' => ['MyC0mpl3x!P@ssw0rd'],
-            'with special chars' => ['P@ssw0rd!'],
-            'only required chars' => ['P@ssw0rd'],
-        ];
-    }
-}
+        expect($password->value())->toBe($validPassword);
+    })->with([
+        'Password1!',
+        'MyC0mpl3x!P@ssw0rd',
+        'P@ssw0rd!',
+        'P@ssw0rd',
+    ]);
+});

@@ -2,11 +2,11 @@
 
 namespace App\Infrastructure\Doctrine\Entity;
 
-use App\Domain\Data\Model\User as UserModel;
 use App\Domain\Data\ValueObject\Email;
 use App\Domain\Data\ValueObject\Password;
-use App\Domain\Data\ValueObject\Uuid as UserId;
 use App\Infrastructure\Doctrine\Repository\UserRepository;
+use App\Infrastructure\Doctrine\Types\EmailType;
+use App\Infrastructure\Doctrine\Types\PasswordType;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -21,14 +21,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     private Uuid $id;
 
-    #[ORM\Column(type: 'email', length: 180, unique: true)]
+    #[ORM\Column(type: EmailType::NAME, length: 180, unique: true)]
     private Email $email;
 
     /** @var string[] */
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
-    #[ORM\Column(type: 'password')]
+    #[ORM\Column(type: PasswordType::NAME)]
     private Password $password;
 
     public function __construct()
@@ -48,7 +48,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getEmail(): Email
     {
-        Assert::stringNotEmpty($this->email, 'Email cannot be empty');
         return $this->email;
     }
 
@@ -60,8 +59,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUserIdentifier(): string
     {
-        Assert::stringNotEmpty($this->email, 'Email cannot be empty');
-        return (string) $this->email;
+        $email = (string) $this->email;
+        Assert::notEmpty($email, 'Email cannot be empty');
+        return $email;
     }
 
     /** @return string[] */
@@ -81,7 +81,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getPassword(): string
     {
-        return (string) $this->password;
+        return (string) $this->password->value();
     }
 
     public function getPassordObject(): Password
@@ -97,29 +97,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials(): void
     {
-    }
-
-    public function toModel(): UserModel
-    {
-        $userId = new UserId($this->id->toRfc4122());
-        return new UserModel(
-            $userId,
-            $this->email,
-            $this->password,
-            $this->roles,
-        );
-    }
-
-    public static function fromModel(UserModel $user): self
-    {
-        $entity = new self();
-        // Convert UserId (domain) to Uuid (entity)
-        $userId = $user->getId();
-        $uuid = Uuid::fromString((string) $userId->value());
-        $entity->setId($uuid);
-        $entity->setEmail($user->getEmail());
-        $entity->setPassword($user->getPassword());
-        $entity->setRoles($user->getRoles());
-        return $entity;
     }
 }
