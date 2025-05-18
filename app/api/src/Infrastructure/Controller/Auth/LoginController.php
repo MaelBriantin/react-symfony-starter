@@ -2,9 +2,11 @@
 
 namespace App\Infrastructure\Controller\Auth;
 
+use App\Application\UseCase\Auth\Login\LoginCommand;
 use App\Application\UseCase\Auth\Login\LoginUseCase;
 use App\Infrastructure\Adapter\UserAdapter;
 use App\Infrastructure\Doctrine\Entity\User as EntityUser;
+use App\Infrastructure\Response\Login\ErrorLoginResponse;
 use App\Infrastructure\Response\Login\SuccessLoginResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -23,15 +25,13 @@ class LoginController extends AbstractController
     public function index(#[CurrentUser] ?EntityUser $user): SuccessLoginResponse | JsonResponse
     {
         if (null === $user) {
-            return $this->json([
-                'message' => 'missing credentials',
-            ], Response::HTTP_UNAUTHORIZED);
+            return ErrorLoginResponse::credentialsMissing();
         }
 
         $domainUser = UserAdapter::toDomain($user);
 
         $response = $this->loginUseCase->execute(
-            new \App\Application\UseCase\Auth\Login\LoginCommand($domainUser)
+            new LoginCommand($domainUser)
         );
 
         return new SuccessLoginResponse($response);
