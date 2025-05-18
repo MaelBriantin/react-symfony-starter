@@ -24,4 +24,9 @@ class ErrorLoginResponse extends JsonResponse
     {
         return new self('missing credentials');
     }
+
+    public static function invalidCredentials(): self
+    {
+        return new self('invalid credentials');
+    }
 }

@@ -25,7 +25,7 @@ class LoginController extends AbstractController
     public function index(#[CurrentUser] ?EntityUser $user): SuccessLoginResponse | JsonResponse
     {
         if (null === $user) {
-            return ErrorLoginResponse::credentialsMissing();
+            return ErrorLoginResponse::invalidCredentials();
         }
 
         $domainUser = UserAdapter::toDomain($user);

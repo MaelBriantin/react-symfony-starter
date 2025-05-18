@@ -2,15 +2,12 @@
 
 namespace App\Infrastructure\Doctrine\Entity;
 
-use App\Domain\Data\Model\User as UserModel;
 use App\Domain\Data\ValueObject\Email;
 use App\Domain\Data\ValueObject\Password;
-use App\Domain\Data\ValueObject\Uuid as UserId;
 use App\Infrastructure\Doctrine\Repository\UserRepository;
 use App\Infrastructure\Doctrine\Types\EmailType;
 use App\Infrastructure\Doctrine\Types\PasswordType;
 use Doctrine\ORM\Mapping as ORM;
-use phpDocumentor\Reflection\PseudoTypes\NonEmptyString;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
