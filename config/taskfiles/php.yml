@@ -17,6 +17,7 @@ tasks:
       - task: composer:install
       - task: up
       - task: migrate
+      - task: jwt:generate-keys:overwrite
     silent: true
 
   build:
@@ -110,4 +111,16 @@ tasks:
       - task: cs-fixer
       - task: phpstan
       - task: pest
+    silent: true
+
+  jwt:generate-keys:
+    desc: Generate JWT keys
+    cmds:
+      - "{{.DOCKER_COMPOSE}} exec php bin/console lexik:jwt:generate-keypair --skip-if-exists"
+    silent: true
+
+  jwt:generate-keys:overwrite:
+    desc: Generate JWT keys (overwrite)
+    cmds:
+      - "{{.DOCKER_COMPOSE}} exec php bin/console lexik:jwt:generate-keypair --overwrite --no-interaction"
     silent: true
