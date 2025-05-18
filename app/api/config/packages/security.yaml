@@ -9,9 +9,23 @@ security:
                 class: App\Infrastructure\Doctrine\Entity\User
                 property: email
     firewalls:
+        login:
+            pattern: ^/auth/login
+            stateless: true
+            json_login:
+                check_path: /auth/login_check
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+        api:
+            pattern:   ^/
+            stateless: true
+            jwt: ~
+
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
         main:
             lazy: true
             provider: app_user_provider
@@ -29,6 +43,8 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/auth/login, roles: PUBLIC_ACCESS }
+        - { path: ^/,           roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
     security:

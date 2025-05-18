@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Controller;
+namespace App\Infrastructure\Controller\User;
 
 use App\Domain\Data\ValueObject\Uuid;
 use App\Domain\Port\Primary\User\GetUserUseCaseInterface;
