@@ -13,6 +13,14 @@ DEV_MYSQL_PASSWORD="${DEV_MYSQL_PASSWORD}"
 DEV_MYSQL_ROOT_PASSWORD="${DEV_MYSQL_ROOT_PASSWORD}"
 DEV_CLIENT_URL="${DEV_CLIENT_URL}"
 DEV_API_URL="${DEV_API_URL}"
+# Use the JWT secrets from environment
+JWT_SECRET_KEY="${JWT_SECRET_KEY}"
+JWT_PUBLIC_KEY="${JWT_PUBLIC_KEY}"
+# Generate JWT_PASSPHRASE if not set
+if [ -z "$JWT_PASSPHRASE" ]; then
+  JWT_PASSPHRASE=$(openssl rand -hex 32)
+  echo "JWT_PASSPHRASE was not set, generated: $JWT_PASSPHRASE"
+fi
 # -------------------------------------------------
 echo "Received ENV_TYPE: '$ENV_TYPE'"
 
@@ -41,6 +49,13 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 echo "Copied/Overwrote '$ROOT_ENV_FILE'."
+
+# Inject JWT_PASSPHRASE into .env
+if [ "$(uname)" = "Darwin" ]; then
+  sed -i '' "s|^JWT_PASSPHRASE=.*$|JWT_PASSPHRASE=${JWT_PASSPHRASE}|" "$ROOT_ENV_FILE"
+else
+  sed -i "s|^JWT_PASSPHRASE=.*$|JWT_PASSPHRASE=${JWT_PASSPHRASE}|" "$ROOT_ENV_FILE"
+fi
 
 # --- Apply dev defaults ONLY if ENV_TYPE is dev ---
 if [ "$ENV_TYPE" = "dev" ]; then
