@@ -12,9 +12,7 @@ tasks:
     desc: Initialize the complete stack for development
     output: prefixed
     cmds:
-      - task: env:generate
-        vars: { ENV_TYPE: dev }
-      - task: env:init
+      - task: env:init:dev
       - task: mysql
       - task: php
       - task: node

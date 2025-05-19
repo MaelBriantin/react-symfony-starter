@@ -1,37 +1,28 @@
 #!/bin/sh
-set -e # Exit immediately if a command exits with a non-zero status.
+set -e
 
 echo "Starting..."
 
 # --- Read environment variables passed from Task ---
 ROOT_DIR="${ROOT_DIR}"
-# Use the ENV_TYPE from environment, defaulting to 'dev' if empty/unset
-ENV_TYPE="${ENV_TYPE:-prod}" # Changed default back to dev for safety
+ENV_TYPE="${ENV_TYPE:-prod}"
 DEV_MYSQL_DATABASE="${DEV_MYSQL_DATABASE}"
 DEV_MYSQL_USER="${DEV_MYSQL_USER}"
 DEV_MYSQL_PASSWORD="${DEV_MYSQL_PASSWORD}"
 DEV_MYSQL_ROOT_PASSWORD="${DEV_MYSQL_ROOT_PASSWORD}"
 DEV_CLIENT_URL="${DEV_CLIENT_URL}"
 DEV_API_URL="${DEV_API_URL}"
-# Use the JWT secrets from environment
-JWT_SECRET_KEY="${JWT_SECRET_KEY}"
-JWT_PUBLIC_KEY="${JWT_PUBLIC_KEY}"
-# Generate JWT_PASSPHRASE if not set
-if [ -z "$JWT_PASSPHRASE" ]; then
-  JWT_PASSPHRASE=$(openssl rand -hex 32)
-  echo "JWT_PASSPHRASE was not set, generated: $JWT_PASSPHRASE"
-fi
 # -------------------------------------------------
 echo "Received ENV_TYPE: '$ENV_TYPE'"
 
-# Check if ROOT_DIR is actually set
+# Check if ROOT_DIR is set
 if [ -z "$ROOT_DIR" ]; then
   echo "Error: ROOT_DIR environment variable is not set." >&2
   exit 1
 fi
 
 ROOT_ENV_FILE="${ROOT_DIR}/.env"
-SOURCE_ENV_FILE="${ROOT_DIR}/.env.example" # Always use .env.example
+SOURCE_ENV_FILE="${ROOT_DIR}/.env.example"
 
 echo "Checking for source file: ${SOURCE_ENV_FILE}"
 # Check if source file exists
@@ -41,52 +32,39 @@ if [ ! -f "$SOURCE_ENV_FILE" ]; then
 fi
 echo "Source file found."
 
-# Always copy from .env.example, overwriting .env if it exists
-echo "Copying/Overwriting '$ROOT_ENV_FILE' from '$SOURCE_ENV_FILE'..."
-cp "$SOURCE_ENV_FILE" "$ROOT_ENV_FILE"
-if [ $? -ne 0 ]; then
-  echo "Error: Failed to copy '$SOURCE_ENV_FILE' to '$ROOT_ENV_FILE'. Check permissions?" >&2
-  exit 1
-fi
-echo "Copied/Overwrote '$ROOT_ENV_FILE'."
-
-# Inject JWT_PASSPHRASE into .env
-if [ "$(uname)" = "Darwin" ]; then
-  sed -i '' "s|^JWT_PASSPHRASE=.*$|JWT_PASSPHRASE=${JWT_PASSPHRASE}|" "$ROOT_ENV_FILE"
-else
-  sed -i "s|^JWT_PASSPHRASE=.*$|JWT_PASSPHRASE=${JWT_PASSPHRASE}|" "$ROOT_ENV_FILE"
+# If .env does not exist, create it from .env.example
+if [ ! -f "$ROOT_ENV_FILE" ]; then
+  echo "Creating '$ROOT_ENV_FILE' from '$SOURCE_ENV_FILE'..."
+  cp "$SOURCE_ENV_FILE" "$ROOT_ENV_FILE"
+  if [ $? -ne 0 ]; then
+    echo "Error: Failed to copy '$SOURCE_ENV_FILE' to '$ROOT_ENV_FILE'. Check permissions?" >&2
+    exit 1
+  fi
+  echo "Created '$ROOT_ENV_FILE'."
 fi
 
-# --- Apply dev defaults ONLY if ENV_TYPE is dev ---
+# Utility function: replace only if value is empty
+replace_if_empty() {
+  VAR_NAME="$1"
+  VAR_VALUE="$2"
+  sed -i "s|^${VAR_NAME}=$|${VAR_NAME}=${VAR_VALUE}|" "$ROOT_ENV_FILE"
+}
+
+# Apply dev defaults ONLY if ENV_TYPE is dev
 if [ "$ENV_TYPE" = "dev" ]; then
   echo "Applying development defaults (ENV_TYPE=dev)..."
-  # Use different delimiters for sed to avoid issues with passwords
-  # Replace only if the line is exactly MYSQL_VAR= (empty value)
-  # Handle sed -i differences between macOS and Linux
-  if [ "$(uname)" = "Darwin" ]; then
-    sed -i '' "s|^APP_ENV=$|APP_ENV=dev|" "$ROOT_ENV_FILE"
-    sed -i '' "s|^MYSQL_DATABASE=$|MYSQL_DATABASE=${DEV_MYSQL_DATABASE}|" "$ROOT_ENV_FILE"
-    sed -i '' "s|^MYSQL_USER=$|MYSQL_USER=${DEV_MYSQL_USER}|" "$ROOT_ENV_FILE"
-    sed -i '' "s|^MYSQL_PASSWORD=$|MYSQL_PASSWORD=${DEV_MYSQL_PASSWORD}|" "$ROOT_ENV_FILE"
-    sed -i '' "s|^MYSQL_ROOT_PASSWORD=$|MYSQL_ROOT_PASSWORD=${DEV_MYSQL_ROOT_PASSWORD}|" "$ROOT_ENV_FILE"
-    sed -i '' "s|^CLIENT_URL=$|CLIENT_URL=${DEV_CLIENT_URL}|" "$ROOT_ENV_FILE"
-    sed -i '' "s|^API_URL=$|API_URL=${DEV_API_URL}|" "$ROOT_ENV_FILE"
-  else
-    sed -i "s|^APP_ENV=$|APP_ENV=dev|" "$ROOT_ENV_FILE"
-    sed -i "s|^MYSQL_DATABASE=$|MYSQL_DATABASE=${DEV_MYSQL_DATABASE}|" "$ROOT_ENV_FILE"
-    sed -i "s|^MYSQL_USER=$|MYSQL_USER=${DEV_MYSQL_USER}|" "$ROOT_ENV_FILE"
-    sed -i "s|^MYSQL_PASSWORD=$|MYSQL_PASSWORD=${DEV_MYSQL_PASSWORD}|" "$ROOT_ENV_FILE"
-    sed -i "s|^MYSQL_ROOT_PASSWORD=$|MYSQL_ROOT_PASSWORD=${DEV_MYSQL_ROOT_PASSWORD}|" "$ROOT_ENV_FILE"
-    sed -i "s|^CLIENT_URL=$|CLIENT_URL=${DEV_CLIENT_URL}|" "$ROOT_ENV_FILE"
-    sed -i "s|^API_URL=$|API_URL=${DEV_API_URL}|" "$ROOT_ENV_FILE"
-  fi
-   echo "Development defaults applied."
+  replace_if_empty "APP_ENV" "dev"
+  replace_if_empty "MYSQL_DATABASE" "$DEV_MYSQL_DATABASE"
+  replace_if_empty "MYSQL_USER" "$DEV_MYSQL_USER"
+  replace_if_empty "MYSQL_PASSWORD" "$DEV_MYSQL_PASSWORD"
+  replace_if_empty "MYSQL_ROOT_PASSWORD" "$DEV_MYSQL_ROOT_PASSWORD"
+  replace_if_empty "CLIENT_URL" "$DEV_CLIENT_URL"
+  replace_if_empty "API_URL" "$DEV_API_URL"
+  echo "Development defaults applied."
 else
-  sed -i "s|^APP_ENV=$|APP_ENV=prod|" "$ROOT_ENV_FILE"
+  replace_if_empty "APP_ENV" "prod"
   echo "Skipping development defaults (ENV_TYPE='$ENV_TYPE')."
 fi
-# ----------------------------------------------------
 
 echo "Finished."
-
 # Note: APP_SECRET generation is handled by generate-secret.sh
