@@ -48,11 +48,21 @@ To get started with the development environment, follow these steps:
     - install the Node dependencies using `pnpm`
     - run the Caddy server via Docker
 
->   **NOTE:** All environment variables are automatically generated when you run the `task dev:setup` command. But, if you want custom values, you can can generate a new `.env` file with the command `task env:generate:dev` first, change the values in the `.env` file, and then run the `task dev:setup` after that. Some task commands are also available to help you with the creation of a custom `.env` file like `task env:generate:app-secret`, `task env:generate:jwt`, `task env:generate:db-url` (specific documentation will be added later).
-
 3. Access the application:
    - Symfony backend: [http://api.localhost](http://api.localhost)
    - React frontend: [http://localhost](http://localhost)
+
+### Customizing the Environment
+
+All environment variables are automatically generated when you run the `task dev:setup` command. But, if you want custom values, you can can generate a new `.env` file with the command `task env:generate:dev` first, change the values in the `.env` file, and then run the `task dev:setup` after that.
+
+Some task commands are also available to help you with the creation of a custom `.env` file.
+- `task env:generate:app-secret`: 
+  Generates a new `APP_SECRET` value in the `.env` file.
+- `task env:generate:jwt`: 
+  Generates a new JWT passphrase, public key, and private key in the `.env` file.
+- `task env:generate:db-url`: 
+  Generates a new `DATABASE_URL` value in the `.env` file based on the current `MYSQL_DATABASE` and `MYSQL_USER` values.
 
 ## API Documentation
 
@@ -87,5 +97,4 @@ JWT_PRIVATE_KEY=your_jwt_private_key_path
 JWT_TOKEN_LIFETIME=jwt_token_lifetime_in_seconds
 ```
 
-> **NOTE:** Needed environment variables and JWT keys and passphrase are automatically generated when you run the `task dev:setup` command. In production, you can generate the keys and passphrase with the command `task env:init:jwt` after the creation of your `.env` file.
-
+> **NOTE:** Needed environment variables and JWT keys and passphrase are automatically generated when you run the `task dev:setup` command. In production, you can generate the keys and passphrase with the command `task env:init:jwt` after the creation of your `.env` file. This command will generate the keys and passphrase in the `.env` file and create the keys in the `config/jwt` directory.
