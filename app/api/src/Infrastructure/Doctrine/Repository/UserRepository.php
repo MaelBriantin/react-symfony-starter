@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Doctrine\Repository;
+namespace Infrastructure\Doctrine\Repository;
 
-use App\Domain\Data\ValueObject\Password;
-use App\Domain\Data\Model\User as UserModel;
-use App\Domain\Data\ValueObject\Email;
-use App\Domain\Data\ValueObject\Uuid;
-use App\Domain\Port\Secondary\User\UserRepositoryInterface;
-use App\Infrastructure\Adapter\UserAdapter;
-use App\Infrastructure\Doctrine\Entity\User as UserEntity;
+use Domain\Data\ValueObject\Password;
+use Domain\Data\Model\User as UserModel;
+use Domain\Data\ValueObject\Email;
+use Domain\Data\ValueObject\Uuid;
+use Domain\Port\Secondary\User\UserRepositoryInterface;
+use Infrastructure\Adapter\UserAdapter;
+use Infrastructure\Doctrine\Entity\User as UserEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -85,7 +85,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $entities = $this->findAllEntities();
 
         return array_map(
-            fn (UserEntity $entity): UserModel => $this->userAdapter->toDomain($entity),
+            fn(UserEntity $entity): UserModel => $this->userAdapter->toDomain($entity),
             $entities
         );
     }

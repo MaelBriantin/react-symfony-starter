@@ -1,25 +1,24 @@
 <?php
 
-namespace App\Infrastructure\Controller\Auth;
+namespace Infrastructure\Controller\Auth;
 
-use App\Domain\Data\ValueObject\Email;
-use App\Domain\Data\ValueObject\Password;
-use App\Infrastructure\Request\Auth\RegisterRequest;
-use App\Infrastructure\Response\Auth\RegisterResponse;
+use Domain\Data\ValueObject\Email;
+use Domain\Data\ValueObject\Password;
+use Infrastructure\Request\Auth\RegisterRequest;
+use Infrastructure\Response\Auth\RegisterResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
-use App\Application\UseCase\Auth\Register\RegisterUserUseCase;
-use App\Application\UseCase\Auth\Register\RegisterUserCommand;
+use Application\UseCase\Auth\Register\RegisterUserUseCase;
+use Application\UseCase\Auth\Register\RegisterUserCommand;
 
 #[Route('/auth/register', name: 'auth_register', methods: ['POST'])]
 class RegisterController extends AbstractController
 {
     public function __construct(
         private RegisterUserUseCase $registerUser,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request): RegisterResponse
     {

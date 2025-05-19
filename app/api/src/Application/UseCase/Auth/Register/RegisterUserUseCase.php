@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Application\UseCase\Auth\Register;
+namespace Application\UseCase\Auth\Register;
 
-use App\Domain\Data\Model\User;
-use App\Domain\Data\ValueObject\Uuid;
-use App\Domain\Port\Secondary\Auth\PasswordHasherInterface;
-use App\Domain\Port\Secondary\User\UserRepositoryInterface;
-use App\Domain\Port\Secondary\UuidGeneratorInterface;
+use Domain\Data\Model\User;
+use Domain\Data\ValueObject\Uuid;
+use Domain\Port\Secondary\Auth\PasswordHasherInterface;
+use Domain\Port\Secondary\User\UserRepositoryInterface;
+use Domain\Port\Secondary\UuidGeneratorInterface;
 
 class RegisterUserUseCase
 {
@@ -14,8 +14,7 @@ class RegisterUserUseCase
         private UserRepositoryInterface $userRepository,
         private PasswordHasherInterface $passwordHasher,
         private UuidGeneratorInterface $uuidGenerator
-    ) {
-    }
+    ) {}
 
     public function execute(RegisterUserCommand $command): User
     {

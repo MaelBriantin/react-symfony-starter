@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Response\User;
+namespace Infrastructure\Response\User;
 
-use App\Domain\Data\Model\User;
+use Domain\Data\Model\User;
 
 class IndexResponse extends AbstractUserResponse
 {

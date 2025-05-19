@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Port\Secondary\User;
+namespace Domain\Port\Secondary\User;
 
-use App\Domain\Data\Model\User;
-use App\Domain\Data\ValueObject\Email;
-use App\Domain\Data\ValueObject\Uuid;
+use Domain\Data\Model\User;
+use Domain\Data\ValueObject\Email;
+use Domain\Data\ValueObject\Uuid;
 
 interface UserRepositoryInterface
 {

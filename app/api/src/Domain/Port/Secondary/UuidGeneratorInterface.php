@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Port\Secondary;
+namespace Domain\Port\Secondary;
 
 interface UuidGeneratorInterface
 {

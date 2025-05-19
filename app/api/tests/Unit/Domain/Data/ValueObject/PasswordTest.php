@@ -1,6 +1,6 @@
 <?php
 
-use App\Domain\Data\ValueObject\Password;
+use Domain\Data\ValueObject\Password;
 use InvalidArgumentException;
 
 describe('Password', function () {

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Infrastructure\Doctrine\Types;
+namespace Infrastructure\Doctrine\Types;
 
-use App\Domain\Data\ValueObject\Password;
+use Domain\Data\ValueObject\Password;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\StringType;
 

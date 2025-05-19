@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Port\Secondary\Auth;
+namespace Domain\Port\Secondary\Auth;
 
-use App\Domain\Data\ValueObject\Password;
+use Domain\Data\ValueObject\Password;
 
 interface PasswordHasherInterface
 {

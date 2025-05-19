@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Domain\Data\Model;
+namespace Domain\Data\Model;
 
-use App\Domain\Data\ValueObject\Email;
-use App\Domain\Data\ValueObject\Password;
-use App\Domain\Data\ValueObject\Uuid;
+use Domain\Data\ValueObject\Email;
+use Domain\Data\ValueObject\Password;
+use Domain\Data\ValueObject\Uuid;
 
 class User
 {
@@ -16,8 +16,7 @@ class User
         private Email $email,
         private ?Password $password = null,
         private array $roles = []
-    ) {
-    }
+    ) {}
 
     public function getId(): Uuid
     {

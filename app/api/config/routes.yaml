@@ -4,5 +4,5 @@ api_login_check:
 controllers:
     resource:
         path: ../src/Infrastructure/Controller/
-        namespace: App\Infrastructure\Controller
+        namespace: Infrastructure\Controller
     type: attribute

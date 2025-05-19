@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Infrastructure\Doctrine\Entity;
+namespace Infrastructure\Doctrine\Entity;
 
-use App\Domain\Data\ValueObject\Email;
-use App\Domain\Data\ValueObject\Password;
-use App\Infrastructure\Doctrine\Repository\UserRepository;
-use App\Infrastructure\Doctrine\Types\EmailType;
-use App\Infrastructure\Doctrine\Types\PasswordType;
+use Domain\Data\ValueObject\Email;
+use Domain\Data\ValueObject\Password;
+use Infrastructure\Doctrine\Repository\UserRepository;
+use Infrastructure\Doctrine\Types\EmailType;
+use Infrastructure\Doctrine\Types\PasswordType;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -31,9 +31,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: PasswordType::NAME)]
     private Password $password;
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function getId(): Uuid
     {
@@ -95,7 +93,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function eraseCredentials(): void
-    {
-    }
+    public function eraseCredentials(): void {}
 }

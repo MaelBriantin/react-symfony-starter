@@ -1,6 +1,6 @@
 <?php
 
-use App\Domain\Data\ValueObject\Email;
+use Domain\Data\ValueObject\Email;
 use InvalidArgumentException;
 
 describe('Email', function () {

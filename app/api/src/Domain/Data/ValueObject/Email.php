@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Data\ValueObject;
+namespace Domain\Data\ValueObject;
 
 use InvalidArgumentException;
 

@@ -1,6 +1,6 @@
 <?php
 
-use App\Infrastructure\Request\Auth\RegisterRequest;
+use Infrastructure\Request\Auth\RegisterRequest;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 describe('RegisterRequest', function () {

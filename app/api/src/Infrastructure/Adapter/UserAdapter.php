@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Infrastructure\Adapter;
+namespace Infrastructure\Adapter;
 
-use App\Domain\Data\Model\User as DomainUser;
-use App\Domain\Data\ValueObject\Email;
-use App\Domain\Data\ValueObject\Uuid;
-use App\Infrastructure\Doctrine\Entity\User as EntityUser;
+use Domain\Data\Model\User as DomainUser;
+use Domain\Data\ValueObject\Email;
+use Domain\Data\ValueObject\Uuid;
+use Infrastructure\Doctrine\Entity\User as EntityUser;
 use Symfony\Component\Uid\Uuid as SymfonyUuid;
 
 class UserAdapter

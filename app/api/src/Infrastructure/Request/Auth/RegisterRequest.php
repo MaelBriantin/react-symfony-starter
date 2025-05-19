@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Infrastructure\Request\Auth;
+namespace Infrastructure\Request\Auth;
 
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Webmozart\Assert\Assert;

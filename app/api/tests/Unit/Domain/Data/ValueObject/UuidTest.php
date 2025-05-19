@@ -1,6 +1,6 @@
 <?php
 
-use App\Domain\Data\ValueObject\Uuid;
+use Domain\Data\ValueObject\Uuid;
 use InvalidArgumentException;
 
 describe('Uuid', function () {

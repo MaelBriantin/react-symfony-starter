@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Infrastructure\Doctrine\Types;
+namespace Infrastructure\Doctrine\Types;
 
-use App\Domain\Data\ValueObject\Email;
+use Domain\Data\ValueObject\Email;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\StringType;
 

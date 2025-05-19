@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Infrastructure\Service;
+namespace Infrastructure\Service;
 
-use App\Domain\Port\Secondary\UuidGeneratorInterface;
+use Domain\Port\Secondary\UuidGeneratorInterface;
 use Symfony\Component\Uid\Uuid;
 
 class SymfonyUuidGenerator implements UuidGeneratorInterface

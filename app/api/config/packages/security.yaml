@@ -1,12 +1,12 @@
 security:
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: "auto"
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         app_user_provider:
             entity:
-                class: App\Infrastructure\Doctrine\Entity\User
+                class: Infrastructure\Doctrine\Entity\User
                 property: email
     firewalls:
         login:
@@ -18,7 +18,7 @@ security:
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
         api:
-            pattern:   ^/
+            pattern: ^/
             stateless: true
             jwt: ~
 
@@ -43,10 +43,10 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
-        - { path: ^/$,              roles: PUBLIC_ACCESS }
-        - { path: ^/auth/register,  roles: PUBLIC_ACCESS }
-        - { path: ^/auth/login,     roles: PUBLIC_ACCESS }
-        - { path: ^/,               roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/$, roles: PUBLIC_ACCESS }
+        - { path: ^/auth/register, roles: PUBLIC_ACCESS }
+        - { path: ^/auth/login, roles: PUBLIC_ACCESS }
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
     security:
@@ -55,4 +55,4 @@ when@test:
             # important to generate secure password hashes. In tests however, secure hashes
             # are not important, waste resources and increase test times. The following
             # reduces the work factor to the lowest possible values.
-            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: "auto"

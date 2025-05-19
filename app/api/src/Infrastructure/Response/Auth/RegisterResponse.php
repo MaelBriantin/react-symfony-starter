@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Response\Auth;
+namespace Infrastructure\Response\Auth;
 
-use App\Domain\Data\Model\User;
-use App\Infrastructure\Response\User\AbstractUserResponse;
+use Domain\Data\Model\User;
+use Infrastructure\Response\User\AbstractUserResponse;
 
 class RegisterResponse extends AbstractUserResponse
 {

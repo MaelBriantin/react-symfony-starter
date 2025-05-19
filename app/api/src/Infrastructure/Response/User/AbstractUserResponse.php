@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Response\User;
+namespace Infrastructure\Response\User;
 
-use App\Domain\Data\Model\User;
-use App\Domain\Data\ValueObject\Email;
-use App\Domain\Data\ValueObject\Uuid;
+use Domain\Data\Model\User;
+use Domain\Data\ValueObject\Email;
+use Domain\Data\ValueObject\Uuid;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 abstract class AbstractUserResponse extends JsonResponse
@@ -28,7 +28,7 @@ abstract class AbstractUserResponse extends JsonResponse
                 /**
                  * @return array{uuid: string, email: string, roles: array<string>}
                  */
-                static fn (User $user): array => self::formatUser($user),
+                static fn(User $user): array => self::formatUser($user),
                 $users
             ),
         ];
