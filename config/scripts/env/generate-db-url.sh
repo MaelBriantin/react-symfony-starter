@@ -21,13 +21,15 @@ if [ ! -f "$ROOT_ENV_FILE" ]; then
 fi
 echo "File found."
 
-# Check if DATABASE_URL already exists
-echo "Checking if DATABASE_URL exists..."
+# Check if DATABASE_URL already exists and is set
+echo "Checking if DATABASE_URL exists and is set..."
 if grep -q '^DATABASE_URL=' "$ROOT_ENV_FILE"; then
-  echo "DATABASE_URL already exists. Exiting."
-  exit 0
+  DATABASE_URL_VALUE=$(grep '^DATABASE_URL=' "$ROOT_ENV_FILE" | cut -d '=' -f2- | tr -d '"')
+  if [ -n "$DATABASE_URL_VALUE" ]; then
+    echo "DATABASE_URL already exists and is set."
+  fi
 fi
-echo "DATABASE_URL does not exist yet."
+echo "DATABASE_URL does not exist or is empty."
 
 # Read values from the .env file (using MYSQL_* names)
 echo "Reading MYSQL_* variables from .env..."
@@ -55,24 +57,43 @@ echo "Anchor line found."
 # Construct the URL using environment variables
 echo "Constructing DATABASE_URL..."
 DATABASE_URL="mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@${DOCKER_DB_HOST}:${DOCKER_DB_PORT}/${MYSQL_DATABASE}?serverVersion=${DB_SERVER_VERSION}&charset=${DB_CHARSET}"
-# echo "[generate-db-url] Constructed URL: ${DATABASE_URL}" # Commented out to avoid exposing password in logs
-
-# Add the DATABASE_URL to .env after MYSQL_ROOT_PASSWORD
-echo "Adding DATABASE_URL to $ROOT_ENV_FILE..."
-# Escape potential special characters in password/user/db for sed
 DATABASE_URL_ESCAPED_SED=$(echo "$DATABASE_URL" | sed -e 's/[&\/]/\\&/g' -e 's/"/\\"/g')
-# Use sed to insert a blank line and then the DATABASE_URL line after MYSQL_ROOT_PASSWORD
-# Use uname for better cross-platform compatibility with sed -i
-if [ "$(uname)" = "Darwin" ]; then
-  sed -i '' -e "/^MYSQL_ROOT_PASSWORD=/a\\\nDATABASE_URL=\"${DATABASE_URL_ESCAPED_SED}\"" "$ROOT_ENV_FILE"
+
+# Check if DATABASE_URL exists
+if grep -q '^DATABASE_URL=' "$ROOT_ENV_FILE"; then
+  CURRENT_URL=$(grep '^DATABASE_URL=' "$ROOT_ENV_FILE" | head -n1 | cut -d '=' -f2- | sed 's/^"//;s/"$//')
+  if [ -n "$CURRENT_URL" ]; then
+    # Parse current DATABASE_URL (remove quotes if present)
+    proto_and_rest="${CURRENT_URL#*://}"
+    CURRENT_USER_PASS_HOST_PORT_DB="${proto_and_rest%%\?*}"
+    CURRENT_USER_PASS="${CURRENT_USER_PASS_HOST_PORT_DB%@*}"
+    CURRENT_HOST_PORT_DB="${CURRENT_USER_PASS_HOST_PORT_DB#*@}"
+    CURRENT_USER="${CURRENT_USER_PASS%%:*}"
+    CURRENT_PASSWORD="${CURRENT_USER_PASS#*:}"
+    CURRENT_HOST_PORT="${CURRENT_HOST_PORT_DB%%/*}"
+    CURRENT_DB="${CURRENT_HOST_PORT_DB#*/}"
+    # Remove query params from db name if present
+    CURRENT_DB="${CURRENT_DB%%\?*}"
+    CURRENT_HOST="${CURRENT_HOST_PORT%%:*}"
+    CURRENT_PORT="${CURRENT_HOST_PORT#*:}"
+    # Compare with env vars
+    if [ "$CURRENT_USER" != "$MYSQL_USER" ] || [ "$CURRENT_PASSWORD" != "$MYSQL_PASSWORD" ] || [ "$CURRENT_HOST" != "$DOCKER_DB_HOST" ] || [ "$CURRENT_PORT" != "$DOCKER_DB_PORT" ] || [ "$CURRENT_DB" != "$MYSQL_DATABASE" ]; then
+      # Update DATABASE_URL
+      sed -i "s|^DATABASE_URL=.*$|DATABASE_URL=\"${DATABASE_URL_ESCAPED_SED}\"|" "$ROOT_ENV_FILE"
+      echo "DATABASE_URL updated to match MYSQL_* variables."
+    else
+      echo "DATABASE_URL matches MYSQL_* variables. No update needed."
+      exit 0
+    fi
+  else
+    # Replace the empty value
+    sed -i "s|^DATABASE_URL=$|DATABASE_URL=\"${DATABASE_URL_ESCAPED_SED}\"|" "$ROOT_ENV_FILE"
+    echo "DATABASE_URL was empty and is now set."
+  fi
 else
-  sed -i -e "/^MYSQL_ROOT_PASSWORD=/a\\\nDATABASE_URL=\"${DATABASE_URL_ESCAPED_SED}\"" "$ROOT_ENV_FILE"
+  # Insert before the MYSQL config marker, no blank line
+  sed -i "/^###< MYSQL configuration ###/i DATABASE_URL=\"${DATABASE_URL_ESCAPED_SED}\"" "$ROOT_ENV_FILE"
+  echo "DATABASE_URL inserted before MYSQL configuration marker."
 fi
-SED_EXIT_CODE=$?
-if [ $SED_EXIT_CODE -ne 0 ]; then
-    echo "Error: sed command failed with exit code $SED_EXIT_CODE" >&2
-    exit 1
-fi
-echo "Generated and added DATABASE_URL."
 
 echo "Finished."
