@@ -6,6 +6,12 @@ tasks:
     cmds:
       - "{{.DOCKER_RUN}} node pnpm add {{.CLI_ARGS}}"
     silent: true
+
+  add:dev:
+    desc: Add a new Node dev dependency via pnpm (task pnpm:add:dev -- <package>)
+    cmds:
+      - "{{.DOCKER_RUN}} node pnpm add -D {{.CLI_ARGS}}"
+    silent: true
   
   remove:
     desc: Remove a Node dependency via pnpm (task pnpm:remove -- <package>)

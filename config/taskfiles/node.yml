@@ -57,3 +57,9 @@ tasks:
       - "{{.DOCKER_RUN}} node sh"
       - echo "Node shell stopped."
     silent: true
+
+  test:
+    desc: Run tests in Node container
+    cmds:
+      - "{{.DOCKER_RUN}} node pnpm test"
+    silent: true
