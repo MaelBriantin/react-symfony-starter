@@ -1,74 +1,61 @@
+import { useEffect, useState } from "react";
+import useFetch from "./hooks/useFetch";
 
-import { useState } from "react";
-import "./App.css";
-
-type ItemType = {
-  name: string,
-  url: string,
-  src: string
-};
-
-const items: ItemType[] = [
-  { name: "Vite", url: "https://vite.dev", src: "/vite.svg" },
-  { name: "React", url: "https://react.dev", src: "/react.svg"},
-];
-
-const itemCard = (item: ItemType) => {
-  const hoverColor = item.name === "Vite" ? "hover:text-vite" : "hover:text-react";
-  const shadowColor = item.name === "Vite" ? "hover:drop-shadow-[0_0_2em_var(--color-vite)]" :  "hover:drop-shadow-[0_0_2em_var(--color-react)]";
-  
-  return (
-    <div className="flex justify-center flex-col gap-2" key={item.name}>
-      <a href={item.url} target="_blank">
-        <img
-          src={item.src}
-          alt={`${item.name} logo`}
-          className={[
-            "h-[10em]",
-            "p-[1.5em]",
-            `${shadowColor}`,
-          ].join(" ")}
-        />
-      </a>
-      <a
-        href={item.url}
-        target="_blank"
-        className={`text-4xl font-bold text-center transition-colors ${hoverColor}`}
-      >
-        {item.name}
-      </a>
-    </div>
-  );
+interface Env {
+  apiUrl: string;
+  clientUrl: string;
 }
-      
-  
 
 const App = () => {
-  const [count, setCount] = useState(0);
-
+  const [env, setEnv] = useState<Env | null>(null);
+  const { fetchData } = useFetch<void, Env>();
+  useEffect(() => {
+    const fetchEnv = async () => {
+      const data = await fetchData({ url: '/config/env' });
+      setEnv(data);
+    };
+    fetchEnv();
+  }, [fetchData]);
   return (
-      <div className="flex flex-col w-screen h-screen items-center justify-center gap-6 dark:bg-neutral-800 dark:text-gray-100 text-black bg-neutral-100">
-        <div className="flex justify-center gap-8">
-          {items.map(item => 
-            itemCard(item)
-          )}
-        </div>
-        <div className="px-4 py-2 flex flex-col items-center justify-center gap-4">
-          <button
-            type="button"
-            onClick={() => setCount((count: number) => count + 1)}
-          >
-            count is {count}
-          </button>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test HMR
-          </p>
-        </div>
-        <p className="text-gray-400">
-          Click on the Vite and React logos to learn more
-        </p>
+    <div className="dark:bg-neutral-900 dark:text-white bg-white text-black min-h-screen flex items-center justify-center font-geist-mono flex-col gap-2 w-full p-6">
+      <h1 className="text-4xl font-bold">
+        Welcome to my React-Symfony-Starter
+      </h1>
+      <p className="mt-4">
+        This is a simple starter template for React and Symfony.
+      </p>
+      <div className="m-4">
+        It includes
+        everything you need to get started with building a modern web application, including:
+        <ul className="list-decimal list-inside">
+          <li>React 19 as the frontend framework</li>
+          <ul className="list-disc list-inside ml-6">
+            <li>Vite as the build tool</li>
+            <li>TypeScript</li>
+            <li>Tailwind CSS with V4 Configuration</li>
+          </ul>
+          <li>Symfony as the backend framework (Json API)</li>
+          <ul className="list-disc list-inside ml-6">
+            <li>Hexagonal Architecture</li>
+            <li>Doctrine as the ORM</li>
+            <li>Authentication with JWT and HTTP Only cookies</li>
+          </ul>
+          <li>MySQL as the database</li>
+          <li>Caddy as a web server</li>
+        </ul>
       </div>
-  );
+      <p className="mt-4">
+        All is dockerized and Taskfile is used to manage the development environment and help you with common tasks.
+      </p>
+      <p className="mt-4">
+        You can access the Symfony API at <a href={env?.apiUrl} className="text-blue-500 hover:underline">{env?.apiUrl}</a>
+      </p>
+      <br />
+      <p className="mt-6 text-xl font-bold text-green-400">
+        Happy Hacking!
+      </p>
+    </div>
+  )
 }
 
 export default App;

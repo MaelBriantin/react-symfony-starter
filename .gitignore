@@ -30,4 +30,5 @@ app/client/node_modules
 app/client/.vite
 app/client/dist
 app/client/.pnpm-store
+app/client/.env
 ###< Node / React / Vite ###
