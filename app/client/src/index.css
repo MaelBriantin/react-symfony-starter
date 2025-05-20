@@ -1,7 +1,15 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "GeistMono";
+  src: url("/fonts/GeistMonoNerdFont.otf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
 @theme {
   --color-deno: #70FFAFAA;
   --color-react: #61DAFBAA;
   --color-vite: #646CFFAA;
+  --font-geist-mono: "GeistMono", monospace;
 }
