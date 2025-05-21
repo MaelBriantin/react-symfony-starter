@@ -19,6 +19,11 @@ class RegisterUserUseCase
 
     public function execute(RegisterUserCommand $command): User
     {
+        $existingUser = $this->userRepository->findByEmail($command->email);
+        if ($existingUser !== null) {
+            throw new \InvalidArgumentException('Email already exists.');
+        }
+
         $user = new User(
             new Uuid($this->uuidGenerator->generateV7()),
             $command->email,
