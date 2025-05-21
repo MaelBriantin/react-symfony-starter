@@ -82,7 +82,7 @@ The Symfony backend uses the [Symfony Security component](https://symfony.com/do
 #### Authentication Flow
 
 The authentication process involves the following steps:
-1. The user sends a POST request to the `<api-url>/login_check` endpoint with their credentials (username and password).
+1. The user sends a POST request to the `<api-url>/auth/login` endpoint with their credentials (username and password).
 2. If the credentials are valid, the server responds with a JWT token.
 3. The client stores the token and includes it in the `Authorization` header for subsequent requests to protected endpoints.
 4. The server verifies the token and grants access to the requested resource if the token is valid.
