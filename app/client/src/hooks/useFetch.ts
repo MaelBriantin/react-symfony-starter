@@ -1,3 +1,4 @@
+import HTTPCodes from "@/enums/HTTPCodes";
 import { useState, useCallback, useEffect } from "react";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -29,6 +30,10 @@ function useFetch<TResponse = unknown, TBody = undefined>(
           credentials: "include"
         });
         if (!response.ok) {
+          if (response.status === HTTPCodes.UNAUTHORIZED) {
+            setData(null);
+            return null as TResponse;
+          }
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const text = await response.text();
