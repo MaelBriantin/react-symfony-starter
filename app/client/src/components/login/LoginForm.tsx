@@ -3,6 +3,8 @@ import useFetch from "../../hooks/useFetch";
 import { useNavigate } from "react-router";
 import useUserStore from "@/stores/useUserStore";
 import { User } from "@/types/user";
+import Input, { InputType } from "../Input";
+import Button, { ButtonType } from "../Button";
 
 interface LoginFormProps {
   username: string;
@@ -35,44 +37,36 @@ const LoginForm = () => {
     <div className="dark:bg-neutral-900 dark:text-white bg-white text-black min-h-screen flex items-center justify-center font-geist-mono flex-col gap-2 w-full p-6">
       <h1>Login Form</h1>
       <form className="flex flex-col gap-4 w-full max-w-sm" onSubmit={handleSubmit}>
-        <div className="flex flex-col">
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            required
-            className="border-2 border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500"
-            value={loginInfo.username}
-            onChange={e => setLoginInfo({
-              ...loginInfo,
-              username: e.target.value
-            })}
-          />
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            required
-            className="border-2 border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500"
-            value={loginInfo.password}
-            onChange={e => setLoginInfo({
-              ...loginInfo,
-              password: e.target.value
-            })}
-          />
-        </div>
+        <Input
+          label="Email:"
+          type={InputType.EMAIL}
+          name="username"
+          required
+          value={loginInfo.username}
+          onChange={e => setLoginInfo({
+            ...loginInfo,
+            username: e.target.value
+          })}
+        />
+        <Input
+          label="Password:"
+          type={InputType.PASSWORD}
+          name="password"
+          required
+          value={loginInfo.password}
+          onChange={e => setLoginInfo({
+            ...loginInfo,
+            password: e.target.value
+          })}
+        />
         {error && <div className="text-red-500">{error.message}</div>}
-        <button
-          type="submit"
-          className="bg-blue-500 text-white rounded-md p-2 mt-4 hover:bg-blue-600"
-          disabled={loading}
-        >
-          {loading ? "Connexion..." : "Login"}
-        </button>
+        <Button
+          loading={loading}
+          loadingText="Logging in..."
+          type={ButtonType.SUBMIT}
+          >
+          Login
+        </Button>
       </form>
     </div>
   );

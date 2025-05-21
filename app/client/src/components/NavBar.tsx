@@ -26,19 +26,35 @@ const NavBar = () => {
   }
 
   return (
-    <nav className="flex gap-4 justify-end items-end w-full">
-      {
-        !loggedInUser &&
-        <NavLink to="/login" className="hover:underline">
-          Login
-        </NavLink>
-      }
-      {
-        loggedInUser &&
-        <div onClick={handleLogout} className="hover:underline hover:text-red-500 cursor-pointer select-none">
-          Logout
-        </div>
-      }
+    <nav className="flex gap-4 justify-between items-end w-full"> 
+      <section className="flex gap-4">
+        {
+          location.pathname !== '/' &&
+          <NavLink to="/" className="hover:underline">
+            Home
+          </NavLink>
+        }
+      </section>
+      <section className="flex gap-4">
+        {
+          !loggedInUser &&
+          <NavLink to="/signup" className="hover:underline">
+            SignUp
+          </NavLink>
+        }
+        {
+          !loggedInUser &&
+          <NavLink to="/login" className="hover:underline">
+            Login
+          </NavLink>
+        }
+        {
+          loggedInUser &&
+          <div onClick={handleLogout} className="hover:underline hover:text-red-500 cursor-pointer select-none">
+            Logout
+          </div>
+        }
+      </section>
     </nav>
   );
 }
