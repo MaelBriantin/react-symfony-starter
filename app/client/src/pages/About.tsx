@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import useFetch from "../hooks/useFetch";
 
 interface Env {
@@ -7,16 +6,7 @@ interface Env {
 }
 
 const About = () => {
-  const [env, setEnv] = useState<Env | null>(null);
-  const { fetchData } = useFetch<void, Env>();
-
-  useEffect(() => {
-    const fetchEnv = async () => {
-      const data = await fetchData({ url: '/config/env' });
-      setEnv(data);
-    };
-    fetchEnv();
-  }, [fetchData]);
+  const { data: env } = useFetch<Env>('/config/env');
 
   return (
     <div className="dark:bg-neutral-900 dark:text-white bg-white text-black min-h-screen flex items-center justify-center font-geist-mono flex-col gap-2 w-full p-6">
