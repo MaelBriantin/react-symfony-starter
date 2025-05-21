@@ -1,9 +1,17 @@
 import About from "@/pages/About";
+import Login from "@/pages/Login";
+import AppLayout from "./layouts/AppLayout";
 
 const routes = [
   {
-    path: "/",
-    element: <About />,
+    element: <AppLayout />,
+    children: [
+      { path: "/", element: <About /> },
+    ],
+  },
+  {
+    path: "/login",
+    element: <Login />, // Page login sans layout
   },
 ];
 

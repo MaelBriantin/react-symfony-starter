@@ -26,6 +26,7 @@ function useFetch<TResponse = unknown, TBody = undefined>(
           method,
           headers: body ? { "Content-Type": "application/json" } : undefined,
           body: body ? JSON.stringify(body) : undefined,
+          credentials: "include"
         });
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
