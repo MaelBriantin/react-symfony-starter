@@ -1,4 +1,4 @@
-api_login_check:
+auth_login:
     path: /auth/login
 
 controllers:

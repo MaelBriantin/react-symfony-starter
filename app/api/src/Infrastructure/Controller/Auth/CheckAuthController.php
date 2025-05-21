@@ -21,9 +21,20 @@ class CheckAuthController extends AbstractController
 
     public function __invoke(): JsonResponse
     {
+        $currentUser = $this->getUser();
+
+        if (!$currentUser) {
+            throw $this->createAccessDeniedException('User is not authenticated');
+        }
+
         $user = $this->userRepository->findByEmail(
-            new Email($this->getUser()->getUserIdentifier())
+            new Email($currentUser->getUserIdentifier())
         );
+
+        if (!$user) {
+            throw $this->createNotFoundException('User not found');
+        }
+
         return $this->json(UserResponse::formatUser($user));
     }
 }
