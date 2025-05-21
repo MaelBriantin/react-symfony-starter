@@ -1,5 +1,5 @@
 api_login_check:
-    path: /auth/login_check
+    path: /auth/login
 
 controllers:
     resource:
