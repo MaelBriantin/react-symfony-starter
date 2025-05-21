@@ -1,3 +1,5 @@
+import { useState, useCallback, useEffect } from "react";
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 interface FetchParams<T = unknown> {
@@ -6,46 +8,52 @@ interface FetchParams<T = unknown> {
   body?: T;
 }
 
-/**
- * Custom React hook for performing HTTP requests with typed request and response bodies.
- *
- * @template TBody - The type of the request body. Defaults to `undefined`.
- * @template TResponse - The type of the response data. Defaults to `unknown`.
- *
- * @returns An object containing the `fetchData` function.
- *
- * @function fetchData
- * @param params - The parameters for the fetch request.
- * @param params.url - The endpoint URL (relative to `API_URL`).
- * @param params.method - The HTTP method (e.g., "GET", "POST"). Defaults to "GET".
- * @param params.body - The request body, if applicable.
- * @returns A promise that resolves to the response data of type `TResponse`.
- *
- * @throws Will throw an error if the HTTP response is not OK or if the fetch fails.
- *
- * @example
- * const { fetchData } = useFetch<MyRequestBody, MyResponse>();
- * const data = await fetchData({ url: '/api/data', method: 'POST', body: { foo: 'bar' } });
- */
-const useFetch = <TBody = undefined, TResponse = unknown>() => {
-  const fetchData = async (params: FetchParams<TBody>): Promise<TResponse> => {
-    const { url, method = "GET", body } = params;
-    try {
-      const response = await fetch(`${API_URL}${url}`, {
-        method,
-        headers: body ? { "Content-Type": "application/json" } : undefined,
-        body: body ? JSON.stringify(body) : undefined,
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+function useFetch<TResponse = unknown, TBody = undefined>(
+  autoUrl?: string,
+  autoOptions?: Omit<FetchParams<TBody>, "url">
+) {
+  const [data, setData] = useState<TResponse | null>(null);
+  const [error, setError] = useState<Error | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const fetchData = useCallback(
+    async (params: FetchParams<TBody>): Promise<TResponse> => {
+      const { url, method = "GET", body } = params;
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`${API_URL}${url}`, {
+          method,
+          headers: body ? { "Content-Type": "application/json" } : undefined,
+          body: body ? JSON.stringify(body) : undefined,
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const text = await response.text();
+        const data = text && text.trim() !== "" ? JSON.parse(text) : null;
+        setData(data);
+        return data as TResponse;
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err);
+        } else {
+          setError(new Error(String(err)));
+        }
+        throw err;
+      } finally {
+        setLoading(false);
       }
-      const data = await response.json();
-      return data as TResponse;
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      throw error;
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (autoUrl) {
+      fetchData({ url: autoUrl, ...autoOptions } as FetchParams<TBody>);
     }
-  };
-  return { fetchData };
-};
+  }, [autoUrl, autoOptions, fetchData]);
+
+  return { data, error, loading, fetchData };
+}
 export default useFetch;

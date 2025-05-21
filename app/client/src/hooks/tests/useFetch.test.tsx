@@ -1,9 +1,10 @@
-import { renderHook, act } from '@testing-library/react';
-import { describe, it, expect, vi, afterEach, Mock } from 'vitest';
+import { renderHook, act, waitFor } from '@testing-library/react';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import useFetch from '../useFetch';
 
 // Mock global fetch
-global.fetch = vi.fn();
+const mockFetch = vi.fn();
+global.fetch = mockFetch;
 
 describe('useFetch', () => {
   const API_URL = import.meta.env.VITE_API_URL || '';
@@ -12,11 +13,11 @@ describe('useFetch', () => {
     vi.clearAllMocks();
   });
 
-  it('should fetch data successfully', async () => {
+  it('fetches data successfully (manual)', async () => {
     const mockResponse = { foo: 'bar' };
-    (fetch as Mock).mockResolvedValueOnce({
+    mockFetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => mockResponse,
+      text: async () => JSON.stringify(mockResponse),
     });
 
     const { result } = renderHook(() => useFetch());
@@ -24,17 +25,42 @@ describe('useFetch', () => {
     await act(async () => {
       data = await result.current.fetchData({ url: '/test' });
     });
-    expect(fetch).toHaveBeenCalledWith(`${API_URL}/test`, expect.any(Object));
+    expect(mockFetch).toHaveBeenCalledWith(`${API_URL}/test`, expect.any(Object));
     expect(data).toEqual(mockResponse);
+    expect(result.current.data).toEqual(mockResponse);
+    expect(result.current.error).toBeNull();
+    expect(result.current.loading).toBe(false);
   });
 
-  it('should throw error on failed fetch', async () => {
-    (fetch as Mock).mockResolvedValueOnce({
+  it('handles fetch error (manual)', async () => {
+    mockFetch.mockResolvedValueOnce({
       ok: false,
       status: 500,
-      json: async () => ({}),
+      text: async () => "",
     });
     const { result } = renderHook(() => useFetch());
     await expect(result.current.fetchData({ url: '/fail' })).rejects.toThrow('HTTP error! status: 500');
+    await act(async () => {
+      // Wait for the fetch to complete
+    });
+    expect(result.current.data).toBeNull();
+    expect(result.current.error).not.toBeNull();
+    expect(result.current.loading).toBe(false);
+  });
+
+  it('auto-fetches data on mount', async () => {
+    const mockResponse = { hello: 'world' };
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      text: async () => JSON.stringify(mockResponse),
+    });
+    const { result } = renderHook(() => useFetch('/auto'));
+    // Attendre que loading devienne false ou que data soit défini
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false);
+      expect(result.current.data).toEqual(mockResponse);
+    });
+    expect(mockFetch).toHaveBeenCalledWith(`${API_URL}/auto`, expect.any(Object));
+    expect(result.current.error).toBeNull();
   });
 });
