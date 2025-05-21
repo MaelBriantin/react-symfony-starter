@@ -24,5 +24,9 @@ services:
     App\Domain\Port\Secondary\PasswordHasherInterface:
         class: App\Infrastructure\Service\Auth\SymfonyPasswordHasher
 
+    App\Infrastructure\Security\JWTAuthenticationSuccessHandler:
+        tags:
+            - { name: kernel.event_subscriber }
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
