@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
-import useFetch from "./hooks/useFetch";
+import useFetch from "../hooks/useFetch";
 
 interface Env {
   apiUrl: string;
   clientUrl: string;
 }
 
-const App = () => {
+const About = () => {
   const [env, setEnv] = useState<Env | null>(null);
   const { fetchData } = useFetch<void, Env>();
+
   useEffect(() => {
     const fetchEnv = async () => {
       const data = await fetchData({ url: '/config/env' });
@@ -16,6 +17,7 @@ const App = () => {
     };
     fetchEnv();
   }, [fetchData]);
+
   return (
     <div className="dark:bg-neutral-900 dark:text-white bg-white text-black min-h-screen flex items-center justify-center font-geist-mono flex-col gap-2 w-full p-6">
       <h1 className="text-4xl font-bold">
@@ -33,6 +35,7 @@ const App = () => {
             <li>Vite as the build tool</li>
             <li>TypeScript</li>
             <li>Tailwind CSS with V4 Configuration</li>
+            <li>React Router v7</li>
           </ul>
           <li>Symfony as the backend framework (Json API)</li>
           <ul className="list-disc list-inside ml-6">
@@ -58,4 +61,4 @@ const App = () => {
   )
 }
 
-export default App;
+export default About;
