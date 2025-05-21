@@ -10,13 +10,8 @@ interface Env {
 
 const About = () => {
   const { data: env } = useFetch<Env>('/config/env');
-  const { error, data } = useFetch<User>('/auth/check');
-  const { fetchData: logout } = useFetch(); // hook pour logout
+  const { data } = useFetch<User>('/auth/check');
 
-  const handleLogout = async () => {
-    await logout({ url: '/auth/logout', method: 'GET' });
-    setUser(null); // vide le user dans le store
-  };
   const { user, setUser } = useUserStore();
 
   useEffect(() => {
@@ -28,12 +23,12 @@ const About = () => {
   
   return (
     <div className="dark:bg-neutral-900 dark:text-white bg-white text-black min-h-screen flex items-center justify-center font-geist-mono flex-col gap-2 w-full p-6">
-      <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" onClick={handleLogout}>
-        Logout
-      </button>
-      <h1 className="text-4xl font-bold">
-        Welcome { user ? <span className="text-blue-500">{user.email}</span> : 'Guest' }, to this React and Symfony Starter Template
+      <h1 className="text-4xl font-bold mb-2">
+        { null !== user && (<><span>👋 Hey </span><span className="text-blue-500">{user.email}</span>,</>) }
       </h1>
+      <h2 className="text-4xl font-bold">
+        Welcome to my React and Symfony Starter Template
+      </h2>
       <p className="mt-4">
         This is a simple starter template for React and Symfony.
       </p>
@@ -46,8 +41,8 @@ const About = () => {
             <li>Vite as the build tool</li>
             <li>TypeScript</li>
             <li>Tailwind CSS with V4 Configuration</li>
-            <li>React Router v7</li>
-            <li>Zustand</li>
+            <li>React Router v7 for routing</li>
+            <li>Zustand as the state management library</li>
           </ul>
           <li>Symfony as the backend framework (Json API)</li>
           <ul className="list-disc list-inside ml-6">

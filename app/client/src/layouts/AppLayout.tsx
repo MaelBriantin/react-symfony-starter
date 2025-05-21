@@ -1,20 +1,19 @@
 import useUserStore from "@/stores/useUserStore";
 import GuestLayout from "./GuestLayout";
-import AuthenticatedLayout from "./AuthenticatedLayout";
 
 const AppLayout = () => {
   const { user } = useUserStore();
 
   return (
-    <>
+    <div className="flex flex-col h-screen overflow-hidden">  
       {
         user === null ? (
           <GuestLayout />
         ) : (
-          <AuthenticatedLayout />
+          <GuestLayout />
         )
       }
-    </>
+    </div>
   );
 }
 
