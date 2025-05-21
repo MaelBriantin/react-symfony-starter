@@ -4,7 +4,7 @@ import useFetch from '../useFetch';
 
 // Mock global fetch
 const mockFetch = vi.fn();
-global.fetch = mockFetch;
+(globalThis as typeof globalThis).fetch = mockFetch;
 
 describe('useFetch', () => {
   const API_URL = import.meta.env.VITE_API_URL || '';
@@ -36,10 +36,10 @@ describe('useFetch', () => {
     mockFetch.mockResolvedValueOnce({
       ok: false,
       status: 500,
-      text: async () => "",
+      json: async () => ({ message: 'Internal Server Error' }),
     });
     const { result } = renderHook(() => useFetch());
-    await expect(result.current.fetchData({ url: '/fail' })).rejects.toThrow('HTTP error! status: 500');
+    await expect(result.current.fetchData({ url: '/fail' })).rejects.toThrow('Internal Server Error');
     await act(async () => {
       // Wait for the fetch to complete
     });
@@ -55,7 +55,6 @@ describe('useFetch', () => {
       text: async () => JSON.stringify(mockResponse),
     });
     const { result } = renderHook(() => useFetch('/auto'));
-    // Attendre que loading devienne false ou que data soit défini
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
       expect(result.current.data).toEqual(mockResponse);
