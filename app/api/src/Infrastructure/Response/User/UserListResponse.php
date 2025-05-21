@@ -6,7 +6,7 @@ namespace App\Infrastructure\Response\User;
 
 use App\Domain\Data\Model\User;
 
-class IndexResponse extends AbstractUserResponse
+class UserListResponse extends AbstractUserResponse
 {
     /**
      * @param array<User> $users
@@ -21,5 +21,14 @@ class IndexResponse extends AbstractUserResponse
                 'count' => count($users),
             ]
         );
+    }
+
+    public static function formatUser(User $user): array
+    {
+        return [
+            'uuid' => (string) $user->getId(),
+            'email' => (string) $user->getEmail(),
+            'roles' => $user->getRoles(),
+        ];
     }
 }
