@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Infrastructure\Doctrine\Entity;
 
 use App\Domain\Data\ValueObject\Email;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Data\Model;
 
 use App\Domain\Data\ValueObject\Email;

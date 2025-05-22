@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Infrastructure\Doctrine\Types;
 
 use App\Domain\Data\ValueObject\Password;

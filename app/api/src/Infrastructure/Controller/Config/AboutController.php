@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Infrastructure\Controller\Config;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
