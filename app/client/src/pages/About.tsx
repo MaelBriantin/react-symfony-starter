@@ -18,7 +18,7 @@ const About = () => {
     if (data && !user) {
       setUser(data);
     }
-  }, [data, user, setUser]);
+  }, [user, setUser, data]);
 
   
   return (

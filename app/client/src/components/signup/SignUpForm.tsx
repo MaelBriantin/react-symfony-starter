@@ -1,9 +1,9 @@
 import Button, { ButtonType } from "@/components/Button";
 import Input, { InputType } from "@/components/Input";
-import { useState } from "react";
-import useFetch from "@/hooks/useFetch";
 import { useNavigate } from "react-router";
+import useFetch from "@/hooks/useFetch";
 import { User } from "@/types/user";
+import { useState } from "react";
 
 interface SignUpFormProps {
   password: string;
@@ -17,12 +17,13 @@ interface LoginFormProps {
 
 const SignUpForm = () => {
   const { loading: loadingSignup, error: errorSignUp, fetchData: fetchSignUp } = useFetch<User, SignUpFormProps>();
-  const { loading: loadingLogin, fetchData: fetchLogin } = useFetch<User, LoginFormProps>();
+  const { loading: loadingLogin, error: errorLogin, fetchData: fetchLogin } = useFetch<User, LoginFormProps>();
+  const navigate = useNavigate();
+
   const [signUpInfo, setSignUpInfo] = useState<SignUpFormProps>({
     email: "",
     password: "",
   });
-  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,7 +41,7 @@ const SignUpForm = () => {
           password: signUpInfo.password
         }
       });
-      if (!errorSignUp) {
+      if (!errorLogin) {
         navigate("/");
       }
     }
