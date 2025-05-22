@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Controller\Auth;
+namespace App\Infrastructure\Symfony\Controller\Auth;
 
 use App\Domain\Data\ValueObject\Email;
 use App\Domain\Data\ValueObject\Password;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Controller\Auth;
+namespace App\Infrastructure\Symfony\Controller\Auth;
 
 use App\Domain\Port\Secondary\User\UserRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

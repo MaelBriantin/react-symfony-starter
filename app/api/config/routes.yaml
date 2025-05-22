@@ -3,6 +3,6 @@ auth_login:
 
 controllers:
     resource:
-        path: ../src/Infrastructure/Controller/
-        namespace: App\Infrastructure\Controller
+        path: ../src/Infrastructure/Symfony/Controller
+        namespace: App\Infrastructure\Symfony\Controller
     type: attribute
