@@ -11,13 +11,37 @@ arch()
 
 arch()
     ->expect('App\Domain\**')
-    ->not->toUse('App\Infrastructure\**');
-
-arch()
-    ->expect('App\Infrastructure\**')
-    ->not->toUse('App\Application\**');
+    ->not->toUse([
+        'App\Application\**',
+        'App\Infrastructure\**'
+    ]);
 
 arch()
     ->expect('App\Application\**')
     ->not->toUse('App\Infrastructure\**');
+
+arch('Controllers can use Application layer')
+    ->expect('App\Infrastructure\Symfony\Controller\**')
+    ->toUse('App\Application\**');
+
+arch('UserRepository must implement UserRepositoryInterface')
+    ->expect('App\Infrastructure\Doctrine\Repository\UserRepository')
+    ->toImplement('App\Domain\Contract\Outbound\User\UserRepositoryInterface');
+
+arch('Domain contracts should only use Domain layer')
+    ->expect('App\Domain\Contract')
+    ->not->toUse([
+        'App\Application\**',
+        'App\Infrastructure\**'
+    ]);
+
+arch('Inbound contracts should be interfaces')
+    ->expect('App\Domain\Contract\Inbound')
+    ->classes()
+    ->toBeInterfaces();
+
+arch('Outbound contracts should be interfaces')
+    ->expect('App\Domain\Contract\Outbound')
+    ->classes()
+    ->toBeInterfaces();
 
