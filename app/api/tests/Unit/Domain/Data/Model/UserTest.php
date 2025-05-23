@@ -4,7 +4,7 @@ use App\Domain\Data\Model\User;
 use App\Domain\Data\ValueObject\Email;
 use App\Domain\Data\ValueObject\Password;
 use App\Domain\Data\ValueObject\Uuid;
-use App\Infrastructure\Service\SymfonyUuidGenerator;
+use App\Infrastructure\Symfony\Service\SymfonyUuidGenerator;
 
 describe('User', function () {
     it('can be created with valid data', function () {

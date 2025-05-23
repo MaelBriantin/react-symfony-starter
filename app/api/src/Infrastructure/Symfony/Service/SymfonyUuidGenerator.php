@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Service;
+namespace App\Infrastructure\Symfony\Service;
 
 use App\Domain\Port\Secondary\UuidGeneratorInterface;
 use Symfony\Component\Uid\Uuid;

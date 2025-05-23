@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Request\Auth;
+namespace App\Application\Request\Auth;
 
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Webmozart\Assert\Assert;
