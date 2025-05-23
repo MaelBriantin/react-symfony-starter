@@ -45,8 +45,8 @@ arch('Outbound contracts should be interfaces')
     ->classes()
     ->toBeInterfaces();
 
-arch('Event Listeners should be in Infrastructure layer')
-    ->expect('App\Infrastructure\EventListener')
+arch('Event Listeners should be in Infrastructure Symfony layer')
+    ->expect('App\Infrastructure\Symfony\EventListener')
     ->classes()
     ->toHaveSuffix('Listener');
 
