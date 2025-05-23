@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Symfony\Service;
 
-use App\Domain\Port\Secondary\UuidGeneratorInterface;
+use App\Domain\Contract\Outbound\UuidGeneratorInterface;
 use Symfony\Component\Uid\Uuid;
 
 class SymfonyUuidGenerator implements UuidGeneratorInterface

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Security;
 
 use App\Domain\Data\ValueObject\Email;
-use App\Domain\Port\Secondary\User\UserRepositoryInterface;
+use App\Domain\Contract\Outbound\User\UserRepositoryInterface;
 use App\Infrastructure\Response\User\UserResponse;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;

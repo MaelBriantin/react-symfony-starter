@@ -8,7 +8,7 @@ use App\Domain\Data\ValueObject\Password;
 use App\Domain\Data\Model\User as UserModel;
 use App\Domain\Data\ValueObject\Email;
 use App\Domain\Data\ValueObject\Uuid;
-use App\Domain\Port\Secondary\User\UserRepositoryInterface;
+use App\Domain\Contract\Outbound\User\UserRepositoryInterface;
 use App\Infrastructure\Adapter\UserAdapter;
 use App\Infrastructure\Doctrine\Entity\User as UserEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;

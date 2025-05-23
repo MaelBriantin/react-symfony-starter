@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Port\Primary\User;
+namespace App\Domain\Contract\Inbound\User;
 
 use App\Domain\Data\Model\User;
 use App\Domain\Data\ValueObject\Uuid;

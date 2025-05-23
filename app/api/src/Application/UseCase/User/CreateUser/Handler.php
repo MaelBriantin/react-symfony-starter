@@ -9,9 +9,9 @@ use App\Domain\Data\ValueObject\Email;
 use App\Domain\Data\ValueObject\Password;
 use App\Domain\Data\ValueObject\Uuid;
 use App\Domain\Exception\UserAlreadyExistsException;
-use App\Domain\Port\Secondary\Auth\PasswordHasherInterface;
-use App\Domain\Port\Secondary\User\UserRepositoryInterface;
-use App\Domain\Port\Secondary\UuidGeneratorInterface;
+use App\Domain\Contract\Outbound\Auth\PasswordHasherInterface;
+use App\Domain\Contract\Outbound\User\UserRepositoryInterface;
+use App\Domain\Contract\Outbound\UuidGeneratorInterface;
 
 class Handler
 {

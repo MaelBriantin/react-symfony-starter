@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Port\Secondary\User;
+namespace App\Domain\Contract\Outbound\User;
 
 use App\Domain\Data\Model\User;
 use App\Domain\Data\ValueObject\Email;
