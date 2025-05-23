@@ -21,12 +21,22 @@ services:
             - '../src/Kernel.php'
             - '../src/Domain/Data/'
 
+    # Controllers need to be public
+    App\Infrastructure\Symfony\Controller\:
+        resource: '../src/Infrastructure/Symfony/Controller/'
+        tags: ['controller.service_arguments']
+
     App\Domain\Port\Secondary\PasswordHasherInterface:
         class: App\Infrastructure\Symfony\Service\Auth\SymfonyPasswordHasher
 
     App\Infrastructure\Security\JWTAuthenticationSuccessHandler:
         tags:
             - { name: kernel.event_subscriber }
+
+    # Register custom argument value resolvers
+    App\Infrastructure\Symfony\ArgumentResolver\RegisterRequestValueResolver:
+        tags:
+            - { name: controller.argument_value_resolver, priority: 50 }
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

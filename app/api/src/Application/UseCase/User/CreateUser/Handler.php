@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace App\Application\UseCase\User\CreateUser;
 
 use App\Domain\Data\Model\User;
+use App\Domain\Data\ValueObject\Email;
+use App\Domain\Data\ValueObject\Password;
 use App\Domain\Data\ValueObject\Uuid;
+use App\Domain\Exception\UserAlreadyExistsException;
 use App\Domain\Port\Secondary\Auth\PasswordHasherInterface;
 use App\Domain\Port\Secondary\User\UserRepositoryInterface;
 use App\Domain\Port\Secondary\UuidGeneratorInterface;
 
-class RegisterUserUseCase
+class Handler
 {
     public function __construct(
         private UserRepositoryInterface $userRepository,
@@ -19,32 +22,33 @@ class RegisterUserUseCase
     ) {
     }
 
-    public function execute(CreateUserRequest $request): CreateUserResponse
+    public function handle(Input $input): Output
     {
-        $existingUser = $this->userRepository->findByEmail($request->email);
+        $email = new Email($input->email);
+        $password = new Password($input->password);
+        $existingUser = $this->userRepository->findByEmail($email);
         if ($existingUser !== null) {
-            throw new \InvalidArgumentException('Email already exists.');
+            throw new UserAlreadyExistsException((string) $email);
         }
 
         $user = new User(
             new Uuid($this->uuidGenerator->generateV7()),
-            $request->email,
-            $request->password,
+            $email,
+            $password,
             ['ROLE_USER']
         );
 
         if ($user->getPassword() === null) {
             throw new \InvalidArgumentException('Password cannot be null');
         }
-        $hashedPassword = $this->passwordHasher->hash($request->password);
+        $hashedPassword = $this->passwordHasher->hash($password);
         $user->setPassword($hashedPassword);
 
         $this->userRepository->save($user);
 
-        return new CreateUserResponse(
+        return new Output(
             $user->getId(),
-            $user->getEmail(),
-            $user->getPassword()
+            $user->getEmail()
         );
     }
 }
