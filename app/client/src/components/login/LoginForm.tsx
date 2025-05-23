@@ -3,8 +3,8 @@ import useFetch from "../../hooks/useFetch";
 import { useNavigate } from "react-router";
 import useUserStore from "@/stores/useUserStore";
 import { User } from "@/types/user";
-import Input, { InputType } from "../Input";
-import Button, { ButtonType } from "../Button";
+import { Input, Button } from "@/components/globals";
+import { ButtonType, InputType } from "@/components/globals/types";
 
 interface LoginFormProps {
   username: string;

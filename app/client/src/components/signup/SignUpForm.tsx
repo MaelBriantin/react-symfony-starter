@@ -1,9 +1,9 @@
-import Button, { ButtonType } from "@/components/Button";
-import Input, { InputType } from "@/components/Input";
 import { useNavigate } from "react-router";
 import useFetch from "@/hooks/useFetch";
 import { User } from "@/types/user";
 import { useState } from "react";
+import { InputType, ButtonType } from "@/components/globals/types";
+import { Input, Button } from "@/components/globals";
 
 interface SignUpFormProps {
   password: string;

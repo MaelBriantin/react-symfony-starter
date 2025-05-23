@@ -1,4 +1,4 @@
-import NavBar from "@/components/NavBar";
+import NavBar from "@/components/globals/NavBar";
 import { Outlet } from "react-router";
 
 const GuestLayout = () => {
