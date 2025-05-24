@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Symfony\Controller\Auth;
 
-use App\Application\Handler\User\CreateUserHandler as Handler;
-use App\Application\Handler\User\CreateUserInput as Input;
+use App\Application\UseCase\User\CreateUserCommand;
+use App\Application\UseCase\User\CreateUserUseCase;
+use App\Domain\Data\ValueObject\Email;
+use App\Domain\Data\ValueObject\Password;
 use App\Infrastructure\Request\Auth\RegisterRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
@@ -14,22 +16,22 @@ use Symfony\Component\Routing\Attribute\Route;
 class RegisterController
 {
     public function __construct(
-        private Handler $handler,
+        private CreateUserUseCase $createUserUseCase,
     ) {
     }
 
     public function __invoke(RegisterRequest $registerRequest): JsonResponse
     {
-        $input = new Input(
-            $registerRequest->email,
-            $registerRequest->password
+        $command = new CreateUserCommand(
+            new Email($registerRequest->email),
+            new Password($registerRequest->password)
         );
 
-        $output = $this->handler->handle($input);
+        $user = $this->createUserUseCase->execute($command);
 
         return new JsonResponse([
-            'uuid' => (string) $output->id,
-            'email' => (string) $output->email,
+            'uuid' => (string) $user->getId(),
+            'email' => (string) $user->getEmail(),
         ], 201);
     }
 }

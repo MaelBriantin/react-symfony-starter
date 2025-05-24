@@ -33,3 +33,9 @@ tasks:
     cmds:
       - "{{.DOCKER_RUN}} php composer update"
     silent: true
+
+  show:
+    desc: Show Composer packages in PHP container
+    cmds:
+      - "{{.DOCKER_RUN}} php composer show"
+    silent: true
