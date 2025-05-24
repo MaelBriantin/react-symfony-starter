@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Application\UseCase\User\CreateUser;
+namespace App\Application\Handler\User;
 
+use App\Application\Handler\User\CreateUserInput as Input;
+use App\Application\Handler\User\CreateUserOutput as Output;
 use App\Domain\Contract\Outbound\Security\PasswordHasherInterface;
 use App\Domain\Contract\Outbound\User\UserRepositoryInterface;
 use App\Domain\Contract\Outbound\UuidGeneratorInterface;
@@ -13,7 +15,7 @@ use App\Domain\Data\ValueObject\Password;
 use App\Domain\Data\ValueObject\Uuid;
 use App\Domain\Exception\UserAlreadyExistsException;
 
-class Handler
+class CreateUserHandler
 {
     public function __construct(
         private UserRepositoryInterface $userRepository,

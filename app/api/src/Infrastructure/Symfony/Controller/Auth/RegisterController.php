@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Symfony\Controller\Auth;
 
-use App\Application\UseCase\User\CreateUser\Handler;
-use App\Application\UseCase\User\CreateUser\Input;
+use App\Application\Handler\User\CreateUserHandler as Handler;
+use App\Application\Handler\User\CreateUserInput as Input;
 use App\Infrastructure\Request\Auth\RegisterRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;

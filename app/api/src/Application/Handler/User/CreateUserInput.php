@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Application\UseCase\User\CreateUser;
+namespace App\Application\Handler\User;
 
-final readonly class Input
+final readonly class CreateUserInput
 {
     public function __construct(
         public readonly string $email,

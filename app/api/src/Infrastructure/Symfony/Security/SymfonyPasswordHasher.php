@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Security\Service;
+namespace App\Infrastructure\Symfony\Security;
 
 use App\Domain\Contract\Outbound\Security\PasswordHasherInterface;
 use App\Domain\Data\ValueObject\Password;
