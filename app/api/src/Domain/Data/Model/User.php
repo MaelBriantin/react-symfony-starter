@@ -18,7 +18,8 @@ class User
         private Email $email,
         private Password $password,
         private array $roles = []
-    ) {}
+    ) {
+    }
 
     public function getId(): Uuid
     {
@@ -38,6 +39,7 @@ class User
     public function setEmail(Email $email): self
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -48,6 +50,7 @@ class User
     {
         $roles = $this->roles;
         $roles[] = 'ROLE_USER';
+
         return array_unique($roles);
     }
 
@@ -57,6 +60,7 @@ class User
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
+
         return $this;
     }
 
@@ -68,6 +72,7 @@ class User
     public function setPassword(Password $password): self
     {
         $this->password = $password;
+
         return $this;
     }
 }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Symfony\Controller\Config;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
 class EnvController extends AbstractController
@@ -17,6 +17,7 @@ class EnvController extends AbstractController
             'apiUrl' => $_ENV['API_URL'] ?? null,
             'clientUrl' => $_ENV['CLIENT_URL'] ?? null,
         ];
+
         return $this->json($env);
     }
 }

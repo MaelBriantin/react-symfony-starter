@@ -4,22 +4,26 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Repository;
 
-use App\Domain\Data\ValueObject\Password;
+use App\Domain\Contract\Outbound\User\UserRepositoryInterface;
 use App\Domain\Data\Model\User as UserModel;
 use App\Domain\Data\ValueObject\Email;
+use App\Domain\Data\ValueObject\Password;
 use App\Domain\Data\ValueObject\Uuid;
-use App\Domain\Contract\Outbound\User\UserRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
+/**
+ * @implements ObjectRepository<UserModel>
+ */
 class UserRepository implements PasswordUpgraderInterface, UserRepositoryInterface, ObjectRepository
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager
-    ) {}
+    ) {
+    }
 
     public function save(UserModel $user): UserModel
     {
@@ -37,7 +41,9 @@ class UserRepository implements PasswordUpgraderInterface, UserRepositoryInterfa
             ->where('u.email = :email')
             ->setParameter('email', $email);
 
-        return $qb->getQuery()->getOneOrNullResult();
+        $result = $qb->getQuery()->getOneOrNullResult();
+
+        return $result instanceof UserModel ? $result : null;
     }
 
     public function findById(Uuid $id): ?UserModel
@@ -63,7 +69,10 @@ class UserRepository implements PasswordUpgraderInterface, UserRepositoryInterfa
         $qb->select('u')
             ->from(UserModel::class, 'u');
 
-        return $qb->getQuery()->getResult();
+        /** @var array<UserModel> $result */
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
     }
 
     // ObjectRepository methods
@@ -77,7 +86,7 @@ class UserRepository implements PasswordUpgraderInterface, UserRepositoryInterfa
         return $this->findAllUsers();
     }
 
-    public function findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null): array
+    public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): array
     {
         return $this->entityManager->getRepository(UserModel::class)->findBy($criteria, $orderBy, $limit, $offset);
     }

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Symfony\Controller\Auth;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class LogoutController extends AbstractController
 {

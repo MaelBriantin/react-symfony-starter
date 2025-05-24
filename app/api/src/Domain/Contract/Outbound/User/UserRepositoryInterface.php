@@ -11,6 +11,7 @@ use App\Domain\Data\ValueObject\Uuid;
 interface UserRepositoryInterface
 {
     public function save(User $user): User;
+
     public function findByEmail(Email $email): ?User;
 
     /** @return array<User> */

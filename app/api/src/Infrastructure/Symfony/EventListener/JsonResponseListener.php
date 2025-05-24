@@ -61,14 +61,14 @@ class JsonResponseListener
         } else {
             // Try to decode existing JSON
             $decodedContent = json_decode($content, true);
-            if (json_last_error() === JSON_ERROR_NONE) {
+            if (JSON_ERROR_NONE === json_last_error()) {
                 $jsonData = $decodedContent;
             } else {
                 // Wrap plain text in a JSON structure
                 $statusCode = $response->getStatusCode();
                 $jsonData = [
                     'message' => $content,
-                    'status' => $statusCode >= 400 ? 'error' : 'success'
+                    'status' => $statusCode >= 400 ? 'error' : 'success',
                 ];
             }
         }
@@ -86,9 +86,9 @@ class JsonResponseListener
         foreach ($headers as $name => $values) {
             if (!in_array(strtolower($name), ['content-length'], true)) {
                 // Filter out null values and handle proper types for PHPStan
-                $filteredValues = array_filter($values, fn ($value) => $value !== null);
+                $filteredValues = array_filter($values, fn ($value) => null !== $value);
                 if (!empty($filteredValues)) {
-                    /** @var list<string> $filteredValues */
+                    /* @var list<string> $filteredValues */
                     $jsonResponse->headers->set($name, $filteredValues);
                 }
             }

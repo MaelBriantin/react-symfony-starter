@@ -26,8 +26,8 @@ services:
         resource: '../src/Infrastructure/Symfony/Controller/'
         tags: ['controller.service_arguments']
 
-    App\Domain\Contract\Outbound\Auth\PasswordHasherInterface:
-        class: App\Infrastructure\Symfony\Service\Auth\SymfonyPasswordHasher
+    App\Domain\Contract\Outbound\Security\PasswordHasherInterface:
+        class: App\Infrastructure\Symfony\Security\SymfonyPasswordHasher
 
     App\Infrastructure\Security\JWTAuthenticationSuccessHandler:
         tags:

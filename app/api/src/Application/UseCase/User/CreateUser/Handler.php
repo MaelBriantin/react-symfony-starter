@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Application\UseCase\User\CreateUser;
 
+use App\Domain\Contract\Outbound\Security\PasswordHasherInterface;
+use App\Domain\Contract\Outbound\User\UserRepositoryInterface;
+use App\Domain\Contract\Outbound\UuidGeneratorInterface;
 use App\Domain\Data\Model\User;
 use App\Domain\Data\ValueObject\Email;
 use App\Domain\Data\ValueObject\Password;
 use App\Domain\Data\ValueObject\Uuid;
 use App\Domain\Exception\UserAlreadyExistsException;
-use App\Domain\Contract\Outbound\Auth\PasswordHasherInterface;
-use App\Domain\Contract\Outbound\User\UserRepositoryInterface;
-use App\Domain\Contract\Outbound\UuidGeneratorInterface;
 
 class Handler
 {
@@ -27,7 +27,7 @@ class Handler
         $email = new Email($input->email);
         $password = new Password($input->password);
         $existingUser = $this->userRepository->findByEmail($email);
-        if ($existingUser !== null) {
+        if (null !== $existingUser) {
             throw new UserAlreadyExistsException((string) $email);
         }
 
@@ -38,9 +38,6 @@ class Handler
             ['ROLE_USER']
         );
 
-        if ($user->getPassword() === null) {
-            throw new \InvalidArgumentException('Password cannot be null');
-        }
         $hashedPassword = $this->passwordHasher->hash($password);
         $user->setPassword($hashedPassword);
 

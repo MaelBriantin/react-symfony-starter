@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Contract\Outbound\Auth;
+namespace App\Domain\Contract\Outbound\Security;
 
 use App\Domain\Data\ValueObject\Password;
 

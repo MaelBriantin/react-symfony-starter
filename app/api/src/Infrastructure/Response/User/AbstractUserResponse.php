@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 abstract class AbstractUserResponse extends JsonResponse
 {
     /**
-     * @param User|array<User> $users
+     * @param User|array<User>     $users
      * @param array<string, mixed> $additionalData
      */
     public function __construct(

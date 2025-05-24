@@ -16,19 +16,19 @@ class RegisterRequestValueResolver implements ValueResolverInterface
      */
     public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
-        if ($argument->getType() !== RegisterRequest::class) {
+        if (RegisterRequest::class !== $argument->getType()) {
             return [];
         }
 
         $content = $request->getContent();
         $data = json_decode($content, true);
 
-        if ($data === null) {
+        if (null === $data) {
             throw new \InvalidArgumentException('Invalid JSON data');
         }
 
         if (!is_array($data)) {
-            throw new \InvalidArgumentException('Expected JSON object, got ' . gettype($data));
+            throw new \InvalidArgumentException('Expected JSON object, got '.gettype($data));
         }
 
         yield RegisterRequest::fromArray($data);
