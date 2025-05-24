@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                                      http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Domain\Data\Model\User" table="user" repository-class="App\Infrastructure\Doctrine\Repository\UserRepository">
+        <id name="id" type="uuid_vo" column="id" />
+        
+        <field name="email" type="email_vo" column="email" length="180" unique="true" />
+        
+        <field name="roles" type="json" column="roles" />
+        
+        <field name="password" type="password_vo" column="password" />
+    </entity>
+
+</doctrine-mapping>
