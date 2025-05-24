@@ -9,84 +9,86 @@ use App\Domain\Data\Model\User as UserModel;
 use App\Domain\Data\ValueObject\Email;
 use App\Domain\Data\ValueObject\Uuid;
 use App\Domain\Contract\Outbound\User\UserRepositoryInterface;
-use App\Infrastructure\Adapter\UserAdapter;
-use App\Infrastructure\Doctrine\Entity\User as UserEntity;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
-use Symfony\Component\Uid\Uuid as SymfonyUuid;
 
-/**
- * @extends ServiceEntityRepository<UserEntity>
- */
-class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserRepositoryInterface
+class UserRepository implements PasswordUpgraderInterface, UserRepositoryInterface, ObjectRepository
 {
     public function __construct(
-        private readonly ManagerRegistry $registry,
-        private readonly UserAdapter $userAdapter
-    ) {
-        parent::__construct($this->registry, UserEntity::class);
-    }
+        private readonly EntityManagerInterface $entityManager
+    ) {}
 
     public function save(UserModel $user): UserModel
     {
-        $userEntity = $this->userAdapter->toEntity($user);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
 
-        $this->getEntityManager()->persist($userEntity);
-        $this->getEntityManager()->flush();
-
-        return $this->userAdapter->toDomain($userEntity);
+        return $user;
     }
 
     public function findByEmail(Email $email): ?UserModel
     {
-        $entity = $this->findOneBy(['email' => $email]);
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('u')
+            ->from(UserModel::class, 'u')
+            ->where('u.email = :email')
+            ->setParameter('email', $email);
 
-        if (!$entity) {
-            return null;
-        }
-
-        return $this->userAdapter->toDomain($entity);
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     public function findById(Uuid $id): ?UserModel
     {
-        $entity = $this->find(SymfonyUuid::fromString($id->value()));
-
-        if (!$entity) {
-            return null;
-        }
-
-        return $this->userAdapter->toDomain($entity);
+        return $this->entityManager->find(UserModel::class, $id);
     }
 
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
-        if (!$user instanceof UserEntity) {
+        if (!$user instanceof UserModel) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
         }
 
         $user->setPassword(new Password($newHashedPassword, true));
-        $this->getEntityManager()->persist($user);
-        $this->getEntityManager()->flush();
-    }
-
-    /** @return array<UserEntity> */
-    protected function findAllEntities(): array
-    {
-        return parent::findAll();
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
     }
 
     /** @return array<UserModel> */
     public function findAllUsers(): array
     {
-        $entities = $this->findAllEntities();
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('u')
+            ->from(UserModel::class, 'u');
 
-        return array_map(
-            fn (UserEntity $entity): UserModel => $this->userAdapter->toDomain($entity),
-            $entities
-        );
+        return $qb->getQuery()->getResult();
+    }
+
+    // ObjectRepository methods
+    public function find($id): ?UserModel
+    {
+        return $this->entityManager->find(UserModel::class, $id);
+    }
+
+    public function findAll(): array
+    {
+        return $this->findAllUsers();
+    }
+
+    public function findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null): array
+    {
+        return $this->entityManager->getRepository(UserModel::class)->findBy($criteria, $orderBy, $limit, $offset);
+    }
+
+    public function findOneBy(array $criteria): ?UserModel
+    {
+        return $this->entityManager->getRepository(UserModel::class)->findOneBy($criteria);
+    }
+
+    public function getClassName(): string
+    {
+        return UserModel::class;
     }
 }

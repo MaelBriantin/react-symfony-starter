@@ -16,10 +16,9 @@ class User
     public function __construct(
         private Uuid $id,
         private Email $email,
-        private ?Password $password = null,
+        private Password $password,
         private array $roles = []
-    ) {
-    }
+    ) {}
 
     public function getId(): Uuid
     {
@@ -61,7 +60,7 @@ class User
         return $this;
     }
 
-    public function getPassword(): ?Password
+    public function getPassword(): Password
     {
         return $this->password;
     }

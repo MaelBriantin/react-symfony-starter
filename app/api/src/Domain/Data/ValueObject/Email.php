@@ -28,7 +28,15 @@ class Email
         }
     }
 
+    /**
+     * @deprecated Use getValue() instead.
+     */
     public function value(): string
+    {
+        return $this->value;
+    }
+
+    public function getValue(): string
     {
         return $this->value;
     }
