@@ -76,6 +76,7 @@
         }
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^4.1",
         "friendsofphp/php-cs-fixer": "^3.75",
         "pestphp/pest": "^3.8",
         "phpstan/phpstan": "^2.1",
