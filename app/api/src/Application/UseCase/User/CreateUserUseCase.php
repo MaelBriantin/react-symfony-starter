@@ -6,7 +6,7 @@ namespace App\Application\UseCase\User;
 
 use App\Domain\Contract\Outbound\Security\PasswordHasherInterface;
 use App\Domain\Contract\Outbound\User\UserRepositoryInterface;
-use App\Domain\Contract\Outbound\UuidGeneratorInterface;
+use App\Domain\Contract\Outbound\Service\UuidGeneratorInterface;
 use App\Domain\Data\Model\User;
 use App\Domain\Data\ValueObject\Uuid;
 use App\Domain\Exception\UserAlreadyExistsException;

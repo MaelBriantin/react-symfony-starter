@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Contract\Outbound;
+namespace App\Domain\Contract\Outbound\Service;
 
 interface UuidGeneratorInterface
 {
