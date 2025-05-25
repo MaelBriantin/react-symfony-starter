@@ -29,18 +29,10 @@ class RegisterRequest
     {
         try {
             Assert::minLength($this->password, 6, 'Password must be at least 6 characters long');
-            if (!preg_match('/[A-Z]/', $this->password)) {
-                throw new BadRequestHttpException('Password must contain at least one uppercase letter');
-            }
-            if (!preg_match('/[a-z]/', $this->password)) {
-                throw new BadRequestHttpException('Password must contain at least one lowercase letter');
-            }
-            if (!preg_match('/\d/', $this->password)) {
-                throw new BadRequestHttpException('Password must contain at least one digit');
-            }
-            if (!preg_match('/[^A-Za-z0-9]/', $this->password)) {
-                throw new BadRequestHttpException('Password must contain at least one special character');
-            }
+            Assert::regex($this->password, '/[A-Z]/', 'Password must contain at least one uppercase letter');
+            Assert::regex($this->password, '/[a-z]/', 'Password must contain at least one lowercase letter');
+            Assert::regex($this->password, '/\d/', 'Password must contain at least one digit');
+            Assert::regex($this->password, '/[^A-Za-z0-9]/', 'Password must contain at least one special character');
         } catch (\InvalidArgumentException $e) {
             throw new BadRequestHttpException($e->getMessage());
         }

@@ -38,7 +38,7 @@ class SecurityUser implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials(): void
     {
-        // Nothing to erase as we use value objects
+        // Nothing to erase for now
     }
 
     public function getDomainUser(): DomainUser
