@@ -21,12 +21,20 @@ services:
             - '../src/Kernel.php'
             - '../src/Domain/Data/'
 
-    App\Domain\Port\Secondary\PasswordHasherInterface:
-        class: App\Infrastructure\Service\Auth\SymfonyPasswordHasher
+    App\Infrastructure\Symfony\Controller\:
+        resource: '../src/Infrastructure/Symfony/Controller/'
+        tags: ['controller.service_arguments']
+
+    App\Domain\Contract\Outbound\Security\PasswordHasherInterface:
+        class: App\Infrastructure\Symfony\Security\SymfonyPasswordHasher
 
     App\Infrastructure\Security\JWTAuthenticationSuccessHandler:
         tags:
             - { name: kernel.event_subscriber }
+
+    App\Infrastructure\Symfony\ArgumentResolver\RegisterRequestValueResolver:
+        tags:
+            - { name: controller.argument_value_resolver, priority: 50 }
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

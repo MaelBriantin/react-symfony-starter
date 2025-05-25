@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Data\ValueObject;
 
-use InvalidArgumentException;
-
 class Password
 {
     private string $value;
@@ -24,31 +22,39 @@ class Password
     public function validate(string $value): void
     {
         if (empty($value)) {
-            throw new InvalidArgumentException('Password cannot be empty');
+            throw new \InvalidArgumentException('Password cannot be empty');
         }
 
         if (strlen($value) < 8) {
-            throw new InvalidArgumentException('Password must be at least 8 characters long');
+            throw new \InvalidArgumentException('Password must be at least 8 characters long');
         }
 
         if (!preg_match('/[A-Z]/', $value)) {
-            throw new InvalidArgumentException('Password must contain at least one uppercase letter');
+            throw new \InvalidArgumentException('Password must contain at least one uppercase letter');
         }
 
         if (!preg_match('/[a-z]/', $value)) {
-            throw new InvalidArgumentException('Password must contain at least one lowercase letter');
+            throw new \InvalidArgumentException('Password must contain at least one lowercase letter');
         }
 
         if (!preg_match('/[0-9]/', $value)) {
-            throw new InvalidArgumentException('Password must contain at least one number');
+            throw new \InvalidArgumentException('Password must contain at least one number');
         }
 
         if (!preg_match('/[^A-Za-z0-9]/', $value)) {
-            throw new InvalidArgumentException('Password must contain at least one special character');
+            throw new \InvalidArgumentException('Password must contain at least one special character');
         }
     }
 
+    /**
+     * @deprecated use getValue() instead
+     */
     public function value(): string
+    {
+        return $this->value;
+    }
+
+    public function getValue(): string
     {
         return $this->value;
     }

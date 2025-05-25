@@ -6,7 +6,7 @@ namespace App\Infrastructure\Response\User;
 
 use App\Domain\Data\Model\User;
 
-class UserListResponse extends AbstractUserResponse
+final class UserListResponse extends AbstractUserResponse
 {
     /**
      * @param array<User> $users

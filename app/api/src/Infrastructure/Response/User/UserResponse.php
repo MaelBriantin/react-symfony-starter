@@ -6,7 +6,7 @@ namespace App\Infrastructure\Response\User;
 
 use App\Domain\Data\Model\User;
 
-class UserResponse extends AbstractUserResponse
+final class UserResponse extends AbstractUserResponse
 {
     public function __construct(User $user)
     {

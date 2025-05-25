@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Application\UseCase\Auth\Register;
+namespace App\Application\UseCase\User;
 
+use App\Domain\Contract\Outbound\Security\PasswordHasherInterface;
+use App\Domain\Contract\Outbound\User\UserRepositoryInterface;
+use App\Domain\Contract\Outbound\UuidGeneratorInterface;
 use App\Domain\Data\Model\User;
 use App\Domain\Data\ValueObject\Uuid;
-use App\Domain\Port\Secondary\Auth\PasswordHasherInterface;
-use App\Domain\Port\Secondary\User\UserRepositoryInterface;
-use App\Domain\Port\Secondary\UuidGeneratorInterface;
+use App\Domain\Exception\UserAlreadyExistsException;
 
-class RegisterUserUseCase
+final class CreateUserUseCase
 {
     public function __construct(
         private UserRepositoryInterface $userRepository,
@@ -19,11 +20,11 @@ class RegisterUserUseCase
     ) {
     }
 
-    public function execute(RegisterUserCommand $command): User
+    public function execute(CreateUserCommand $command): User
     {
         $existingUser = $this->userRepository->findByEmail($command->email);
-        if ($existingUser !== null) {
-            throw new \InvalidArgumentException('Email already exists.');
+        if (null !== $existingUser) {
+            throw new UserAlreadyExistsException((string) $command->email);
         }
 
         $user = new User(
@@ -33,10 +34,7 @@ class RegisterUserUseCase
             ['ROLE_USER']
         );
 
-        if ($user->getPassword() === null) {
-            throw new \InvalidArgumentException('Password cannot be null');
-        }
-        $hashedPassword = $this->passwordHasher->hash($user->getPassword());
+        $hashedPassword = $this->passwordHasher->hash($command->password);
         $user->setPassword($hashedPassword);
 
         return $this->userRepository->save($user);
