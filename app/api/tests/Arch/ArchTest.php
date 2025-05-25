@@ -49,4 +49,35 @@ arch('Event Listeners should be in Infrastructure Symfony layer')
     ->expect('App\Infrastructure\Symfony\EventListener')
     ->classes()
     ->toHaveSuffix('Listener');
+    
 
+arch('UseCase classes should be final')
+    ->expect('App\Application\UseCase\**')
+    ->classes()
+    ->toBeFinal();
+
+arch('Request classes should be final')
+    ->expect('App\Infrastructure\Request\**')
+    ->classes()
+    ->toBeFinal();
+
+arch('Controllers should be final')
+    ->expect('App\Infrastructure\Symfony\Controller\**')
+    ->classes()
+    ->toBeFinal();
+
+arch('Application DTOs should be final')
+    ->expect([
+        'App\Application\UseCase\User\CreateUserCommand',
+        'App\Application\Handler\User\CreateUserInput',
+        'App\Application\Handler\User\CreateUserOutput'
+    ])
+    ->toBeFinal();
+
+arch('Response concrete classes should be final')
+    ->expect([
+        'App\Infrastructure\Response\Auth\RegisterResponse',
+        'App\Infrastructure\Response\User\UserResponse', 
+        'App\Infrastructure\Response\User\UserListResponse'
+    ])
+    ->toBeFinal();

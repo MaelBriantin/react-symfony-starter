@@ -15,7 +15,7 @@ use App\Domain\Data\ValueObject\Password;
 use App\Domain\Data\ValueObject\Uuid;
 use App\Domain\Exception\UserAlreadyExistsException;
 
-class CreateUserHandler
+final class CreateUserHandler
 {
     public function __construct(
         private UserRepositoryInterface $userRepository,

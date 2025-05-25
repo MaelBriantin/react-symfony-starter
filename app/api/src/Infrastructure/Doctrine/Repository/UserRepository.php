@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 /**
  * @implements ObjectRepository<UserModel>
  */
-class UserRepository implements PasswordUpgraderInterface, UserRepositoryInterface, ObjectRepository
+final class UserRepository implements PasswordUpgraderInterface, UserRepositoryInterface, ObjectRepository
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager

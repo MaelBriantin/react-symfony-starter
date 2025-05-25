@@ -7,7 +7,7 @@ namespace App\Infrastructure\Request\Auth;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Webmozart\Assert\Assert;
 
-class RegisterRequest
+final class RegisterRequest
 {
     public function __construct(
         public readonly string $email,

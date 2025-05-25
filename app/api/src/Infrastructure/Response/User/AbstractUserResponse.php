@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Infrastructure\Response\User;
 
 use App\Domain\Data\Model\User;
-use App\Domain\Data\ValueObject\Email;
-use App\Domain\Data\ValueObject\Uuid;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 abstract class AbstractUserResponse extends JsonResponse

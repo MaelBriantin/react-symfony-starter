@@ -7,7 +7,7 @@ namespace App\Infrastructure\Response\Auth;
 use App\Domain\Data\Model\User;
 use App\Infrastructure\Response\User\AbstractUserResponse;
 
-class RegisterResponse extends AbstractUserResponse
+final class RegisterResponse extends AbstractUserResponse
 {
     public function __construct(User $user)
     {

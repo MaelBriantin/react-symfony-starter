@@ -7,7 +7,7 @@ namespace App\Application\Handler\User;
 use App\Domain\Data\ValueObject\Email;
 use App\Domain\Data\ValueObject\Uuid;
 
-class CreateUserOutput
+final class CreateUserOutput
 {
     public function __construct(
         public readonly Uuid $id,

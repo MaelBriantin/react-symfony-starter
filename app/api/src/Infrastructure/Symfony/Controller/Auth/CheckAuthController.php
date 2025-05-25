@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/auth/check', name: 'auth_check', methods: ['GET'])]
-class CheckAuthController extends AbstractController
+final class CheckAuthController extends AbstractController
 {
     public function __construct(
         private UserRepositoryInterface $userRepository,

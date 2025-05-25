@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
-class EnvController extends AbstractController
+final class EnvController extends AbstractController
 {
     #[Route('/config/env', name: 'config_env', methods: ['GET'])]
     public function getEnv(): JsonResponse
