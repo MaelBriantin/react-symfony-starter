@@ -28,6 +28,9 @@ services:
     App\Domain\Contract\Outbound\Security\PasswordHasherInterface:
         class: App\Infrastructure\Symfony\Security\SymfonyPasswordHasher
 
+    App\Domain\Contract\Outbound\Factory\UserFactoryInterface:
+        class: App\Infrastructure\Symfony\Factory\UserFactory
+
     App\Infrastructure\Security\JWTAuthenticationSuccessHandler:
         tags:
             - { name: kernel.event_subscriber }

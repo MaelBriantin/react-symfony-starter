@@ -1,0 +1,3 @@
+doctrine_fixtures:
+    dirs:
+        - '%kernel.project_dir%/src/Infrastructure/Doctrine/Fixture'
