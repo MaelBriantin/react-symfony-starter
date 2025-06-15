@@ -54,6 +54,12 @@ if [ -z "$MYSQL_ROOT_PASSWORD_LINE" ]; then
 fi
 echo "Anchor line found."
 
+if [ "$(uname)" = "Darwin" ]; then
+  sed -i '' '/^DATABASE_URL=/d' "$ROOT_ENV_FILE"
+else
+  sed -i '/^DATABASE_URL=/d' "$ROOT_ENV_FILE"
+fi
+
 # Construct the URL using environment variables
 echo "Constructing DATABASE_URL..."
 DATABASE_URL="mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@${DOCKER_DB_HOST}:${DOCKER_DB_PORT}/${MYSQL_DATABASE}?serverVersion=${DB_SERVER_VERSION}&charset=${DB_CHARSET}"
