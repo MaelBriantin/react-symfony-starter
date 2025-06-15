@@ -42,8 +42,8 @@ To get started with the development environment, follow these steps:
     ```
 
     This command will run the following tasks:
-    - create a local SSL certificate using `mkcert` for HTTPS support
     - create a `.env` file from the `.env.example` file with the needed environment variables
+    - create a local SSL certificate using `mkcert` for HTTPS support
     - build the Docker containers for the Symfony backend and the React frontend (MYSQL, Node, PHP, Caddy)
     - start the Docker containers
     - install the PHP dependencies using `composer`
@@ -99,4 +99,4 @@ JWT_PRIVATE_KEY=your_jwt_private_key_path
 JWT_TOKEN_LIFETIME=jwt_token_lifetime_in_seconds
 ```
 
-> **NOTE:** Needed environment variables and JWT keys and passphrase are automatically generated when you run the `task dev:setup` command. In production, you can generate the keys and passphrase with the command `task env:init:jwt` after the creation of your `.env` file. This command will generate the keys and passphrase in the `.env` file and create the keys in the `config/jwt` directory.
+> **NOTE:** Needed environment variables and JWT keys and passphrase are automatically generated when you run the `task dev:setup` command. In production, you can generate the keys and passphrase with the command `task env:init:jwt` after the creation of your `.env` file. This command will generate the keys and passphrase in the `.env` file and create the keys in the `app/api/config/jwt` directory.
