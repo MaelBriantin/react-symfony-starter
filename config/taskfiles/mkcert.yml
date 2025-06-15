@@ -6,6 +6,9 @@ tasks:
     deps: [check]
     cmds:
       - |
+        set -a
+        [ -f .env ] && . .env
+        set +a
         CLIENT_DOMAIN=$(echo "$CLIENT_URL" | sed -E 's|^"?https?://([^/]+).*"?$|\1|')
         API_DOMAIN=$(echo "$API_URL" | sed -E 's|^"?https?://([^/]+).*"?$|\1|')
         if [ ! -f config/certs/localhost.pem ] || [ ! -f config/certs/localhost-key.pem ]; then
