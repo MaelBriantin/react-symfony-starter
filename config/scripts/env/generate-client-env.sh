@@ -14,7 +14,13 @@ echo -e "$NOTES" > "$CLIENT_ENV_FILE"
 for VAR in "${VARS[@]}"; do
   VALUE=$(grep -E "^$VAR=" "$ENV_FILE" | cut -d '=' -f2-)
   if [ -n "$VALUE" ]; then
-    sed -i "/^VITE_${VAR}=.*/d" "$CLIENT_ENV_FILE"
+    if [ "$(uname)" = "Darwin" ]; then
+      sed -i '' "/^VITE_${VAR}=.*/d" "$CLIENT_ENV_FILE"
+    else
+      sed -i "/^VITE_${VAR}=.*/d" "$CLIENT_ENV_FILE"
+    fi
     echo "VITE_${VAR}=$VALUE" >> "$CLIENT_ENV_FILE"
   fi
 done
+
+echo "Client environment variables generated in '$CLIENT_ENV_FILE'."

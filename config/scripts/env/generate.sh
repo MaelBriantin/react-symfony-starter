@@ -47,7 +47,13 @@ fi
 replace_if_empty() {
   VAR_NAME="$1"
   VAR_VALUE="$2"
-  sed -i "s|^${VAR_NAME}=$|${VAR_NAME}=${VAR_VALUE}|" "$ROOT_ENV_FILE"
+  TEMP_FILE="$ROOT_ENV_FILE.tmp"
+  # Check OS type
+  if [ "$(uname)" = "Darwin" ]; then
+    sed -i '' "s|^${VAR_NAME}=$|${VAR_NAME}=${VAR_VALUE}|" "$ROOT_ENV_FILE"
+  else
+    sed -i "s|^${VAR_NAME}=$|${VAR_NAME}=${VAR_VALUE}|" "$ROOT_ENV_FILE"
+  fi
 }
 
 # Apply dev defaults ONLY if ENV_TYPE is dev
@@ -67,4 +73,3 @@ else
 fi
 
 echo "Finished."
-# Note: APP_SECRET generation is handled by generate-secret.sh

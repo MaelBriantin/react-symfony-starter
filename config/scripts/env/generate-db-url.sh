@@ -59,41 +59,18 @@ echo "Constructing DATABASE_URL..."
 DATABASE_URL="mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@${DOCKER_DB_HOST}:${DOCKER_DB_PORT}/${MYSQL_DATABASE}?serverVersion=${DB_SERVER_VERSION}&charset=${DB_CHARSET}"
 DATABASE_URL_ESCAPED_SED=$(echo "$DATABASE_URL" | sed -e 's/[&\/]/\\&/g' -e 's/"/\\"/g')
 
-# Check if DATABASE_URL exists
-if grep -q '^DATABASE_URL=' "$ROOT_ENV_FILE"; then
-  CURRENT_URL=$(grep '^DATABASE_URL=' "$ROOT_ENV_FILE" | head -n1 | cut -d '=' -f2- | sed 's/^"//;s/"$//')
-  if [ -n "$CURRENT_URL" ]; then
-    # Parse current DATABASE_URL (remove quotes if present)
-    proto_and_rest="${CURRENT_URL#*://}"
-    CURRENT_USER_PASS_HOST_PORT_DB="${proto_and_rest%%\?*}"
-    CURRENT_USER_PASS="${CURRENT_USER_PASS_HOST_PORT_DB%@*}"
-    CURRENT_HOST_PORT_DB="${CURRENT_USER_PASS_HOST_PORT_DB#*@}"
-    CURRENT_USER="${CURRENT_USER_PASS%%:*}"
-    CURRENT_PASSWORD="${CURRENT_USER_PASS#*:}"
-    CURRENT_HOST_PORT="${CURRENT_HOST_PORT_DB%%/*}"
-    CURRENT_DB="${CURRENT_HOST_PORT_DB#*/}"
-    # Remove query params from db name if present
-    CURRENT_DB="${CURRENT_DB%%\?*}"
-    CURRENT_HOST="${CURRENT_HOST_PORT%%:*}"
-    CURRENT_PORT="${CURRENT_HOST_PORT#*:}"
-    # Compare with env vars
-    if [ "$CURRENT_USER" != "$MYSQL_USER" ] || [ "$CURRENT_PASSWORD" != "$MYSQL_PASSWORD" ] || [ "$CURRENT_HOST" != "$DOCKER_DB_HOST" ] || [ "$CURRENT_PORT" != "$DOCKER_DB_PORT" ] || [ "$CURRENT_DB" != "$MYSQL_DATABASE" ]; then
-      # Update DATABASE_URL
-      sed -i "s|^DATABASE_URL=.*$|DATABASE_URL=\"${DATABASE_URL_ESCAPED_SED}\"|" "$ROOT_ENV_FILE"
-      echo "DATABASE_URL updated to match MYSQL_* variables."
-    else
-      echo "DATABASE_URL matches MYSQL_* variables. No update needed."
-      exit 0
-    fi
-  else
-    # Replace the empty value
-    sed -i "s|^DATABASE_URL=$|DATABASE_URL=\"${DATABASE_URL_ESCAPED_SED}\"|" "$ROOT_ENV_FILE"
-    echo "DATABASE_URL was empty and is now set."
-  fi
+if [ "$(uname)" = "Darwin" ]; then
+  sed -i '' "s|^DATABASE_URL=.*$|DATABASE_URL=\"${DATABASE_URL_ESCAPED_SED}\"|" "$ROOT_ENV_FILE"
+  sed -i '' "s|^DATABASE_URL=$|DATABASE_URL=\"${DATABASE_URL_ESCAPED_SED}\"|" "$ROOT_ENV_FILE"
+  sed -i '' "s|^DATABASE_URL=\".*\"###< MYSQL configuration ###$||" "$ROOT_ENV_FILE"
+  sed -i '' "/^###< MYSQL configuration ###/i\\
+DATABASE_URL=\"${DATABASE_URL_ESCAPED_SED}\"\\
+" "$ROOT_ENV_FILE"
 else
-  # Insert before the MYSQL config marker, no blank line
-  sed -i "/^###< MYSQL configuration ###/i DATABASE_URL=\"${DATABASE_URL_ESCAPED_SED}\"" "$ROOT_ENV_FILE"
-  echo "DATABASE_URL inserted before MYSQL configuration marker."
+  sed -i "s|^DATABASE_URL=.*$|DATABASE_URL=\"${DATABASE_URL_ESCAPED_SED}\"|" "$ROOT_ENV_FILE"
+  sed -i "s|^DATABASE_URL=$|DATABASE_URL=\"${DATABASE_URL_ESCAPED_SED}\"|" "$ROOT_ENV_FILE"
+  sed -i "s|^DATABASE_URL=\".*\"###< MYSQL configuration ###$||" "$ROOT_ENV_FILE"
+  sed -i "/^###< MYSQL configuration ###/i DATABASE_URL=\"${DATABASE_URL_ESCAPED_SED}\"\\" "$ROOT_ENV_FILE"
 fi
 
 echo "Finished."

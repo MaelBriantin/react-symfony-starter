@@ -25,11 +25,27 @@ fi
 # Generate a passphrase for JWT
 JWT_PASSPHRASE=$(openssl rand -hex 32)
 
-# Update the .env file with the paths to the keys and the passphrase
-sed -i "s|^JWT_SECRET_KEY=.*$|JWT_SECRET_KEY=$JWT_SECRET_KEY|" "$ENV_FILE"
-sed -i "s|^JWT_PUBLIC_KEY=.*$|JWT_PUBLIC_KEY=$JWT_PUBLIC_KEY|" "$ENV_FILE"
-sed -i "s|^JWT_PASSPHRASE=.*$|JWT_PASSPHRASE=$JWT_PASSPHRASE|" "$ENV_FILE"
-sed -i "s|^JWT_TOKEN_LIFETIME=.*$|JWT_TOKEN_LIFETIME=$JWT_TOKEN_LIFETIME|" "$ENV_FILE"
+JWT_SECRET_KEY_ESCAPED=$(echo "$JWT_SECRET_KEY" | sed -e 's/[&\/]/\\&/g')
+JWT_PUBLIC_KEY_ESCAPED=$(echo "$JWT_PUBLIC_KEY" | sed -e 's/[&\/]/\\&/g')
+JWT_PASSPHRASE_ESCAPED=$(echo "$JWT_PASSPHRASE" | sed -e 's/[&\/]/\\&/g')
+JWT_TOKEN_LIFETIME_ESCAPED=$(echo "$JWT_TOKEN_LIFETIME" | sed -e 's/[&\/]/\\&/g')
+
+# Update JWT keys and passphrase in .env file
+update_env_variable() {
+  VAR_NAME="$1"
+  VAR_VALUE="$2"
+  TEMP_FILE="$ENV_FILE.tmp"
+  if grep -q "^${VAR_NAME}=" "$ENV_FILE"; then
+    sed -i '' "s|^${VAR_NAME}=.*$|${VAR_NAME}=${VAR_VALUE}|" "$ENV_FILE"
+  else
+    echo "${VAR_NAME}=${VAR_VALUE}" >> "$ENV_FILE"
+  fi
+}
+
+update_env_variable "JWT_SECRET_KEY" "$JWT_SECRET_KEY_ESCAPED"
+update_env_variable "JWT_PUBLIC_KEY" "$JWT_PUBLIC_KEY_ESCAPED"
+update_env_variable "JWT_PASSPHRASE" "$JWT_PASSPHRASE_ESCAPED"
+update_env_variable "JWT_TOKEN_LIFETIME" "$JWT_TOKEN_LIFETIME_ESCAPED"
 
 echo "JWT keys and passphrase updated in $ENV_FILE."
 
