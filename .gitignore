@@ -9,6 +9,10 @@ build
 .env.*.local
 ###< Environment files ###
 
+###> Certificates ###
+config/certs/
+###< Certificates ###
+
 ###> Logs ###
 *.log
 ###< Logs ###

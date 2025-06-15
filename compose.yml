@@ -42,6 +42,7 @@ services:
     volumes:
       - ./config/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
       - ./app/api:/app
+      - ./config/certs:/etc/caddy/certs:ro
     depends_on:
       - node
       - php

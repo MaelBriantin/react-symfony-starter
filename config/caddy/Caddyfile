@@ -1,12 +1,12 @@
 {$CLIENT_URL} {
     log
-    tls internal
+    tls /etc/caddy/certs/localhost.pem /etc/caddy/certs/localhost-key.pem
     reverse_proxy node:5173
 }
 
 {$API_URL} {
     log
-    tls internal
+    tls /etc/caddy/certs/localhost.pem /etc/caddy/certs/localhost-key.pem
     root * /app/public
     encode gzip
     php_fastcgi php:9000

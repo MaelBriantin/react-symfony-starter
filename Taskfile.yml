@@ -27,6 +27,8 @@ includes:
     aliases: [api, symfony]
   test:
     taskfile: ./config/taskfiles/test.yml
+  mkcert:
+    taskfile: ./config/taskfiles/mkcert.yml
 
 set: [pipefail]
 

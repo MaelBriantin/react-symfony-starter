@@ -24,6 +24,7 @@ To use this starter template, you need to have the following installed on your m
 - [Docker](https://docs.docker.com/engine/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/) (version 2 or higher)
 - [Taskfile](https://taskfile.dev/installation/)
+- [mkcert](https://github.com/FiloSottile/mkcert) (for local HTTPS support)
 
 ### Installation
 
@@ -41,6 +42,7 @@ To get started with the development environment, follow these steps:
     ```
 
     This command will run the following tasks:
+    - create a local SSL certificate using `mkcert` for HTTPS support
     - create a `.env` file from the `.env.example` file with the needed environment variables
     - build the Docker containers for the Symfony backend and the React frontend (MYSQL, Node, PHP, Caddy)
     - start the Docker containers
@@ -49,8 +51,8 @@ To get started with the development environment, follow these steps:
     - run the Caddy server via Docker
 
 3. Access the application:
-   - Symfony backend: [http://api.localhost](http://api.localhost)
-   - React frontend: [http://localhost](http://localhost)
+   - Symfony backend: [https://api.localhost](http://api.localhost)
+   - React frontend: [https://localhost](http://localhost)
 
 ### Customizing the Environment
 
