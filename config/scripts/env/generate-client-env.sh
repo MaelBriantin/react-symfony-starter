@@ -2,7 +2,7 @@
 ENV_FILE=".env"
 CLIENT_ENV_FILE="app/client/.env"
 DEFAULT_VARS=($CLIENT_ENV_VARS)
-NOTES="#\n# This file is auto-generated at build time.\n# You can add your own variables here, prefixed with VITE_ if you want them to be available in the client with 'import.meta.env'.\n# You can also add any of the root .env variables here with 'task env:generate:client-env --- <var>'\n#\n"
+NOTES="#\n# This file is auto-generated at build time.\n# You can add your own variables here, prefixed with VITE_ if you want them to be available in the client with 'import.meta.env'.\n# You can also add any of the root .env variables here with 'task env:generate:client-env -- <var>'\n#\n"
 
 ALL_VARS=("${DEFAULT_VARS[@]}" "$@")
 
